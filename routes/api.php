@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\PasswordResetController;
+
+
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -16,3 +19,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])->middleware('auth:sanctum');
+
+
+
+Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
+Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword']);
