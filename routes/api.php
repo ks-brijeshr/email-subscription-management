@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\PasswordResetController;
-
+use App\Http\Controllers\ProfileController;
 
 
 Route::get('/test', function () {
@@ -24,3 +24,11 @@ Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])
 
 Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
 Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword']);
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile/update', [ProfileController::class, 'update']);
+    Route::put('/profile/update-password', [ProfileController::class, 'updatePassword']);
+    Route::post('/profile/generate-api-key', [ProfileController::class, 'generateApiKey']);
+});
