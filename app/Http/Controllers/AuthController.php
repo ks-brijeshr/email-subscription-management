@@ -35,7 +35,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle user login
+     * Handle user login (Only if verified)
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -54,7 +54,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle email verification
+     * Handle email verification when user clicks the verify email link 
      */
     public function verifyEmail(Request $request, $id, $hash)
     {

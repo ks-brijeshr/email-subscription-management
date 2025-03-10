@@ -31,22 +31,28 @@ class AuthService
 
 
 
-    /**
-     * Handle user login
-     */
-    public function login(array $data)
-    {
-        $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+    /**
+     * Handle user login (Only allow verified users)
+     */
+    public function login(array $credentials)
+    {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return ['error' => 'Invalid credentials'];
+        }
+
+        //Restrict login if email is not verified
+        if (!$user->hasVerifiedEmail()) {
+            return ['error' => 'Your email is not verified. Please check your email for verification.'];
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return [
-            'user' => $user,
-            'token' => $token
+            'token' => $token,
+            'user' => $user
         ];
     }
 }
