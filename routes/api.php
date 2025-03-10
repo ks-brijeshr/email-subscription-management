@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\SubscriptionListController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -31,4 +31,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update']);
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword']);
     Route::post('/profile/generate-api-key', [ProfileController::class, 'generateApiKey']);
+});
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/subscription-lists', [SubscriptionListController::class, 'store']);
 });
