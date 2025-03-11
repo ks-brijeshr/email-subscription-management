@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Auth;
 class SubscriptionListService
 {
     /**
-     * Get all subscription lists for the authenticated user
+     * Get all subscription lists for the authenticated user with total subscribers count
      */
-    public function getAllSubscriptionLists()
+    public function getAllSubscriptionListsWithCounts()
     {
-        return SubscriptionList::where('user_id', Auth::id())->get();
+        return SubscriptionList::where('user_id', Auth::id())
+            ->withCount('subscribers') // Get total subscribers count
+            ->get();
     }
+
 
     /**
      * Update an existing subscription list
