@@ -1,0 +1,13 @@
+[90m= [39m[34;4mApp\Models\SubscriptionList[39;24m {#5377
+    [34muser_id[39m: [35m1[39m,
+    [34mname[39m: "[32mWelcome Emails[39m",
+    [34mallow_business_email_only[39m: [36mtrue[39m,
+    [34mblock_temporary_email[39m: [36mtrue[39m,
+    [34mrequire_email_verification[39m: [36mtrue[39m,
+    [34mcheck_domain_existence[39m: [36mtrue[39m,
+    [34mverify_dns_records[39m: [36mtrue[39m,
+    [34mupdated_at[39m: "[32m2025-03-11 08:44:06[39m",
+    [34mcreated_at[39m: "[32m2025-03-11 08:44:06[39m",
+    [34mid[39m: [35m4[39m,
+  }
+

@@ -2,18 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\SubscriptionList;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Services\SubscriptionListService;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\SubscriptionListRequest;
 use App\Mail\SubscriptionVerificationMail;
+use App\Http\Requests\SubscriptionListRequest;
+use App\Http\Requests\UpdateSubscriptionListRequest;
 
 class SubscriptionListController extends Controller
 {
+    protected $subscriptionListService;
+
+    public function __construct(SubscriptionListService $subscriptionListService)
+    {
+        $this->subscriptionListService = $subscriptionListService;
+    }
+
+    /**
+     * Get all subscription lists for the authenticated user.
+     */
+    public function index(Request $request): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionLists();
+
+        return response()->json([
+            'message' => 'Subscription lists retrieved successfully.',
+            'subscription_lists' => $subscriptionLists
+        ], 200);
+    }
     /**
      * Store a new subscription list with restrictions
      */
@@ -165,5 +192,28 @@ class SubscriptionListController extends Controller
             checkdnsrr($domain, "MX") &&
             checkdnsrr($domain, "TXT") &&
             checkdnsrr("_dmarc." . $domain, "TXT");
+    }
+
+
+
+    /**
+     * Update an existing subscription list
+     */
+    public function update(UpdateSubscriptionListRequest $request, $id): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $updatedSubscriptionList = $this->subscriptionListService->updateSubscriptionList($id, $request->validated());
+
+        if (!$updatedSubscriptionList) {
+            return response()->json(['error' => 'Subscription list not found or access denied'], 404);
+        }
+
+        return response()->json([
+            'message' => 'Subscription list updated successfully.',
+            'subscription_list' => $updatedSubscriptionList
+        ], 200);
     }
 }

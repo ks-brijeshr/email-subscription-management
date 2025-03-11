@@ -32,14 +32,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update']);
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword']);
     Route::post('/profile/generate-api-key', [ProfileController::class, 'generateApiKey']);
-
     Route::get('/activity-logs', [ActivityLogController::class, 'index']);
+
+    Route::post('/subscription-list/create', [SubscriptionListController::class, 'store']);
+    //Get all subscription lists
+    Route::get('/subscription-lists', [SubscriptionListController::class, 'index']);
+    //update a specific subscription list
+    Route::put('/subscription-lists/{id}', [SubscriptionListController::class, 'update']);
 });
 
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/subscription-lists', [SubscriptionListController::class, 'store']);
-});
 
 //Email verification for owners who create subscription list
 Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
