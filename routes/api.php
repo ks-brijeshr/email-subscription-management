@@ -6,7 +6,10 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\SubscriptionListController;
+use App\Http\Controllers\SubscriberController;
+
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -43,3 +46,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 //Email verification for owners who create subscription list
 Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
+
+
+
+Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
+
+
+
+Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
+Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
+Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
+Route::post('/unsubscribe/{subscriber_id}', [SubscriberController::class, 'unsubscribeUser']);
