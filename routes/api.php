@@ -42,6 +42,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/subscription-lists', [SubscriptionListController::class, 'index']);
     //update a specific subscription list
     Route::put('/subscription-lists/{id}', [SubscriptionListController::class, 'update']);
+
+    //subscriber count in each list
+    Route::get('/subscription-lists/subscribers-count', [SubscriptionListController::class, 'index']);
 });
 
 
