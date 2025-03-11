@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SubscriptionListRequest;
 use App\Models\SubscriptionList;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SubscriptionListRequest;
+use App\Mail\SubscriptionVerificationMail;
 
 class SubscriptionListController extends Controller
 {
@@ -32,19 +34,46 @@ class SubscriptionListController extends Controller
         // Create subscription list
         $subscriptionList = SubscriptionList::create([
             'user_id' => $user->id,
-            'created_by' => $user->id,
-            'name' => $request->name,  // This is the subscription list name (not an email)
+            'name' => $request->name,
             'allow_business_email_only' => $request->allow_business_email_only ?? true,
             'block_temporary_email' => $request->block_temporary_email ?? true,
             'require_email_verification' => $request->require_email_verification ?? true,
             'check_domain_existence' => $request->check_domain_existence ?? true,
             'verify_dns_records' => $request->verify_dns_records ?? true,
+            'is_verified' => false,         // Subscription is inactive until email verification
         ]);
 
+        // Send verification email
+        $this->sendVerificationEmail($subscriptionList);
+
         return response()->json([
-            'message' => 'Subscription list created successfully with restrictions.',
+            'message' => 'Subscription list created successfully. Please verify your email.',
             'subscription_list' => $subscriptionList
         ], 201);
+    }
+
+
+    private function sendVerificationEmail($subscriptionList)
+    {
+        $token = encrypt($subscriptionList->id);
+
+        Mail::to(Auth::user()->email)->send(new SubscriptionVerificationMail($subscriptionList, $token));
+    }
+
+
+    public function verify($token): JsonResponse
+    {
+        $subscriptionListId = decrypt($token);
+        $subscriptionList = SubscriptionList::find($subscriptionListId);
+
+        if (!$subscriptionList) {
+            return response()->json(['error' => 'Invalid verification token'], 400);
+        }
+
+        // Mark as verified
+        $subscriptionList->update(['is_verified' => true]);
+
+        return response()->json(['message' => 'Subscription verified successfully.']);
     }
 
     /**
