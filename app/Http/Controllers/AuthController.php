@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use Illuminate\Http\JsonResponse;
-use App\Http\Requests\LoginRequest;
-use Illuminate\Auth\Events\Verified;
+use App\Services\ActivityLogService;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Http\JsonResponse;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use App\Models\User;
 
 class AuthController extends Controller
 {
     protected AuthService $authService;
+    protected ActivityLogService $activityLogService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(AuthService $authService, ActivityLogService $activityLogService)
     {
         $this->authService = $authService;
+        $this->activityLogService = $activityLogService;
     }
 
     /**
@@ -25,6 +29,10 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = $this->authService->register($request->validated());
+
+        Auth::login($user);
+
+        $this->activityLogService->logActivity('User registered', $request);
 
         return response()->json([
             'status' => 'success',
@@ -35,7 +43,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle user login (Only if verified)
+     * Handle user login
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -44,6 +52,10 @@ class AuthController extends Controller
         if (isset($result['error'])) {
             return response()->json(['status' => 'error', 'message' => $result['error']], 401);
         }
+
+        Auth::login($result['user']);
+
+        $this->activityLogService->logActivity('User logged in', $request);
 
         return response()->json([
             'status' => 'success',
@@ -71,6 +83,9 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
         event(new Verified($user));
 
+
+        $this->activityLogService->logActivity('Email verified', $request);
+
         return response()->json(['message' => 'Email verified successfully.'], 200);
     }
 
@@ -84,6 +99,8 @@ class AuthController extends Controller
         }
 
         $request->user()->sendEmailVerificationNotification();
+
+        $this->activityLogService->logActivity('Resent verification email', $request);
 
         return response()->json(['message' => 'Verification email resent.'], 200);
     }
