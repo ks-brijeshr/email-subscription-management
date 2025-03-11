@@ -37,3 +37,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/subscription-lists', [SubscriptionListController::class, 'store']);
 });
+
+//Email verification for owners who create subscription list
+Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
