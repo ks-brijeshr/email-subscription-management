@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Mail\VerifyEmail;
+use Illuminate\Auth\Events\Registered;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Auth\Events\Registered;
+use App\Mail\VerifyEmail;
+use App\Models\User;
 
 class AuthService
 {
@@ -23,7 +23,7 @@ class AuthService
             'is_owner' => filter_var($validatedData['is_owner'], FILTER_VALIDATE_BOOLEAN),
         ]);
 
-        //Laravel's built-in event for email verification
+        
         event(new Registered($user));
 
         return $user;

@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\ProfileService;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
-
-
-
+use App\Services\ProfileService;
+use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
+    protected ActivityLogService $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
     /**
      * Get the authenticated user's profile.
      */
@@ -20,6 +25,8 @@ class ProfileController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
+
+        $this->activityLogService->logActivity('Visited profile');
 
         $profileService = new ProfileService($user);
         return response()->json(['user' => $profileService->getProfile()]);
@@ -43,6 +50,9 @@ class ProfileController extends Controller
         $profileService = new ProfileService($user);
         $updatedUser = $profileService->updateProfile($request->all());
 
+
+        $this->activityLogService->logActivity('Name and Email Updated', $request);
+
         return response()->json(['message' => 'Profile updated successfully', 'user' => $updatedUser]);
     }
 
@@ -62,17 +72,12 @@ class ProfileController extends Controller
         ]);
 
         $profileService = new ProfileService($user);
-        return response()->json($profileService->updatePassword($request->all()));
+        $response = $profileService->updatePassword($request->all());
 
 
+        $this->activityLogService->logActivity('Password updated', $request);
 
-
-
-
-
-
-
-
+        return response()->json($response);
     }
 
     /**
@@ -85,14 +90,11 @@ class ProfileController extends Controller
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-
-
-
-
-
         $profileService = new ProfileService($user);
-        return response()->json($profileService->generateApiKey());
+        $response = $profileService->generateApiKey();
 
+        $this->activityLogService->logActivity('Generated API key');
 
+        return response()->json($response);
     }
 }
