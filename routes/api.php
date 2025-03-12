@@ -50,6 +50,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //subscriber count in each list
     Route::get('/subscription-lists/subscribers-count', [SubscriptionListController::class, 'index']);
 
+
+    //logout
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 
