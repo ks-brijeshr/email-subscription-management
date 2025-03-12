@@ -39,6 +39,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/subscription-lists', [SubscriptionListController::class, 'index']);
     //update a specific subscription list
     Route::put('/subscription-lists/{id}', [SubscriptionListController::class, 'update']);
+    //delete a subscription list
+    Route::delete('/subscription-lists/{id}', [SubscriptionListController::class, 'destroy']);
 });
 
 
