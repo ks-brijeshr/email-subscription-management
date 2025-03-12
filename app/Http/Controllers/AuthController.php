@@ -104,4 +104,23 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Verification email resent.'], 200);
     }
+
+
+    /**
+     * Logout removes the personal access token from databse  
+     *
+     * @param Request $request
+     * @return json response
+     */
+    public function logout(Request $request)
+    {
+        $user = $request->user(); // Get authenticated user
+
+        // Revoke user's token
+        $user->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ], 200);
+    }
 }
