@@ -34,7 +34,7 @@ class SubscriptionListController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionLists();
+        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionListsWithCounts();
 
         return response()->json([
             'message' => 'Subscription lists retrieved successfully.',
@@ -215,5 +215,32 @@ class SubscriptionListController extends Controller
             'message' => 'Subscription list updated successfully.',
             'subscription_list' => $updatedSubscriptionList
         ], 200);
+    }
+
+    /**
+     * Delete the subscription list
+     *
+     * @param [type] $id
+     * @return JsonResponse
+     */
+    public function destroy($id): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Get subscription list by ID and check if the user owns it
+        $subscriptionList = SubscriptionList::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$subscriptionList) {
+            return response()->json(['error' => 'Subscription list not found or access denied'], 404);
+        }
+
+        // Delete the subscription list (cascade delete subscribers due to foreign key constraint)
+        $subscriptionList->delete();
+
+        return response()->json(['message' => 'Subscription list deleted successfully.'], 200);
     }
 }
