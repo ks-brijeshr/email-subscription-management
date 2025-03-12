@@ -17,13 +17,20 @@ class Subscriber extends Model
         'metadata'
     ];
 
-    protected $casts = [
+   
+
+    public function tags()
+    {
+        return $this->hasMany(SubscriberTag::class, 'subscriber_id');
+    }
+
         'metadata' => 'array', // Convert JSON to array
     ];
 
     /**
      * Relationship: Each subscriber belongs to a subscription list
      */
+
     public function subscriptionList()
     {
         return $this->belongsTo(SubscriptionList::class, 'list_id');
