@@ -15,7 +15,8 @@ class SubscriberController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:subscribers,email',
-            'name' => 'nullable|string'
+            'name' => 'nullable|string',
+            'metadata' => 'nullable|array' // Metadata should be an array
         ]);
 
         // Check if subscription list exists
@@ -29,6 +30,7 @@ class SubscriberController extends Controller
             'list_id' => $list_id,
             'email' => $request->email,
             'name' => $request->name,
+            'metadata' => json_encode($request->metadata), // Store metadata as JSON
             'status' => 'inactive', // Default status
             'created_at' => now(),
             'updated_at' => now()
@@ -98,4 +100,88 @@ class SubscriberController extends Controller
         ]);
     }
 
+    // 4. Get Subscriber Details
+    public function getSubscriberDetails($subscriber_id)
+    {
+        $subscriber = Subscriber::with('tags')->find($subscriber_id);
+
+        if (!$subscriber) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Subscriber not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            "success" => true,
+            "subscriber" => [
+                "id" => $subscriber->id,
+                "list_id" => $subscriber->list_id,
+                "name" => $subscriber->name,
+                "email" => $subscriber->email,
+                "tags" => $subscriber->tags->pluck('tag'), // Retrieve tag values
+                "metadata" => json_decode($subscriber->metadata) ?? (object)[], // Decode metadata JSON
+                "status" => $subscriber->status,
+                "created_at" => $subscriber->created_at->toDateTimeString(),
+                "updated_at" => $subscriber->updated_at->toDateTimeString(),
+            ]
+        ]);
+    }
+
+    // 5. Add Tags to Subscriber
+
+    public function addSubscriberTags(Request $request, $subscriber_id)
+    {
+        $request->validate([
+            'tags' => 'required|array',
+            'tags.*' => 'string|max:255',
+        ]);
+
+        $subscriber = Subscriber::find($subscriber_id);
+
+        if (!$subscriber) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Subscriber not found.'
+            ], 404);
+        }
+
+        foreach ($request->tags as $tag) {
+            $subscriber->tags()->create(['tag' => $tag]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tags added successfully.',
+            'tags' => $subscriber->tags->pluck('tag')
+        ]);
+    }
+
+    // 6. Update Subscriber Metadata
+    public function updateSubscriberMetadata(Request $request, $subscriber_id)
+    {
+        $request->validate([
+            'metadata' => 'required|array',
+        ]);
+
+        $subscriber = Subscriber::find($subscriber_id);
+        if (!$subscriber) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Subscriber not found.'
+            ], 404);
+        }
+
+        // Merge existing metadata with new data
+        $existingMetadata = json_decode($subscriber->metadata, true) ?? [];
+        $updatedMetadata = array_merge($existingMetadata, $request->metadata);
+
+        $subscriber->update(['metadata' => json_encode($updatedMetadata)]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Metadata updated successfully.',
+            'metadata' => $updatedMetadata
+        ]);
+    }
 }

@@ -59,3 +59,12 @@ Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class
 Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
 Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
 Route::post('/unsubscribe/{subscriber_id}', [SubscriberController::class, 'unsubscribeUser']);
+
+
+
+Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
+
+
+Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
+
+

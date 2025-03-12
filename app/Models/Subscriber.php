@@ -17,6 +17,15 @@ class Subscriber extends Model
         'metadata'
     ];
 
+    protected $casts = [
+        'metadata' => 'array',
+    ];
+
+    public function tags()
+    {
+        return $this->hasMany(SubscriberTag::class, 'subscriber_id');
+    }
+
     public function subscriptionList()
     {
         return $this->belongsTo(SubscriptionList::class, 'list_id');
