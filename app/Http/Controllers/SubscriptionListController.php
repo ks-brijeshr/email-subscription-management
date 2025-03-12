@@ -34,7 +34,7 @@ class SubscriptionListController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionLists();
+        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionListsWithCounts();
 
         return response()->json([
             'message' => 'Subscription lists retrieved successfully.',
