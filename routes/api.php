@@ -93,3 +93,7 @@ Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, '
 
 //Export subscribers(csv, json)
 Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::class, 'exportSubscribers']);
+
+
+//Search subscriber
+Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);

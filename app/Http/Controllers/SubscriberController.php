@@ -194,4 +194,57 @@ class SubscriberController extends Controller
             return response()->json(['error' => 'Invalid format. Use CSV or JSON.'], 400);
         }
     }
+
+    public function searchSubscribers(Request $request, $list_id)
+    {
+        // Validate that the subscription list exists
+        $subscriptionList = SubscriptionList::find($list_id);
+        if (!$subscriptionList) {
+            return response()->json([
+                "success" => false,
+                "error" => "Subscription list not found."
+            ], 404);
+        }
+
+        // Get filters from request
+        $email = $request->query('email');  // Search by email
+        $status = $request->query('status');  // Filter by status (active/inactive)
+        $tag = $request->query('tag');  // Filter by tag
+
+        // Query builder for subscribers
+        $query = Subscriber::where('list_id', $list_id)->with('tags');
+
+        if (!empty($email)) {
+            $query->where('email', 'LIKE', "%$email%");
+        }
+
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!empty($tag)) {
+            $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tag', 'LIKE', "%$tag%");
+            });
+        }
+
+        // Get results
+        $subscribers = $query->get();
+
+        // Return response
+        return response()->json([
+            "success" => true,
+            "list_name" => $subscriptionList->name,
+            "subscribers" => $subscribers->map(function ($subscriber) {
+                return [
+                    "id" => $subscriber->id,
+                    "name" => $subscriber->name,
+                    "email" => $subscriber->email,
+                    "tags" => $subscriber->tags->pluck('tag')->toArray(),
+                    "status" => $subscriber->status,
+                    "subscribed_at" => $subscriber->created_at->toDateTimeString(),
+                ];
+            })
+        ]);
+    }
 }
