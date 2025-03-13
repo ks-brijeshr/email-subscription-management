@@ -32,4 +32,52 @@ class UnsubscribeController extends Controller
             'unsubscribe_link' => $unsubscribeLink
         ]);
     }
+
+    /**
+     * Show the unsubscribe confirmation page.
+     */
+    public function showUnsubscribePage($subscriberId, $token)
+    {
+        // dd("Subscriber ID: $subscriberId", "Token: $token");
+
+        $subscriber = Subscriber::where('id', $subscriberId)
+            ->where('unsubscribe_token', $token)
+            ->first();
+
+        if (!$subscriber) {
+            abort(404, 'Invalid or expired unsubscribe link.');
+        }
+
+        return view('unsubscribe.confirm', compact('subscriber', 'token'));
+    }
+
+
+    /**
+     * Handle the unsubscribe confirmation.
+     */
+    public function confirmUnsubscribe(Request $request, $subscriberId, $token)
+    {
+        $subscriber = Subscriber::where('id', $subscriberId)
+            ->where('unsubscribe_token', $token)
+            ->first();
+
+        if (!$subscriber) {
+            abort(410, 'Invalid or expired unsubscribe link.');
+        }
+
+        // Unsubscribe the user but KEEP the token to prevent expiration issues
+        $subscriber->status = 'inactive';
+        $subscriber->save();
+
+        return redirect()->route('unsubscribe.success');
+    }
+
+
+    /**
+     * Show unsubscribe success page.
+     */
+    public function unsubscribeSuccess()
+    {
+        return view('unsubscribe.success');
+    }
 }
