@@ -10,7 +10,7 @@ use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UnsubscribeController;
 
 
 Route::get('/test', function () {
@@ -68,11 +68,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //logout
     Route::post('/logout', [AuthController::class, 'logout']);
-  
-  
-  
-  
-   //Generate and manage all api token
+
+
+
+
+    //Generate and manage all api token
     Route::post('/api-tokens/create', [ApiTokenController::class, 'generateToken']);
     Route::get('/api-tokens', [ApiTokenController::class, 'getTokens']);
     Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revokeToken']);
@@ -111,3 +111,6 @@ Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::cl
 //Search subscriber
 Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);
 
+
+//Unsubscribe link for each subscription list
+Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
