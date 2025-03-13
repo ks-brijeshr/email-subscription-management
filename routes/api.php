@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\ApiTokenController;
 
 
 Route::get('/test', function () {
@@ -79,3 +80,11 @@ Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubs
 Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
 
 
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/api-tokens/create', [ApiTokenController::class, 'generateToken']);
+    Route::get('/api-tokens', [ApiTokenController::class, 'getTokens']);
+    Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revokeToken']);
+    Route::delete('/api-tokens/all-revoke', [ApiTokenController::class, 'revokeAllTokens']);
+});
