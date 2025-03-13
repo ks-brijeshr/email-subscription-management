@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subscriber extends Model
 {
@@ -14,7 +15,8 @@ class Subscriber extends Model
         'name',
         'email',
         'status',
-        'metadata'
+        'metadata',
+        'unsubscribe_token'
     ];
 
     public function tags()
@@ -33,5 +35,13 @@ class Subscriber extends Model
     public function subscriptionList()
     {
         return $this->belongsTo(SubscriptionList::class, 'list_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($subscriber) {
+            $subscriber->unsubscribe_token = Str::random(32); //Generate random token
+        });
     }
 }

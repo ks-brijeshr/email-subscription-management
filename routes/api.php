@@ -10,7 +10,7 @@ use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UnsubscribeController;
 
 
 Route::get('/test', function () {
@@ -105,8 +105,9 @@ Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::cl
 //Search subscriber
 Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);
 
-Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
-    Route::get('/protected-api', function () {
-        return response()->json(['message' => 'You have accessed a protected API!']);
-    });
-});
+
+
+//Unsubscribe link for each subscription list
+Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
+Route::get('/unsubscribe/{subscriberId}/{token}', [UnsubscribeController::class, 'showUnsubscribePage']);
+
