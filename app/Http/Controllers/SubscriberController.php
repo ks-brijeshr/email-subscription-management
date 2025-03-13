@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
 use App\Models\SubscriptionList;
+use App\Services\SubscriberExportService;
 use Carbon\Carbon;
 
 class SubscriberController extends Controller
@@ -119,8 +120,8 @@ class SubscriberController extends Controller
                 "list_id" => $subscriber->list_id,
                 "name" => $subscriber->name,
                 "email" => $subscriber->email,
-                "tags" => $subscriber->tags->pluck('tag'), // Retrieve tag values
-                "metadata" => json_decode($subscriber->metadata) ?? (object)[], // Decode metadata JSON
+                "tags" => $subscriber->tags->pluck('tag'),
+                "metadata" => json_decode($subscriber->metadata) ?? (object)[],
                 "status" => $subscriber->status,
                 "created_at" => $subscriber->created_at->toDateTimeString(),
                 "updated_at" => $subscriber->updated_at->toDateTimeString(),
@@ -129,7 +130,6 @@ class SubscriberController extends Controller
     }
 
     // 5. Add Tags to Subscriber
-
     public function addSubscriberTags(Request $request, $subscriber_id)
     {
         $request->validate([
@@ -172,7 +172,6 @@ class SubscriberController extends Controller
             ], 404);
         }
 
-        // Merge existing metadata with new data
         $existingMetadata = json_decode($subscriber->metadata, true) ?? [];
         $updatedMetadata = array_merge($existingMetadata, $request->metadata);
 
@@ -183,5 +182,16 @@ class SubscriberController extends Controller
             'message' => 'Metadata updated successfully.',
             'metadata' => $updatedMetadata
         ]);
+    }
+
+    public function exportSubscribers($list_id, $format, SubscriberExportService $exportService)
+    {
+        if ($format === 'csv') {
+            return $exportService->exportAsCSV($list_id);
+        } elseif ($format === 'json') {
+            return $exportService->exportAsJSON($list_id);
+        } else {
+            return response()->json(['error' => 'Invalid format. Use CSV or JSON.'], 400);
+        }
     }
 }
