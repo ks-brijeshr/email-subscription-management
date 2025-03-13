@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\ActivityLogController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\SubscriptionListController;
+use App\Http\Controllers\SubscriberListController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/test', function () {
@@ -25,22 +26,35 @@ Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])-
 
 Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])->middleware('auth:sanctum');
 
-
-
+//Send reset password link via email
 Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
+
+//Reset password
 Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword']);
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    //Get profile
     Route::get('/profile', [ProfileController::class, 'show']);
+
+    //Update name and email
     Route::put('/profile/update', [ProfileController::class, 'update']);
+
+    //Update password
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword']);
+
+    //Generate api key
     Route::post('/profile/generate-api-key', [ProfileController::class, 'generateApiKey']);
+
+    //View activity history
     Route::get('/activity-logs', [ActivityLogController::class, 'index']);
 
+    //Create subscription list
     Route::post('/subscription-list/create', [SubscriptionListController::class, 'store']);
+
     //Get all subscription lists
     Route::get('/subscription-lists', [SubscriptionListController::class, 'index']);
+
     //update a specific subscription list
     Route::put('/subscription-lists/{id}', [SubscriptionListController::class, 'update']);
 
@@ -54,37 +68,46 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //logout
     Route::post('/logout', [AuthController::class, 'logout']);
-});
-
-
-
-//Email verification for owners who create subscription list
-Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
-
-
-
-Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
-
-
-
-Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
-Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
-Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
-Route::post('/unsubscribe/{subscriber_id}', [SubscriberController::class, 'unsubscribeUser']);
-
-
-
-Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
-
-
-Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
-
-
-
-
-Route::middleware('auth:sanctum')->group(function () {
+  
+  
+  
+  
+   //Generate and manage all api token
     Route::post('/api-tokens/create', [ApiTokenController::class, 'generateToken']);
     Route::get('/api-tokens', [ApiTokenController::class, 'getTokens']);
     Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revokeToken']);
     Route::delete('/api-tokens/all-revoke', [ApiTokenController::class, 'revokeAllTokens']);
 });
+
+
+//Email verification for owners who create subscription list
+Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
+
+//Get subscriber by list
+Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
+
+
+//Add subscriber
+Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
+
+//Get all subscriber
+Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
+
+//Update subscriber status (active, inactive)
+Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
+
+//Get subscriber details
+Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
+
+//Add subscriber tags
+Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
+
+//Export subscribers(csv, json)
+Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::class, 'exportSubscribers']);
+
+
+
+
+//Search subscriber
+Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);
+

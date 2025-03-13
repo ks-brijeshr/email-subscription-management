@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
 use App\Models\SubscriptionList;
+use App\Services\SubscriberExportService;
 use Carbon\Carbon;
 
 class SubscriberController extends Controller
@@ -119,8 +120,8 @@ class SubscriberController extends Controller
                 "list_id" => $subscriber->list_id,
                 "name" => $subscriber->name,
                 "email" => $subscriber->email,
-                "tags" => $subscriber->tags->pluck('tag'), // Retrieve tag values
-                "metadata" => json_decode($subscriber->metadata) ?? (object)[], // Decode metadata JSON
+                "tags" => $subscriber->tags->pluck('tag'),
+                "metadata" => json_decode($subscriber->metadata) ?? (object)[],
                 "status" => $subscriber->status,
                 "created_at" => $subscriber->created_at->toDateTimeString(),
                 "updated_at" => $subscriber->updated_at->toDateTimeString(),
@@ -129,7 +130,6 @@ class SubscriberController extends Controller
     }
 
     // 5. Add Tags to Subscriber
-
     public function addSubscriberTags(Request $request, $subscriber_id)
     {
         $request->validate([
@@ -172,7 +172,6 @@ class SubscriberController extends Controller
             ], 404);
         }
 
-        // Merge existing metadata with new data
         $existingMetadata = json_decode($subscriber->metadata, true) ?? [];
         $updatedMetadata = array_merge($existingMetadata, $request->metadata);
 
@@ -182,6 +181,70 @@ class SubscriberController extends Controller
             'success' => true,
             'message' => 'Metadata updated successfully.',
             'metadata' => $updatedMetadata
+        ]);
+    }
+
+    public function exportSubscribers($list_id, $format, SubscriberExportService $exportService)
+    {
+        if ($format === 'csv') {
+            return $exportService->exportAsCSV($list_id);
+        } elseif ($format === 'json') {
+            return $exportService->exportAsJSON($list_id);
+        } else {
+            return response()->json(['error' => 'Invalid format. Use CSV or JSON.'], 400);
+        }
+    }
+
+    public function searchSubscribers(Request $request, $list_id)
+    {
+        // Validate that the subscription list exists
+        $subscriptionList = SubscriptionList::find($list_id);
+        if (!$subscriptionList) {
+            return response()->json([
+                "success" => false,
+                "error" => "Subscription list not found."
+            ], 404);
+        }
+
+        // Get filters from request
+        $email = $request->query('email');  // Search by email
+        $status = $request->query('status');  // Filter by status (active/inactive)
+        $tag = $request->query('tag');  // Filter by tag
+
+        // Query builder for subscribers
+        $query = Subscriber::where('list_id', $list_id)->with('tags');
+
+        if (!empty($email)) {
+            $query->where('email', 'LIKE', "%$email%");
+        }
+
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!empty($tag)) {
+            $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tag', 'LIKE', "%$tag%");
+            });
+        }
+
+        // Get results
+        $subscribers = $query->get();
+
+        // Return response
+        return response()->json([
+            "success" => true,
+            "list_name" => $subscriptionList->name,
+            "subscribers" => $subscribers->map(function ($subscriber) {
+                return [
+                    "id" => $subscriber->id,
+                    "name" => $subscriber->name,
+                    "email" => $subscriber->email,
+                    "tags" => $subscriber->tags->pluck('tag')->toArray(),
+                    "status" => $subscriber->status,
+                    "subscribed_at" => $subscriber->created_at->toDateTimeString(),
+                ];
+            })
         ]);
     }
 }
