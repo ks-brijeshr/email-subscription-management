@@ -6,9 +6,11 @@ use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/test', function () {
@@ -66,6 +68,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //logout
     Route::post('/logout', [AuthController::class, 'logout']);
+  
+  
+  
+  
+   //Generate and manage all api token
+    Route::post('/api-tokens/create', [ApiTokenController::class, 'generateToken']);
+    Route::get('/api-tokens', [ApiTokenController::class, 'getTokens']);
+    Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revokeToken']);
+    Route::delete('/api-tokens/all-revoke', [ApiTokenController::class, 'revokeAllTokens']);
 });
 
 
@@ -95,5 +106,8 @@ Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, '
 Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::class, 'exportSubscribers']);
 
 
+
+
 //Search subscriber
 Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);
+
