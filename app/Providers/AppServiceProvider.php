@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\RateLimitMiddleware;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,8 +24,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+
     public function boot(): void
     {
-        Schema::defaultStringLength(191); // Fix for older MySQL versions
+        Route::aliasMiddleware('rate.limit', RateLimitMiddleware::class);
     }
 }

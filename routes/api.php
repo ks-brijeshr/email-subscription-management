@@ -86,18 +86,12 @@ Route::get('/subscription-list/verify/{token}', [SubscriptionListController::cla
 //Get subscriber by list
 Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
 
-
-//Add subscriber
-Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
-
-//Get all subscriber
-Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
-
-//Update subscriber status (active, inactive)
-Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
-
-//Get subscriber details
-Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
+Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
+    Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
+    Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
+    Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
+    Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
+});
 
 //Add subscriber tags
 Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
@@ -112,6 +106,8 @@ Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::cl
 Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'searchSubscribers']);
 
 
+
 //Unsubscribe link for each subscription list
 Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
 Route::get('/unsubscribe/{subscriberId}/{token}', [UnsubscribeController::class, 'showUnsubscribePage']);
+
