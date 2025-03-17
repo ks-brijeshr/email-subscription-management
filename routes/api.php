@@ -5,6 +5,7 @@ use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
@@ -115,3 +116,6 @@ Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLo
 
 //Email verification statistics (how many passed/failed).
 Route::get('/email-verification-stats', [EmailVerificationStatsController::class, 'getEmailVerificationStats']);
+
+Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
+

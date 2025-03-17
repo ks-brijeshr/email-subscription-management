@@ -4,11 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Subscriber;
 use App\Models\UnsubscribeLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class UnsubscribeController extends Controller
 {
+
+    public function unsubscribe(Request $request)
+    {
+        $email = $request->email;
+        $listId = $request->list_id;
+
+        // Insert into `unsubscribe_logs`
+        $log = UnsubscribeLog::create([
+            'email' => $email,
+            'list_id' => $listId,
+            'recorded_date' => Carbon::now()->toDateString(), // Current Date
+        ]);
+
+        // Increment count for today's unsubscriptions
+        UnsubscribeLog::where('recorded_date', Carbon::now()->toDateString())
+            ->increment('unsubscribed_count');
+
+        return response()->json([
+            'message' => 'User unsubscribed successfully!',
+        ]);
+    }
+
+
     /**
      * Get the unsubscribe link for a subscriber.
      */
