@@ -5,6 +5,7 @@ use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
@@ -110,3 +111,5 @@ Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class,
 //Unsubscribe link for each subscription list
 Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
 Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);
+
+Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
