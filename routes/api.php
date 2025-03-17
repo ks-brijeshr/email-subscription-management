@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnsubscribeController;
+use App\Http\Controllers\EmailVerificationStatsController;
 
 
 Route::get('/test', function () {
@@ -112,4 +113,9 @@ Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class,
 Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
 Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);
 
+
+//Email verification statistics (how many passed/failed).
+Route::get('/email-verification-stats', [EmailVerificationStatsController::class, 'getEmailVerificationStats']);
+
 Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
+
