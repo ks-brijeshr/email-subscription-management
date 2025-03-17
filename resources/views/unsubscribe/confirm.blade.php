@@ -15,11 +15,11 @@
         <form action="{{ route('unsubscribe.confirm.post', ['subscriberId' => $subscriber->id, 'token' => $token]) }}"
             method="POST">
             @csrf
+            <label for="reason">Reason (Optional):</label>
+            <input type="text" name="reason" id="reason" class="form-control mb-3" placeholder="Optional reason">
             <button type="submit" class="btn btn-danger">Yes, Unsubscribe Me</button>
             <a href="/" class="btn btn-secondary">No, Keep Me Subscribed</a>
         </form>
-
-
     </div>
 </body>
 

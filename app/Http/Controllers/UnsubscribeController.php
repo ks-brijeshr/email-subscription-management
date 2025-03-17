@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscriber;
+use App\Models\UnsubscribeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,7 @@ class UnsubscribeController extends Controller
             $subscriber->save();
         }
 
-        $unsubscribeLink = url("/api/unsubscribe/{$subscriber->id}/{$subscriber->unsubscribe_token}");
+        $unsubscribeLink = url("/unsubscribe/{$subscriber->id}/{$subscriber->unsubscribe_token}");
 
         return response()->json([
             'message' => 'Unsubscribe link generated successfully',
@@ -38,8 +39,6 @@ class UnsubscribeController extends Controller
      */
     public function showUnsubscribePage($subscriberId, $token)
     {
-        // dd("Subscriber ID: $subscriberId", "Token: $token");
-
         $subscriber = Subscriber::where('id', $subscriberId)
             ->where('unsubscribe_token', $token)
             ->first();
@@ -65,13 +64,23 @@ class UnsubscribeController extends Controller
             abort(410, 'Invalid or expired unsubscribe link.');
         }
 
-        // Unsubscribe the user but KEEP the token to prevent expiration issues
+        // Store reason if provided
+        $reason = $request->input('reason', null);
+
+        // Log the unsubscribe action
+        UnsubscribeLog::create([
+            'list_id'       => $subscriber->list_id,
+            'subscriber_id' => $subscriber->id,
+            'unsubscribed_at' => now(),
+            'reason'        => $reason,
+        ]);
+
+        // Mark subscriber as inactive
         $subscriber->status = 'inactive';
         $subscriber->save();
 
         return redirect()->route('unsubscribe.success');
     }
-
 
     /**
      * Show unsubscribe success page.
@@ -79,5 +88,18 @@ class UnsubscribeController extends Controller
     public function unsubscribeSuccess()
     {
         return view('unsubscribe.success');
+    }
+
+    /**
+     * Get unsubscribe logs.
+     */
+    public function getUnsubscribeLogs()
+    {
+        $logs = UnsubscribeLog::with(['subscriber', 'subscriptionList'])->latest()->get();
+
+        return response()->json([
+            'message' => 'Unsubscribe logs retrieved successfully',
+            'data'    => $logs
+        ]);
     }
 }
