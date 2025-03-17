@@ -44,4 +44,9 @@ class Subscriber extends Model
             $subscriber->unsubscribe_token = Str::random(32); //Generate random token
         });
     }
+
+    public function unsubscribeLogs()
+    {
+        return $this->hasMany(UnsubscribeLog::class);
+    }
 }

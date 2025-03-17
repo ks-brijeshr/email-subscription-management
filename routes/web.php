@@ -15,3 +15,6 @@ Route::get('/unsubscribe/{subscriberId}/{token}', [UnsubscribeController::class,
 
 Route::post('/unsubscribe/{subscriberId}/{token}/confirm', [UnsubscribeController::class, 'confirmUnsubscribe'])
     ->name('unsubscribe.confirm.post');
+
+Route::get('/unsubscribe/success', [UnsubscribeController::class, 'unsubscribeSuccess'])
+    ->name('unsubscribe.success');
