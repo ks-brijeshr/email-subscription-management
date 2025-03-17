@@ -3,11 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Auth\Events\Registered;
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
 use App\Models\User;
+use App\Models\EmailVerificationLog;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -23,13 +21,17 @@ class AuthService
             'is_owner' => filter_var($validatedData['is_owner'], FILTER_VALIDATE_BOOLEAN),
         ]);
 
-        
         event(new Registered($user));
+
+        // Log as "failed" (unverified user)
+        EmailVerificationLog::create([
+            'user_id' => $user->id,
+            'status' => 'failed',
+            'attempted_at' => now(),
+        ]);
 
         return $user;
     }
-
-
 
 
     /**
@@ -43,7 +45,7 @@ class AuthService
             return ['error' => 'Invalid credentials'];
         }
 
-        //Restrict login if email is not verified
+        // Restrict login if email is not verified
         if (!$user->hasVerifiedEmail()) {
             return ['error' => 'Your email is not verified. Please check your email for verification.'];
         }
@@ -54,5 +56,19 @@ class AuthService
             'token' => $token,
             'user' => $user
         ];
+    }
+
+    /**
+     * Mark email verification as passed
+     */
+    public function markEmailAsVerified(User $user)
+    {
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+
+            // Update verification log to passed
+            EmailVerificationLog::where('user_id', $user->id)
+                ->update(['status' => 'passed']);
+        }
     }
 }
