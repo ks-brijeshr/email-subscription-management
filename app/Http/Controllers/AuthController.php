@@ -7,7 +7,6 @@ use App\Models\DailySignup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginRequest;
