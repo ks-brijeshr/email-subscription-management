@@ -10,6 +10,8 @@ use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SignupAnalyticsController;
+use App\Http\Controllers\SubscriptionAnalyticsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnsubscribeController;
 
@@ -112,4 +114,11 @@ Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class,
 Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
 Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);
 
+//Unsubscribe trends
 Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
+
+//Subscription analytics
+Route::get('/subscription-analytics', [SubscriptionAnalyticsController::class, 'getSubscriptionAnalytics']);
+
+//Daily signups
+Route::get('/daily-signups', [SignupAnalyticsController::class, 'index']);

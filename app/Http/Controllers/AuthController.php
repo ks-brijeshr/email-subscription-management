@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ActivityLogService;
 use App\Http\Requests\RegisterRequest;
+use App\Services\ActivityLogService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
+use App\Models\DailySignup;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
