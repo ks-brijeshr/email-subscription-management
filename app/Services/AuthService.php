@@ -2,48 +2,42 @@
 
 namespace App\Services;
 
-use Illuminate\Auth\Events\Registered;
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
-use App\Models\DailySignup;
-use Carbon\Carbon;
-
 use App\Models\User;
 use App\Models\BlockedIp;
+use App\Models\DailySignup;
 use App\Models\FailedLogin;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\EmailVerificationLog;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
+
 
 
 class AuthService
 {
     const MAX_FAILED_ATTEMPTS = 5; // Set limit before blocking
     const BLOCK_DURATION = 1; // Minutes to block
+
     /**
      * Handle user registration
      */
-
-    
     public function register(array $data)
     {
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'is_owner' => filter_var($data['is_owner'], FILTER_VALIDATE_BOOLEAN),
         ]);
 
-    
+
         // Track daily signups
         $date = Carbon::today()->toDateString();
         $signup = DailySignup::where('date', $date)->first();
-    
+
         if ($signup) {
             $signup->increment('count'); // Increase count if record exists
         } else {
@@ -52,8 +46,6 @@ class AuthService
                 'count' => 1
             ]);
         }
-    
-
 
         event(new Registered($user));
 
@@ -67,7 +59,7 @@ class AuthService
 
         return $user;
     }
-    
+
 
 
     /**
