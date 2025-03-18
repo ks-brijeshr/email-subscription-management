@@ -52,28 +52,14 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $result = $this->authService->login($request->validated());
-
-        if (isset($result['error'])) {
-            return response()->json(['status' => 'error', 'message' => $result['error']], 401);
-        }
-
-        Auth::login($result['user']);
-
-        $this->activityLogService->logActivity('User logged in', $request);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Login successful',
-            'token' => $result['token'],
-            'user' => $result['user']
-        ], 200);
+        //Directly return the JSON response from AuthService
+        return $this->authService->login($request->validated());
     }
 
     /**
      * Handle email verification when user clicks the verify email link 
      */
-    public function verifyEmail(Request $request, $id, $hash)
+    public function verifyEmail(Request $request, $id, $hash): JsonResponse
     {
         $user = User::findOrFail($id);
 
@@ -99,11 +85,10 @@ class AuthController extends Controller
         return response()->json(['message' => 'Email verified successfully.'], 200);
     }
 
-
     /**
      * Resend email verification link
      */
-    public function resendVerificationEmail(Request $request)
+    public function resendVerificationEmail(Request $request): JsonResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return response()->json(['message' => 'Email already verified.'], 400);
@@ -116,14 +101,13 @@ class AuthController extends Controller
         return response()->json(['message' => 'Verification email resent.'], 200);
     }
 
-
     /**
      * Logout removes the personal access token from databse  
      *
      * @param Request $request
-     * @return json response
+     * @return json response  
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $user = $request->user(); // Get authenticated user
 

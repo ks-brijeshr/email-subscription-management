@@ -15,7 +15,7 @@ use App\Http\Controllers\SubscriptionAnalyticsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnsubscribeController;
 use App\Http\Controllers\EmailVerificationStatsController;
-
+use App\Http\Controllers\SecurityController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -24,6 +24,15 @@ Route::get('/test', function () {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+//manually get block ips , block/unblock the ip
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/blocked-ips', [SecurityController::class, 'getBlockedIPs']);
+    Route::post('/block-ip', [SecurityController::class, 'blockIP']);
+    Route::post('/unblock-ip', [SecurityController::class, 'unblockIP']);
+});
+
+
 
 //verify the users email after register (API response)
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
@@ -128,4 +137,3 @@ Route::get('/email-verification-stats', [EmailVerificationStatsController::class
 
 //Unsubscribe trends
 Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
-
