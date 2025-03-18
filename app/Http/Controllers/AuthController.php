@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Log;
+use App\Models\DailySignup;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\LoginRequest;
+use App\Models\EmailVerificationLog;
 use App\Services\ActivityLogService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\JsonResponse;
-use App\Models\DailySignup;
-use App\Services\AuthService;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Http\Requests\RegisterRequest;
+
 
 class AuthController extends Controller
 {
@@ -86,11 +89,17 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
         event(new Verified($user));
 
+        // Log email verification as "passed"
+        EmailVerificationLog::updateOrCreate(
+            ['user_id' => $user->id],
+            ['status' => 'passed', 'attempted_at' => now()]
+        );
 
         $this->activityLogService->logActivity('Email verified', $request);
 
         return response()->json(['message' => 'Email verified successfully.'], 200);
     }
+
 
     /**
      * Resend email verification link
