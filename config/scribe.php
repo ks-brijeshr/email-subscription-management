@@ -1,8 +1,10 @@
 <?php
 
-use Knuckles\Scribe\Extracting\Strategies;
-use Knuckles\Scribe\Config\Defaults;
 use Knuckles\Scribe\Config\AuthIn;
+use Knuckles\Scribe\Config\Defaults;
+use Knuckles\Scribe\Extracting\Strategies;
+use Knuckles\Scribe\Extracting\Strategies\StaticData;
+use Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls;
 use function Knuckles\Scribe\Config\{removeStrategies, configureStrategy};
 
 // Only the most common configs are shown. See the https://scribe.knuckles.wtf/laravel/reference/config for all.
@@ -211,7 +213,7 @@ return [
         ],
         'headers' => [
             ...Defaults::HEADERS_STRATEGIES,
-            Strategies\StaticData::withSettings(data: [
+            StaticData::withSettings(data: [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ]),
@@ -227,7 +229,7 @@ return [
         ],
         'responses' => configureStrategy(
             Defaults::RESPONSES_STRATEGIES,
-            Strategies\Responses\ResponseCalls::withSettings(
+            ResponseCalls::withSettings(
                 only: ['GET *'],
                 // Recommended: disable debug mode in response calls to avoid error stack traces in responses
                 config: [
