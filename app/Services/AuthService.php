@@ -3,23 +3,46 @@
 namespace App\Services;
 
 use Illuminate\Auth\Events\Registered;
+use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+use App\Models\DailySignup;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\EmailVerificationLog;
 use Illuminate\Support\Facades\Hash;
+
 
 class AuthService
 {
     /**
      * Handle user registration
      */
-    public function register(array $validatedData): User
+
+    
+    public function register(array $data)
     {
         $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'is_owner' => filter_var($validatedData['is_owner'], FILTER_VALIDATE_BOOLEAN),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
         ]);
+
+    
+        // Track daily signups
+        $date = Carbon::today()->toDateString();
+        $signup = DailySignup::where('date', $date)->first();
+    
+        if ($signup) {
+            $signup->increment('count'); // Increase count if record exists
+        } else {
+            DailySignup::create([
+                'date' => $date,
+                'count' => 1
+            ]);
+        }
+    
+
 
         event(new Registered($user));
 
@@ -30,8 +53,10 @@ class AuthService
             'attempted_at' => now(),
         ]);
 
+
         return $user;
     }
+    
 
 
     /**

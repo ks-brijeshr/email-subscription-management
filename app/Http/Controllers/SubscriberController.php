@@ -3,21 +3,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SubscriberExportService;
+use App\Models\SubscriptionAnalytics;
+use Illuminate\Support\Facades\DB;
+use App\Models\SubscriptionList;
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
-use App\Models\SubscriptionList;
-use App\Services\SubscriberExportService;
 use Carbon\Carbon;
 
 class SubscriberController extends Controller
 {
-    // 1. Add Subscriber to a List
+    // 1. Add Subscriber to a List   
     public function addSubscriber(Request $request, $list_id)
     {
         $request->validate([
-            'email' => 'required|email|unique:subscribers,email',
+            'email' => 'required|email',
             'name' => 'nullable|string',
-            'metadata' => 'nullable|array' // Metadata should be an array
+            'metadata' => 'nullable|array' 
         ]);
 
         // Check if subscription list exists
@@ -26,18 +28,36 @@ class SubscriberController extends Controller
             return response()->json(['error' => 'Subscription list not found.'], 404);
         }
 
-        // Create subscriber
+        // Check if subscriber already exists in the list
+        $existingSubscriber = Subscriber::where('list_id', $list_id)
+            ->where('email', $request->email)
+            ->first();
+
+        if ($existingSubscriber) {
+            return response()->json(['error' => 'Subscriber already exists in this list.'], 409);
+        }
+
+        // Create new subscriber
         $subscriber = Subscriber::create([
             'list_id' => $list_id,
             'email' => $request->email,
             'name' => $request->name,
-            'metadata' => json_encode($request->metadata), // Store metadata as JSON
-            'status' => 'inactive', // Default status
+            'metadata' => json_encode($request->metadata), 
+            'status' => 'inactive', 
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
+        // Update subscription analytics
+        $today = now()->toDateString();
+        SubscriptionAnalytics::updateOrCreate(
+            ['list_id' => $list_id, 'recorded_date' => $today],
+            ['new_subscribers' => DB::raw('new_subscribers + 1')] 
+        );
+
         return response()->json([
+            "success" => true,
+            "message" => "Subscriber added successfully!",
             "logs" => [
                 "subscriber_id" => $subscriber->id,
                 "email" => $subscriber->email,
