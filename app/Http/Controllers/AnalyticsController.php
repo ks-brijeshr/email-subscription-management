@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\UnsubscribeLog;
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 

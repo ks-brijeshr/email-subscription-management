@@ -29,7 +29,7 @@ class RateLimitMiddleware
             return response()->json(['message' => 'Too many requests. Try again later.'], 429);
         }
 
-        RateLimiter::hit($key, 60); // Limit: 5 requests per 60 seconds
+        RateLimiter::hit($key, 60); // Limit: 10 requests per 60 seconds
         return $next($request);
     }
 
