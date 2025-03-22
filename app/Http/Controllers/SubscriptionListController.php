@@ -46,11 +46,13 @@ class SubscriptionListController extends Controller
      */
     public function store(SubscriptionListRequest $request): JsonResponse
     {
-        if (!Auth::check()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $user = Auth::user();
+
+        // Check if the authenticated user is an owner
+        if (!$user || !$user->is_owner) {
+            return response()->json(['error' => 'Unauthorized. Only owners can create subscription lists.'], 403);
         }
 
-        $user = Auth::user();
         Log::info('User creating subscription list:', ['user_id' => $user->id]);
 
         // Only check email restrictions if an email is provided
@@ -67,7 +69,7 @@ class SubscriptionListController extends Controller
             'require_email_verification' => $request->require_email_verification ?? true,
             'check_domain_existence' => $request->check_domain_existence ?? true,
             'verify_dns_records' => $request->verify_dns_records ?? true,
-            'is_verified' => false,         // Subscription is inactive until email verification
+            'is_verified' => false, // Subscription is inactive until email verification
         ]);
 
         // Send verification email
