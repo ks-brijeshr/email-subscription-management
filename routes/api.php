@@ -1,20 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ApiTokenController;
-use App\Http\Controllers\SecurityController;
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\UnsubscribeController;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\SubscriberListController;
-use App\Http\Controllers\SignupAnalyticsController;
-use App\Http\Controllers\SubscriptionListController;
-use App\Http\Controllers\SubscriptionAnalyticsController;
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationStatsController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\SignupAnalyticsController;
+use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\SubscriberListController;
+use App\Http\Controllers\SubscriptionAnalyticsController;
+use App\Http\Controllers\SubscriptionListController;
+use App\Http\Controllers\UnsubscribeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -75,12 +75,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-
     //Generate and manage all api token
-    Route::post('/api-tokens/create', [ApiTokenController::class, 'generateToken']);
-    Route::get('/api-tokens', [ApiTokenController::class, 'getTokens']);
-    Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revokeToken']);
-    Route::delete('/api-tokens/all-revoke', [ApiTokenController::class, 'revokeAllTokens']);
+    Route::post('/api-tokens/create', [ApiTokenController::class, 'store']);
+    Route::get('/api-tokens', [ApiTokenController::class, 'index']);
+    Route::delete('/tokens/{tokenId}', [ApiTokenController::class, 'revoke']);
 
 
 
@@ -89,6 +87,34 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/block-ip', [SecurityController::class, 'blockIP']);
     Route::post('/unblock-ip', [SecurityController::class, 'unblockIP']);
 });
+
+
+
+// Secure API routes using 'auth.api_token' middleware
+Route::middleware('auth.api_token')->group(function () {
+    // Subscriber Management APIs
+    Route::get('/api-auth/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
+    Route::post('/api-auth/subscribers/{list_id}', [SubscriberController::class, 'addSubscriber'])->middleware('owner');
+    Route::get('/api-auth/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails'])->middleware('owner');
+    Route::put('/api-auth/susbcriber/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus'])->middleware('owner');
+
+    // Email Validation APIs
+    // Route::get('/email-validation/business/{email}', [EmailValidationController::class, 'checkBusinessEmail']);
+    // Route::get('/email-validation/temporary/{email}', [EmailValidationController::class, 'checkTemporaryEmail']);
+    // Route::get('/email-validation/blacklist/{email}', [EmailValidationController::class, 'checkBlacklistedEmail']);
+    // Route::get('/email-validation/dns/{domain}', [EmailValidationController::class, 'checkDNSRecords']);
+    // Route::get('/email-validation/subscribed/{email}', [EmailValidationController::class, 'checkSubscribed']);
+
+
+    // Secure API routes for Subscription List
+    Route::get('/api-auth/subscription-lists', [SubscriptionListController::class, 'index']);
+    Route::get('/api-auth/subscription-lists/subscribers-count', [SubscriptionListController::class, 'index']);
+    Route::post('/api-auth/subscription-list/create', [SubscriptionListController::class, 'store'])->middleware('owner');
+    Route::put('/api-auth/subscription-lists/{id}', [SubscriptionListController::class, 'update'])->middleware('owner');
+    Route::delete('/api-auth/subscription-lists/{id}', [SubscriptionListController::class, 'destroy'])->middleware('owner');
+});
+
+
 
 
 //Email verification for owners who create subscription list
@@ -109,8 +135,6 @@ Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, '
 
 //Export subscribers(csv, json)
 Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::class, 'exportSubscribers']);
-
-
 
 
 //Search subscriber
