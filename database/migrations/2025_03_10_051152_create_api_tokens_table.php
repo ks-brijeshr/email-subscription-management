@@ -4,30 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateApiTokensTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('api_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');                 // Token name (e.g., "My API Token")
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable(); // Store token abilities
-            $table->timestamp('last_used_at')->nullable();
+            $table->string('name');
+            $table->string('token')->unique();
+            $table->boolean('is_active')->default(true);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('api_tokens');
     }
-};
+}

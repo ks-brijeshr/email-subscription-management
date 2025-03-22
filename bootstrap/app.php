@@ -12,11 +12,15 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php'
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Global Middleware
+        $middleware->append(\App\Http\Middleware\RateLimitMiddleware::class);
+
+        // Route Middleware
+        $middleware->alias([
+            'auth.api_token' => \App\Http\Middleware\AuthenticateApiToken::class,
+            'owner' => \App\Http\Middleware\OwnerMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
-$app->middleware([
-    \App\Http\Middleware\RateLimitMiddleware::class,
-]);

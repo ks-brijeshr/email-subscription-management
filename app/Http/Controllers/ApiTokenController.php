@@ -2,99 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\User;
 use App\Models\ApiToken;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ApiTokenController extends Controller
 {
-    /**
-     * Generate a new API token.
-     */
-    public function generateToken(Request $request)
+    public function index()
+    {
+        $tokens = ApiToken::where('user_id', Auth::id())->get();
+
+        return response()->json(['tokens' => $tokens]);
+    }
+
+
+    public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'abilities' => 'array',
-            'abilities.*' => 'string',
+            'name' => 'required|string',
             'expires_at' => 'nullable|date',
         ]);
 
+        // Get authenticated user
         $user = Auth::user();
 
-        // Generate a random token
-        $plainTextToken = Str::random(64);
+        if (!$user) {
+            return response()->json([
+                'error' => 'Unauthorized: User not authenticated.'
+            ], 401);
+        }
 
-        // Store in database directly
+        // Generate new token
+        $plainToken = Str::random(60);
+        $hashedToken = hash('sha256', $plainToken);
+
+        // Save token in database
         $token = ApiToken::create([
             'user_id' => $user->id,
             'name' => $request->name,
-            'token' => hash('sha256', $plainTextToken), // Store hashed token for security
-            'abilities' => json_encode($request->input('abilities', ['*'])), // Store as JSON
-            'expires_at' => $request->expires_at,
+            'token' => $hashedToken,
+            'expires_at' => $request->expires_at ?? now()->addMonth(),
         ]);
 
         return response()->json([
-            'message' => 'API token generated successfully.',
-            'token' => $plainTextToken, // Return plain text token for use
-            'token_id' => $token->id
-        ], 201);
-    }
-
-    /**
-     * Get all tokens of the authenticated user.
-     */
-    public function getTokens()
-    {
-        $user = Auth::user();
-
-        // Fetch tokens directly from the database
-        $tokens = ApiToken::where('user_id', $user->id)->get()->map(function ($token) {
-            return [
-                'id' => $token->id,
-                'name' => $token->name,
-                'token_last_digits' => substr($token->token, -4),
-                'abilities' => json_decode($token->abilities, true),
-                'expires_at' => $token->expires_at,
-                'created_at' => $token->created_at
-            ];
-        });
-
-        return response()->json([
-            'tokens' => $tokens,
+            'token' => $plainToken,
+            'message' => 'API Token generated successfully.'
         ]);
     }
 
-    /**
-     * Revoke a specific token.
-     */
-    public function revokeToken($tokenId)
+
+    public function revoke($id)
     {
-        $user = Auth::user();
-
-        // Find and delete the token directly
-        $token = ApiToken::where('id', $tokenId)->where('user_id', $user->id)->first();
-
-        if (!$token) {
-            return response()->json(['message' => 'Token not found.'], 404);
+        $token = ApiToken::where('user_id', Auth::id())->where('id', $id)->first();
+        if ($token) {
+            $token->delete();
+            return response()->json(['message' => 'API Token revoked successfully.']);
         }
-
-        $token->delete();
-
-        return response()->json(['message' => 'Token revoked successfully.']);
-    }
-
-    /**
-     * Revoke all API tokens of the authenticated user.
-     */
-    public function revokeAllTokens()
-    {
-        $user = Auth::user();
-
-        // Delete all tokens directly from the database
-        ApiToken::where('user_id', $user->id)->delete();
-
-        return response()->json(['message' => 'All API tokens revoked.']);
+        return response()->json(['message' => 'Token not found.'], 404);
     }
 }
