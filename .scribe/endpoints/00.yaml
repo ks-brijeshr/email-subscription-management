@@ -39,7 +39,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -100,7 +100,7 @@ endpoints:
         name: is_owner
         description: ''
         required: false
-        example: '1'
+        example: 'true'
         type: string
         enumValues:
           - 'true'
@@ -114,14 +114,14 @@ endpoints:
       name: vmqeopfuudtdsufvyvddq
       email: kunde.eloisa@example.com
       password: '4[*UyPJ"}6'
-      is_owner: '1'
+      is_owner: 'true'
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -177,140 +177,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/blocked-ips
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get all blocked IPs'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: '{"status":"success","data":[{"id":1,"ip_address":"127.0.0.1","reason":"Too many failed login attempts","blocked_at":"2025-03-18 06:39:55","blocked_by":1,"created_at":"2025-03-18T06:39:55.000000Z","updated_at":"2025-03-18T06:39:55.000000Z"},{"id":3,"ip_address":"192.168.1.101","reason":"Manually blocked","blocked_at":"2025-03-18 06:50:18","blocked_by":3,"created_at":"2025-03-18T06:50:18.000000Z","updated_at":"2025-03-18T06:50:18.000000Z"}]}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/block-ip
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Manually block an IP'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      ip_address:
-        name: ip_address
-        description: 'Must be a valid IP address.'
-        required: true
-        example: 64.52.10.134
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      ip_address: 64.52.10.134
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/unblock-ip
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Unblock an IP'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      ip_address:
-        name: ip_address
-        description: 'Must be a valid IP address.'
-        required: true
-        example: 64.52.10.134
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      ip_address: 64.52.10.134
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -378,7 +245,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -412,7 +279,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -457,7 +324,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -524,7 +391,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -556,7 +423,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '{"user":{"id":3,"name":"brijesh patel","email":"brijeshpatel@gmail.com","email_verified_at":"2025-03-13T05:22:00.000000Z","is_owner":1,"api_token":null,"created_at":"2025-03-13T05:21:50.000000Z","updated_at":"2025-03-13T05:22:00.000000Z"}}'
+        content: '{"user":{"id":3,"name":"brijesh patel","email":"brijeshrupavatiya@gmail.com","email_verified_at":"2025-03-24T06:22:25.000000Z","is_owner":1,"api_token":null,"created_at":"2025-03-24T06:22:03.000000Z","updated_at":"2025-03-24T06:22:25.000000Z"}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -567,7 +434,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -622,7 +489,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -678,7 +545,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -712,7 +579,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -744,7 +611,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '{"status":"success","activity_logs":[{"id":10,"user_id":3,"action":"Visited profile","ip_address":"127.0.0.1","user_agent":"PostmanRuntime\/7.37.3","created_at":"2025-03-13T05:23:39.000000Z","updated_at":"2025-03-13T05:23:39.000000Z"},{"id":9,"user_id":3,"action":"User logged in","ip_address":"127.0.0.1","user_agent":"PostmanRuntime\/7.37.3","created_at":"2025-03-13T05:22:26.000000Z","updated_at":"2025-03-13T05:22:26.000000Z"},{"id":8,"user_id":3,"action":"User registered","ip_address":"127.0.0.1","user_agent":"PostmanRuntime\/7.37.3","created_at":"2025-03-13T05:21:54.000000Z","updated_at":"2025-03-13T05:21:54.000000Z"}]}'
+        content: '{"status":"success","activity_logs":[{"id":3,"user_id":3,"action":"User registered","ip_address":"127.0.0.1","user_agent":"PostmanRuntime\/7.43.2","created_at":"2025-03-24T06:22:07.000000Z","updated_at":"2025-03-24T06:22:07.000000Z"}]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -755,7 +622,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -764,6 +631,989 @@ endpoints:
     httpMethods:
       - POST
     uri: api/subscription-list/create
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a new subscription list with restrictions'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      allow_business_email_only:
+        name: allow_business_email_only
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      block_temporary_email:
+        name: block_temporary_email
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      require_email_verification:
+        name: require_email_verification
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      check_domain_existence:
+        name: check_domain_existence
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      verify_dns_records:
+        name: verify_dns_records
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      allow_business_email_only: true
+      block_temporary_email: false
+      require_email_verification: false
+      check_domain_existence: true
+      verify_dns_records: true
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/subscription-lists
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all subscription lists for the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"message":"Subscription lists retrieved successfully.","subscription_lists":[]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/subscription-lists/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing subscription list'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the subscription list.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      allow_business_email_only:
+        name: allow_business_email_only
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      block_temporary_email:
+        name: block_temporary_email
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      require_email_verification:
+        name: require_email_verification
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      check_domain_existence:
+        name: check_domain_existence
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      verify_dns_records:
+        name: verify_dns_records
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      allow_business_email_only: true
+      block_temporary_email: false
+      require_email_verification: true
+      check_domain_existence: false
+      verify_dns_records: true
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/subscription-lists/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete the subscription list'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the subscription list.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/subscription-lists/subscribers-count
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all subscription lists for the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"message":"Subscription lists retrieved successfully.","subscription_lists":[]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Logout removes the personal access token from databse'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/api-tokens/create
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: ''
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      expires_at:
+        name: expires_at
+        description: 'Must be a valid date.'
+        required: false
+        example: '2025-03-24T06:36:25'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: consequatur
+      expires_at: '2025-03-24T06:36:25'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/api-tokens
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"tokens":[{"id":1,"user_id":3,"name":"My API Token","token":"3688252934fd4958f9685aa74af7a80b0eeda4df46a6e1e8eb421c9b744092a2","is_active":1,"expires_at":"2025-04-24 06:26:55","created_at":"2025-03-24T06:26:55.000000Z","updated_at":"2025-03-24T06:26:55.000000Z"}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/tokens/{tokenId}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      tokenId:
+        name: tokenId
+        description: ''
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      tokenId: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/blocked-ips
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all blocked IPs'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"status":"success","data":[]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/block-ip
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Manually block an IP'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      ip_address:
+        name: ip_address
+        description: 'Must be a valid IP address.'
+        required: true
+        example: 64.52.10.134
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      ip_address: 64.52.10.134
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/unblock-ip
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Unblock an IP'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      ip_address:
+        name: ip_address
+        description: 'Must be a valid IP address.'
+        required: true
+        example: 64.52.10.134
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      ip_address: 64.52.10.134
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/api-auth/subscribers/{list_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      list_id:
+        name: list_id
+        description: 'The ID of the list.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      list_id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: '{"error":"Invalid API token"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/api-auth/subscribers/{list_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      list_id:
+        name: list_id
+        description: 'The ID of the list.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      list_id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: qkunze@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      metadata:
+        name: metadata
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      email: qkunze@example.com
+      name: consequatur
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/api-auth/subscriber/{subscriber_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      subscriber_id:
+        name: subscriber_id
+        description: 'The ID of the subscriber.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      subscriber_id: 17
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: '{"error":"Invalid API token"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/api-auth/susbcriber/{subscriber_id}/status'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      subscriber_id:
+        name: subscriber_id
+        description: 'The ID of the subscriber.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      subscriber_id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      status:
+        name: status
+        description: ''
+        required: true
+        example: blacklisted
+        type: string
+        enumValues:
+          - active
+          - inactive
+          - blacklisted
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      status: blacklisted
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/api-auth/subscription-lists
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all subscription lists for the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: '{"error":"Invalid API token"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/api-auth/subscription-lists/subscribers-count
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all subscription lists for the authenticated user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: '{"error":"Invalid API token"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/api-auth/subscription-list/create
     metadata:
       groupName: Endpoints
       groupDescription: ''
@@ -836,7 +1686,7 @@ endpoints:
         name: verify_dns_records
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -848,57 +1698,14 @@ endpoints:
       block_temporary_email: false
       require_email_verification: true
       check_domain_existence: false
-      verify_dns_records: true
+      verify_dns_records: false
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/subscription-lists
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get all subscription lists for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: '{"message":"Subscription lists retrieved successfully.","subscription_lists":[{"id":1,"user_id":3,"name":"productmail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-13T07:06:04.000000Z","updated_at":"2025-03-13T07:07:30.000000Z","subscribers_count":6},{"id":3,"user_id":3,"name":"welcome","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T09:05:19.000000Z","updated_at":"2025-03-17T09:21:28.000000Z","subscribers_count":0},{"id":4,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T09:50:46.000000Z","updated_at":"2025-03-17T09:51:03.000000Z","subscribers_count":0},{"id":5,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:19:51.000000Z","updated_at":"2025-03-17T10:20:27.000000Z","subscribers_count":0},{"id":6,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:21:15.000000Z","updated_at":"2025-03-17T10:22:33.000000Z","subscribers_count":0},{"id":7,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:27:21.000000Z","updated_at":"2025-03-17T10:27:33.000000Z","subscribers_count":0},{"id":8,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:34:20.000000Z","updated_at":"2025-03-17T10:34:39.000000Z","subscribers_count":0},{"id":9,"user_id":3,"name":"hellomail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-18T08:26:47.000000Z","updated_at":"2025-03-18T08:27:28.000000Z","subscribers_count":0},{"id":10,"user_id":3,"name":"ohomail","is_verified":0,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-18T08:27:44.000000Z","updated_at":"2025-03-18T08:27:44.000000Z","subscribers_count":1}]}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -906,7 +1713,7 @@ endpoints:
   -
     httpMethods:
       - PUT
-    uri: 'api/subscription-lists/{id}'
+    uri: 'api/api-auth/subscription-lists/{id}'
     metadata:
       groupName: Endpoints
       groupDescription: ''
@@ -925,14 +1732,14 @@ endpoints:
         name: id
         description: 'The ID of the subscription list.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -950,7 +1757,7 @@ endpoints:
         name: allow_business_email_only
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -980,7 +1787,7 @@ endpoints:
         name: check_domain_existence
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -990,7 +1797,7 @@ endpoints:
         name: verify_dns_records
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -998,18 +1805,18 @@ endpoints:
         custom: []
     cleanBodyParameters:
       name: vmqeopfuudtdsufvyvddq
-      allow_business_email_only: false
+      allow_business_email_only: true
       block_temporary_email: false
       require_email_verification: true
-      check_domain_existence: false
-      verify_dns_records: false
+      check_domain_existence: true
+      verify_dns_records: true
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1017,7 +1824,7 @@ endpoints:
   -
     httpMethods:
       - DELETE
-    uri: 'api/subscription-lists/{id}'
+    uri: 'api/api-auth/subscription-lists/{id}'
     metadata:
       groupName: Endpoints
       groupDescription: ''
@@ -1036,14 +1843,14 @@ endpoints:
         name: id
         description: 'The ID of the subscription list.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1054,275 +1861,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/subscription-lists/subscribers-count
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get all subscription lists for the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: '{"message":"Subscription lists retrieved successfully.","subscription_lists":[{"id":1,"user_id":3,"name":"productmail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-13T07:06:04.000000Z","updated_at":"2025-03-13T07:07:30.000000Z","subscribers_count":6},{"id":3,"user_id":3,"name":"welcome","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T09:05:19.000000Z","updated_at":"2025-03-17T09:21:28.000000Z","subscribers_count":0},{"id":4,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T09:50:46.000000Z","updated_at":"2025-03-17T09:51:03.000000Z","subscribers_count":0},{"id":5,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:19:51.000000Z","updated_at":"2025-03-17T10:20:27.000000Z","subscribers_count":0},{"id":6,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:21:15.000000Z","updated_at":"2025-03-17T10:22:33.000000Z","subscribers_count":0},{"id":7,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:27:21.000000Z","updated_at":"2025-03-17T10:27:33.000000Z","subscribers_count":0},{"id":8,"user_id":3,"name":"hello mail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-17T10:34:20.000000Z","updated_at":"2025-03-17T10:34:39.000000Z","subscribers_count":0},{"id":9,"user_id":3,"name":"hellomail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-18T08:26:47.000000Z","updated_at":"2025-03-18T08:27:28.000000Z","subscribers_count":0},{"id":10,"user_id":3,"name":"ohomail","is_verified":0,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-18T08:27:44.000000Z","updated_at":"2025-03-18T08:27:44.000000Z","subscribers_count":1}]}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/logout
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Logout removes the personal access token from databse'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/api-tokens/create
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Generate a new API token.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: 'Must not be greater than 255 characters.'
-        required: true
-        example: vmqeopfuudtdsufvyvddq
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      abilities:
-        name: abilities
-        description: ''
-        required: false
-        example:
-          - consequatur
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      expires_at:
-        name: expires_at
-        description: 'Must be a valid date.'
-        required: false
-        example: '2025-03-18T10:24:07'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      name: vmqeopfuudtdsufvyvddq
-      abilities:
-        - consequatur
-      expires_at: '2025-03-18T10:24:07'
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/api-tokens
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get all tokens of the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: '{"tokens":[{"id":2,"name":"My API Token","token_last_digits":"1c8a","abilities":["read","write"],"expires_at":"2025-12-31T00:00:00.000000Z","created_at":"2025-03-13T05:34:53.000000Z"},{"id":3,"name":"My API Token","token_last_digits":"8159","abilities":["read","write"],"expires_at":"2025-12-31T00:00:00.000000Z","created_at":"2025-03-13T05:34:55.000000Z"},{"id":4,"name":"My API Token","token_last_digits":"f4f8","abilities":["read","write"],"expires_at":"2025-12-31T00:00:00.000000Z","created_at":"2025-03-13T05:34:55.000000Z"}]}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/tokens/{tokenId}'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Revoke a specific token.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      tokenId:
-        name: tokenId
-        description: ''
-        required: true
-        example: consequatur
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      tokenId: consequatur
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: api/api-tokens/all-revoke
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Revoke all API tokens of the authenticated user.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1379,7 +1918,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1406,14 +1945,14 @@ endpoints:
         name: list_id
         description: 'The ID of the list.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      list_id: 1
+      list_id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1421,8 +1960,8 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 200
-        content: '{"success":true,"list_name":"productmail","subscribers":[{"id":1,"list_id":1,"name":"new1","email":"new2@gmail.com","subscribed_at":"2025-03-13 07:10:59","created_at":"2025-03-13 07:10:59","updated_at":"2025-03-13 10:08:19"},{"id":2,"list_id":1,"name":"new1","email":"brijesh@gmail.com","subscribed_at":"2025-03-13 07:11:12","created_at":"2025-03-13 07:11:12","updated_at":"2025-03-13 10:32:04"},{"id":3,"list_id":1,"name":"new1","email":"shruti@gmail.com","subscribed_at":"2025-03-13 07:11:21","created_at":"2025-03-13 07:11:21","updated_at":"2025-03-13 09:50:51"},{"id":4,"list_id":1,"name":"sita","email":"chetna@gmail.com","subscribed_at":"2025-03-13 10:39:09","created_at":"2025-03-13 10:39:09","updated_at":"2025-03-13 10:39:09"},{"id":5,"list_id":1,"name":"rox","email":"brox@gmail.com","subscribed_at":"2025-03-13 11:00:05","created_at":"2025-03-13 11:00:05","updated_at":"2025-03-13 11:00:05"},{"id":6,"list_id":1,"name":"john","email":"john@gmail.com","subscribed_at":"2025-03-17 04:14:57","created_at":"2025-03-17 04:14:57","updated_at":"2025-03-17 05:22:09"}]}'
+        status: 404
+        content: '{"success":false,"message":"Subscription list not found."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1433,7 +1972,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1510,7 +2049,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1537,14 +2076,14 @@ endpoints:
         name: subscriber_id
         description: 'The ID of the subscriber.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      subscriber_id: 1
+      subscriber_id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -1552,7 +2091,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: active
+        example: inactive
         type: string
         enumValues:
           - active
@@ -1562,14 +2101,14 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      status: active
+      status: inactive
     fileParameters: []
     responses: []
     responseFields: []
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1596,14 +2135,14 @@ endpoints:
         name: subscriber_id
         description: 'The ID of the subscriber.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      subscriber_id: 1
+      subscriber_id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1611,8 +2150,8 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 200
-        content: '{"success":true,"subscriber":{"id":1,"list_id":1,"name":"new1","email":"new2@gmail.com","tags":[],"metadata":{},"status":"inactive","created_at":"2025-03-13 07:10:59","updated_at":"2025-03-13 10:08:19"}}'
+        status: 404
+        content: '{"success":false,"message":"Subscriber not found."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1623,7 +2162,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1650,14 +2189,14 @@ endpoints:
         name: subscriber_id
         description: 'The ID of the subscriber.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      subscriber_id: 1
+      subscriber_id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -1681,7 +2220,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1746,7 +2285,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1800,7 +2339,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1854,7 +2393,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1886,7 +2425,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '{"message":"Unsubscribe logs retrieved successfully","data":[{"id":2,"list_id":1,"subscriber_id":6,"unsubscribed_at":"2025-03-17 05:22:09","reason":"spam","created_at":"2025-03-17T05:22:09.000000Z","updated_at":"2025-03-17T05:22:09.000000Z","unsubscribed_count":0,"recorded_date":"2025-03-17","subscriber":{"id":6,"list_id":1,"name":"john","email":"john@gmail.com","unsubscribe_token":"adtJgSfuPA8QEXvi8eF3SLypVBwE5ov0","metadata":"null","status":"inactive","created_at":"2025-03-17T04:14:57.000000Z","updated_at":"2025-03-17T05:22:09.000000Z"},"subscription_list":{"id":1,"user_id":3,"name":"productmail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-13T07:06:04.000000Z","updated_at":"2025-03-13T07:07:30.000000Z"}},{"id":1,"list_id":1,"subscriber_id":5,"unsubscribed_at":"2025-03-17 05:05:58","reason":"No longer interested","created_at":"2025-03-17T05:05:58.000000Z","updated_at":"2025-03-17T05:05:58.000000Z","unsubscribed_count":0,"recorded_date":"2025-03-17","subscriber":{"id":5,"list_id":1,"name":"rox","email":"brox@gmail.com","unsubscribe_token":"qhXpyHKGUdq75tSEPrnDGLd28Ryfml0g","metadata":"null","status":"inactive","created_at":"2025-03-13T11:00:05.000000Z","updated_at":"2025-03-13T11:00:05.000000Z"},"subscription_list":{"id":1,"user_id":3,"name":"productmail","is_verified":1,"allow_business_email_only":1,"block_temporary_email":1,"require_email_verification":1,"check_domain_existence":1,"verify_dns_records":1,"created_at":"2025-03-13T07:06:04.000000Z","updated_at":"2025-03-13T07:07:30.000000Z"}}]}'
+        content: '{"message":"Unsubscribe logs retrieved successfully","data":[]}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1897,7 +2436,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1951,7 +2490,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -1983,7 +2522,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '[{"id":1,"date":"2025-03-18","count":2,"created_at":"2025-03-18T07:21:12.000000Z","updated_at":"2025-03-18T07:22:21.000000Z"}]'
+        content: '[{"id":1,"date":"2025-03-24","count":3,"created_at":"2025-03-24T06:07:24.000000Z","updated_at":"2025-03-24T06:22:03.000000Z"}]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -1994,7 +2533,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -2026,7 +2565,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '{"total_verified":6,"total_failed":1}'
+        content: '{"total_verified":3,"total_failed":0}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -2037,7 +2576,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null
@@ -2069,7 +2608,7 @@ endpoints:
     responses:
       -
         status: 200
-        content: '[{"date":"2025-03-17","unsubscribed_count":2}]'
+        content: '[]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -2080,7 +2619,7 @@ endpoints:
     auth:
       - headers
       - Authorization
-      - 'Bearer 5|iasvn6AmwixIQncOjNK7enLzBomzv63ksk0a1Z2gdce9e324'
+      - 'Bearer 2|M88YRoOjRESAiWZwnsA2f8Tv1z8I3fnLa6sDV3GP8219e7b0'
     controller: null
     method: null
     route: null

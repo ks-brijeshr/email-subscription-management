@@ -80,15 +80,6 @@
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-login">
                                 <a href="#endpoints-POSTapi-login">Handle user login</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-blocked-ips">
-                                <a href="#endpoints-GETapi-blocked-ips">Get all blocked IPs</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-block-ip">
-                                <a href="#endpoints-POSTapi-block-ip">Manually block an IP</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-unblock-ip">
-                                <a href="#endpoints-POSTapi-unblock-ip">Unblock an IP</a>
-                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-email-verify--id---hash-">
                                 <a href="#endpoints-GETapi-email-verify--id---hash-">Handle email verification when user clicks the verify email link</a>
                             </li>
@@ -135,16 +126,49 @@
                                 <a href="#endpoints-POSTapi-logout">Logout removes the personal access token from databse</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-api-tokens-create">
-                                <a href="#endpoints-POSTapi-api-tokens-create">Generate a new API token.</a>
+                                <a href="#endpoints-POSTapi-api-tokens-create">POST api/api-tokens/create</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-api-tokens">
-                                <a href="#endpoints-GETapi-api-tokens">Get all tokens of the authenticated user.</a>
+                                <a href="#endpoints-GETapi-api-tokens">GET api/api-tokens</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-tokens--tokenId-">
-                                <a href="#endpoints-DELETEapi-tokens--tokenId-">Revoke a specific token.</a>
+                                <a href="#endpoints-DELETEapi-tokens--tokenId-">DELETE api/tokens/{tokenId}</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-api-tokens-all-revoke">
-                                <a href="#endpoints-DELETEapi-api-tokens-all-revoke">Revoke all API tokens of the authenticated user.</a>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-blocked-ips">
+                                <a href="#endpoints-GETapi-blocked-ips">Get all blocked IPs</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-block-ip">
+                                <a href="#endpoints-POSTapi-block-ip">Manually block an IP</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-unblock-ip">
+                                <a href="#endpoints-POSTapi-unblock-ip">Unblock an IP</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-api-auth-subscribers--list_id-">
+                                <a href="#endpoints-GETapi-api-auth-subscribers--list_id-">GET api/api-auth/subscribers/{list_id}</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-api-auth-subscribers--list_id-">
+                                <a href="#endpoints-POSTapi-api-auth-subscribers--list_id-">POST api/api-auth/subscribers/{list_id}</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-api-auth-subscriber--subscriber_id-">
+                                <a href="#endpoints-GETapi-api-auth-subscriber--subscriber_id-">GET api/api-auth/subscriber/{subscriber_id}</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-api-auth-susbcriber--subscriber_id--status">
+                                <a href="#endpoints-PUTapi-api-auth-susbcriber--subscriber_id--status">PUT api/api-auth/susbcriber/{subscriber_id}/status</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-api-auth-subscription-lists">
+                                <a href="#endpoints-GETapi-api-auth-subscription-lists">Get all subscription lists for the authenticated user.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-api-auth-subscription-lists-subscribers-count">
+                                <a href="#endpoints-GETapi-api-auth-subscription-lists-subscribers-count">Get all subscription lists for the authenticated user.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-api-auth-subscription-list-create">
+                                <a href="#endpoints-POSTapi-api-auth-subscription-list-create">Store a new subscription list with restrictions</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-api-auth-subscription-lists--id-">
+                                <a href="#endpoints-PUTapi-api-auth-subscription-lists--id-">Update an existing subscription list</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-api-auth-subscription-lists--id-">
+                                <a href="#endpoints-DELETEapi-api-auth-subscription-lists--id-">Delete the subscription list</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-GETapi-subscription-list-verify--token-">
                                 <a href="#endpoints-GETapi-subscription-list-verify--token-">GET api/subscription-list/verify/{token}</a>
@@ -199,7 +223,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: March 18, 2025</li>
+        <li>Last updated: March 24, 2025</li>
     </ul>
 </div>
 
@@ -384,7 +408,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"vmqeopfuudtdsufvyvddq\",
     \"email\": \"kunde.eloisa@example.com\",
     \"password\": \"4[*UyPJ\\\"}6\",
-    \"is_owner\": \"1\"
+    \"is_owner\": \"true\"
 }"
 </code></pre></div>
 
@@ -404,7 +428,7 @@ let body = {
     "name": "vmqeopfuudtdsufvyvddq",
     "email": "kunde.eloisa@example.com",
     "password": "4[*UyPJ\"}6",
-    "is_owner": "1"
+    "is_owner": "true"
 };
 
 fetch(url, {
@@ -537,10 +561,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="is_owner"                data-endpoint="POSTapi-register"
-               value="1"
+               value="true"
                data-component="body">
     <br>
-<p>Example: <code>1</code></p>
+<p>Example: <code>true</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>true</code></li> <li><code>false</code></li> <li><code>1</code></li> <li><code>0</code></li></ul>
         </div>
@@ -699,450 +723,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must be at least 8 characters. Example: <code>Z5ij-e/dl4m{o,</code></p>
-        </div>
-        </form>
-
-                    <h2 id="endpoints-GETapi-blocked-ips">Get all blocked IPs</h2>
-
-<p>
-<small class="badge badge-darkred">requires authentication</small>
-</p>
-
-
-
-<span id="example-requests-GETapi-blocked-ips">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/blocked-ips" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/blocked-ips"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-blocked-ips">
-            <blockquote>
-            <p>Example response (200):</p>
-        </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;status&quot;: &quot;success&quot;,
-    &quot;data&quot;: [
-        {
-            &quot;id&quot;: 1,
-            &quot;ip_address&quot;: &quot;127.0.0.1&quot;,
-            &quot;reason&quot;: &quot;Too many failed login attempts&quot;,
-            &quot;blocked_at&quot;: &quot;2025-03-18 06:39:55&quot;,
-            &quot;blocked_by&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-18T06:39:55.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T06:39:55.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 3,
-            &quot;ip_address&quot;: &quot;192.168.1.101&quot;,
-            &quot;reason&quot;: &quot;Manually blocked&quot;,
-            &quot;blocked_at&quot;: &quot;2025-03-18 06:50:18&quot;,
-            &quot;blocked_by&quot;: 3,
-            &quot;created_at&quot;: &quot;2025-03-18T06:50:18.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T06:50:18.000000Z&quot;
-        }
-    ]
-}</code>
- </pre>
-    </span>
-<span id="execution-results-GETapi-blocked-ips" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-blocked-ips"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-blocked-ips"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-blocked-ips" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-blocked-ips">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-blocked-ips" data-method="GET"
-      data-path="api/blocked-ips"
-      data-authed="1"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-blocked-ips', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-blocked-ips"
-                    onclick="tryItOut('GETapi-blocked-ips');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-blocked-ips"
-                    onclick="cancelTryOut('GETapi-blocked-ips');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-blocked-ips"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/blocked-ips</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="GETapi-blocked-ips"
-               value="Bearer {YOUR_AUTH_KEY}"
-               data-component="header">
-    <br>
-<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-blocked-ips"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-blocked-ips"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                        </form>
-
-                    <h2 id="endpoints-POSTapi-block-ip">Manually block an IP</h2>
-
-<p>
-<small class="badge badge-darkred">requires authentication</small>
-</p>
-
-
-
-<span id="example-requests-POSTapi-block-ip">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/block-ip" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"ip_address\": \"64.52.10.134\"
-}"
-</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/block-ip"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "ip_address": "64.52.10.134"
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-POSTapi-block-ip">
-</span>
-<span id="execution-results-POSTapi-block-ip" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-POSTapi-block-ip"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-block-ip"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-POSTapi-block-ip" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-block-ip">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-POSTapi-block-ip" data-method="POST"
-      data-path="api/block-ip"
-      data-authed="1"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-block-ip', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-block-ip"
-                    onclick="tryItOut('POSTapi-block-ip');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-block-ip"
-                    onclick="cancelTryOut('POSTapi-block-ip');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-block-ip"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-black">POST</small>
-            <b><code>api/block-ip</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-block-ip"
-               value="Bearer {YOUR_AUTH_KEY}"
-               data-component="header">
-    <br>
-<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-block-ip"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-block-ip"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>ip_address</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="ip_address"                data-endpoint="POSTapi-block-ip"
-               value="64.52.10.134"
-               data-component="body">
-    <br>
-<p>Must be a valid IP address. Example: <code>64.52.10.134</code></p>
-        </div>
-        </form>
-
-                    <h2 id="endpoints-POSTapi-unblock-ip">Unblock an IP</h2>
-
-<p>
-<small class="badge badge-darkred">requires authentication</small>
-</p>
-
-
-
-<span id="example-requests-POSTapi-unblock-ip">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/unblock-ip" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"ip_address\": \"64.52.10.134\"
-}"
-</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/unblock-ip"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "ip_address": "64.52.10.134"
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-POSTapi-unblock-ip">
-</span>
-<span id="execution-results-POSTapi-unblock-ip" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-POSTapi-unblock-ip"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-POSTapi-unblock-ip"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-POSTapi-unblock-ip" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-POSTapi-unblock-ip">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-POSTapi-unblock-ip" data-method="POST"
-      data-path="api/unblock-ip"
-      data-authed="1"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('POSTapi-unblock-ip', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-POSTapi-unblock-ip"
-                    onclick="tryItOut('POSTapi-unblock-ip');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-POSTapi-unblock-ip"
-                    onclick="cancelTryOut('POSTapi-unblock-ip');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-POSTapi-unblock-ip"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-black">POST</small>
-            <b><code>api/unblock-ip</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-unblock-ip"
-               value="Bearer {YOUR_AUTH_KEY}"
-               data-component="header">
-    <br>
-<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-unblock-ip"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="POSTapi-unblock-ip"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>ip_address</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="ip_address"                data-endpoint="POSTapi-unblock-ip"
-               value="64.52.10.134"
-               data-component="body">
-    <br>
-<p>Must be a valid IP address. Example: <code>64.52.10.134</code></p>
         </div>
         </form>
 
@@ -1796,12 +1376,12 @@ access-control-allow-origin: *
     &quot;user&quot;: {
         &quot;id&quot;: 3,
         &quot;name&quot;: &quot;brijesh patel&quot;,
-        &quot;email&quot;: &quot;brijeshpatel@gmail.com&quot;,
-        &quot;email_verified_at&quot;: &quot;2025-03-13T05:22:00.000000Z&quot;,
+        &quot;email&quot;: &quot;brijeshrupavatiya@gmail.com&quot;,
+        &quot;email_verified_at&quot;: &quot;2025-03-24T06:22:25.000000Z&quot;,
         &quot;is_owner&quot;: 1,
         &quot;api_token&quot;: null,
-        &quot;created_at&quot;: &quot;2025-03-13T05:21:50.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-03-13T05:22:00.000000Z&quot;
+        &quot;created_at&quot;: &quot;2025-03-24T06:22:03.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2025-03-24T06:22:25.000000Z&quot;
     }
 }</code>
  </pre>
@@ -2375,31 +1955,13 @@ access-control-allow-origin: *
     &quot;status&quot;: &quot;success&quot;,
     &quot;activity_logs&quot;: [
         {
-            &quot;id&quot;: 10,
-            &quot;user_id&quot;: 3,
-            &quot;action&quot;: &quot;Visited profile&quot;,
-            &quot;ip_address&quot;: &quot;127.0.0.1&quot;,
-            &quot;user_agent&quot;: &quot;PostmanRuntime/7.37.3&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:23:39.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13T05:23:39.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 9,
-            &quot;user_id&quot;: 3,
-            &quot;action&quot;: &quot;User logged in&quot;,
-            &quot;ip_address&quot;: &quot;127.0.0.1&quot;,
-            &quot;user_agent&quot;: &quot;PostmanRuntime/7.37.3&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:22:26.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13T05:22:26.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 8,
+            &quot;id&quot;: 3,
             &quot;user_id&quot;: 3,
             &quot;action&quot;: &quot;User registered&quot;,
             &quot;ip_address&quot;: &quot;127.0.0.1&quot;,
-            &quot;user_agent&quot;: &quot;PostmanRuntime/7.37.3&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:21:54.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13T05:21:54.000000Z&quot;
+            &quot;user_agent&quot;: &quot;PostmanRuntime/7.43.2&quot;,
+            &quot;created_at&quot;: &quot;2025-03-24T06:22:07.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-03-24T06:22:07.000000Z&quot;
         }
     ]
 }</code>
@@ -2507,10 +2069,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"name\": \"vmqeopfuudtdsufvyvddq\",
-    \"allow_business_email_only\": false,
+    \"allow_business_email_only\": true,
     \"block_temporary_email\": false,
-    \"require_email_verification\": true,
-    \"check_domain_existence\": false,
+    \"require_email_verification\": false,
+    \"check_domain_existence\": true,
     \"verify_dns_records\": true
 }"
 </code></pre></div>
@@ -2529,10 +2091,10 @@ const headers = {
 
 let body = {
     "name": "vmqeopfuudtdsufvyvddq",
-    "allow_business_email_only": false,
+    "allow_business_email_only": true,
     "block_temporary_email": false,
-    "require_email_verification": true,
-    "check_domain_existence": false,
+    "require_email_verification": false,
+    "check_domain_existence": true,
     "verify_dns_records": true
 };
 
@@ -2657,7 +2219,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>block_temporary_email</code></b>&nbsp;&nbsp;
@@ -2699,7 +2261,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>check_domain_existence</code></b>&nbsp;&nbsp;
@@ -2720,7 +2282,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>verify_dns_records</code></b>&nbsp;&nbsp;
@@ -2798,134 +2360,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Subscription lists retrieved successfully.&quot;,
-    &quot;subscription_lists&quot;: [
-        {
-            &quot;id&quot;: 1,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;productmail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-13T07:06:04.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13T07:07:30.000000Z&quot;,
-            &quot;subscribers_count&quot;: 6
-        },
-        {
-            &quot;id&quot;: 3,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;welcome&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T09:05:19.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T09:21:28.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 4,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T09:50:46.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T09:51:03.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 5,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:19:51.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:20:27.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 6,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:21:15.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:22:33.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 7,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:27:21.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:27:33.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 8,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:34:20.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:34:39.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 9,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hellomail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-18T08:26:47.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T08:27:28.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 10,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;ohomail&quot;,
-            &quot;is_verified&quot;: 0,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-18T08:27:44.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T08:27:44.000000Z&quot;,
-            &quot;subscribers_count&quot;: 1
-        }
-    ]
+    &quot;subscription_lists&quot;: []
 }</code>
  </pre>
     </span>
@@ -3025,24 +2460,24 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/subscription-lists/1" \
+    "http://localhost/api/subscription-lists/17" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"name\": \"vmqeopfuudtdsufvyvddq\",
-    \"allow_business_email_only\": false,
+    \"allow_business_email_only\": true,
     \"block_temporary_email\": false,
     \"require_email_verification\": true,
     \"check_domain_existence\": false,
-    \"verify_dns_records\": false
+    \"verify_dns_records\": true
 }"
 </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscription-lists/1"
+    "http://localhost/api/subscription-lists/17"
 );
 
 const headers = {
@@ -3053,11 +2488,11 @@ const headers = {
 
 let body = {
     "name": "vmqeopfuudtdsufvyvddq",
-    "allow_business_email_only": false,
+    "allow_business_email_only": true,
     "block_temporary_email": false,
     "require_email_verification": true,
     "check_domain_existence": false,
-    "verify_dns_records": false
+    "verify_dns_records": true
 };
 
 fetch(url, {
@@ -3157,10 +2592,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PUTapi-subscription-lists--id-"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the subscription list. Example: <code>1</code></p>
+<p>The ID of the subscription list. Example: <code>17</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -3193,7 +2628,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>block_temporary_email</code></b>&nbsp;&nbsp;
@@ -3277,7 +2712,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
         </form>
 
@@ -3295,7 +2730,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/subscription-lists/1" \
+    "http://localhost/api/subscription-lists/17" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3303,7 +2738,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscription-lists/1"
+    "http://localhost/api/subscription-lists/17"
 );
 
 const headers = {
@@ -3408,10 +2843,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-subscription-lists--id-"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the subscription list. Example: <code>1</code></p>
+<p>The ID of the subscription list. Example: <code>17</code></p>
             </div>
                     </form>
 
@@ -3468,134 +2903,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Subscription lists retrieved successfully.&quot;,
-    &quot;subscription_lists&quot;: [
-        {
-            &quot;id&quot;: 1,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;productmail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-13T07:06:04.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13T07:07:30.000000Z&quot;,
-            &quot;subscribers_count&quot;: 6
-        },
-        {
-            &quot;id&quot;: 3,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;welcome&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T09:05:19.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T09:21:28.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 4,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T09:50:46.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T09:51:03.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 5,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:19:51.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:20:27.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 6,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:21:15.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:22:33.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 7,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:27:21.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:27:33.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 8,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hello mail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-17T10:34:20.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T10:34:39.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 9,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;hellomail&quot;,
-            &quot;is_verified&quot;: 1,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-18T08:26:47.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T08:27:28.000000Z&quot;,
-            &quot;subscribers_count&quot;: 0
-        },
-        {
-            &quot;id&quot;: 10,
-            &quot;user_id&quot;: 3,
-            &quot;name&quot;: &quot;ohomail&quot;,
-            &quot;is_verified&quot;: 0,
-            &quot;allow_business_email_only&quot;: 1,
-            &quot;block_temporary_email&quot;: 1,
-            &quot;require_email_verification&quot;: 1,
-            &quot;check_domain_existence&quot;: 1,
-            &quot;verify_dns_records&quot;: 1,
-            &quot;created_at&quot;: &quot;2025-03-18T08:27:44.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-18T08:27:44.000000Z&quot;,
-            &quot;subscribers_count&quot;: 1
-        }
-    ]
+    &quot;subscription_lists&quot;: []
 }</code>
  </pre>
     </span>
@@ -3803,7 +3111,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-POSTapi-api-tokens-create">Generate a new API token.</h2>
+                    <h2 id="endpoints-POSTapi-api-tokens-create">POST api/api-tokens/create</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -3822,11 +3130,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"vmqeopfuudtdsufvyvddq\",
-    \"abilities\": [
-        \"consequatur\"
-    ],
-    \"expires_at\": \"2025-03-18T10:24:07\"
+    \"name\": \"consequatur\",
+    \"expires_at\": \"2025-03-24T06:36:25\"
 }"
 </code></pre></div>
 
@@ -3843,11 +3148,8 @@ const headers = {
 };
 
 let body = {
-    "name": "vmqeopfuudtdsufvyvddq",
-    "abilities": [
-        "consequatur"
-    ],
-    "expires_at": "2025-03-18T10:24:07"
+    "name": "consequatur",
+    "expires_at": "2025-03-24T06:36:25"
 };
 
 fetch(url, {
@@ -3947,23 +3249,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-api-tokens-create"
-               value="vmqeopfuudtdsufvyvddq"
+               value="consequatur"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>abilities</code></b>&nbsp;&nbsp;
-<small>string[]</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="abilities[0]"                data-endpoint="POSTapi-api-tokens-create"
-               data-component="body">
-        <input type="text" style="display: none"
-               name="abilities[1]"                data-endpoint="POSTapi-api-tokens-create"
-               data-component="body">
-    <br>
-
+<p>Example: <code>consequatur</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>expires_at</code></b>&nbsp;&nbsp;
@@ -3971,14 +3260,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="expires_at"                data-endpoint="POSTapi-api-tokens-create"
-               value="2025-03-18T10:24:07"
+               value="2025-03-24T06:36:25"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-03-18T10:24:07</code></p>
+<p>Must be a valid date. Example: <code>2025-03-24T06:36:25</code></p>
         </div>
         </form>
 
-                    <h2 id="endpoints-GETapi-api-tokens">Get all tokens of the authenticated user.</h2>
+                    <h2 id="endpoints-GETapi-api-tokens">GET api/api-tokens</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -4032,37 +3321,14 @@ access-control-allow-origin: *
 <code class="language-json" style="max-height: 300px;">{
     &quot;tokens&quot;: [
         {
-            &quot;id&quot;: 2,
+            &quot;id&quot;: 1,
+            &quot;user_id&quot;: 3,
             &quot;name&quot;: &quot;My API Token&quot;,
-            &quot;token_last_digits&quot;: &quot;1c8a&quot;,
-            &quot;abilities&quot;: [
-                &quot;read&quot;,
-                &quot;write&quot;
-            ],
-            &quot;expires_at&quot;: &quot;2025-12-31T00:00:00.000000Z&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:34:53.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 3,
-            &quot;name&quot;: &quot;My API Token&quot;,
-            &quot;token_last_digits&quot;: &quot;8159&quot;,
-            &quot;abilities&quot;: [
-                &quot;read&quot;,
-                &quot;write&quot;
-            ],
-            &quot;expires_at&quot;: &quot;2025-12-31T00:00:00.000000Z&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:34:55.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 4,
-            &quot;name&quot;: &quot;My API Token&quot;,
-            &quot;token_last_digits&quot;: &quot;f4f8&quot;,
-            &quot;abilities&quot;: [
-                &quot;read&quot;,
-                &quot;write&quot;
-            ],
-            &quot;expires_at&quot;: &quot;2025-12-31T00:00:00.000000Z&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13T05:34:55.000000Z&quot;
+            &quot;token&quot;: &quot;3688252934fd4958f9685aa74af7a80b0eeda4df46a6e1e8eb421c9b744092a2&quot;,
+            &quot;is_active&quot;: 1,
+            &quot;expires_at&quot;: &quot;2025-04-24 06:26:55&quot;,
+            &quot;created_at&quot;: &quot;2025-03-24T06:26:55.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-03-24T06:26:55.000000Z&quot;
         }
     ]
 }</code>
@@ -4150,7 +3416,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-DELETEapi-tokens--tokenId-">Revoke a specific token.</h2>
+                    <h2 id="endpoints-DELETEapi-tokens--tokenId-">DELETE api/tokens/{tokenId}</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -4284,7 +3550,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="endpoints-DELETEapi-api-tokens-all-revoke">Revoke all API tokens of the authenticated user.</h2>
+                    <h2 id="endpoints-GETapi-blocked-ips">Get all blocked IPs</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -4292,13 +3558,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 
 
-<span id="example-requests-DELETEapi-api-tokens-all-revoke">
+<span id="example-requests-GETapi-blocked-ips">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
-    <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/api-tokens/all-revoke" \
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/blocked-ips" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4306,7 +3572,1872 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/api-tokens/all-revoke"
+    "http://localhost/api/blocked-ips"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-blocked-ips">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;data&quot;: []
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-blocked-ips" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-blocked-ips"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-blocked-ips"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-blocked-ips" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-blocked-ips">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-blocked-ips" data-method="GET"
+      data-path="api/blocked-ips"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-blocked-ips', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-blocked-ips"
+                    onclick="tryItOut('GETapi-blocked-ips');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-blocked-ips"
+                    onclick="cancelTryOut('GETapi-blocked-ips');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-blocked-ips"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/blocked-ips</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-blocked-ips"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-blocked-ips"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-blocked-ips"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-block-ip">Manually block an IP</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-block-ip">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/block-ip" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"ip_address\": \"64.52.10.134\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/block-ip"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "ip_address": "64.52.10.134"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-block-ip">
+</span>
+<span id="execution-results-POSTapi-block-ip" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-block-ip"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-block-ip"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-block-ip" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-block-ip">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-block-ip" data-method="POST"
+      data-path="api/block-ip"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-block-ip', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-block-ip"
+                    onclick="tryItOut('POSTapi-block-ip');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-block-ip"
+                    onclick="cancelTryOut('POSTapi-block-ip');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-block-ip"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/block-ip</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-block-ip"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-block-ip"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-block-ip"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>ip_address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="ip_address"                data-endpoint="POSTapi-block-ip"
+               value="64.52.10.134"
+               data-component="body">
+    <br>
+<p>Must be a valid IP address. Example: <code>64.52.10.134</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-unblock-ip">Unblock an IP</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-unblock-ip">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/unblock-ip" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"ip_address\": \"64.52.10.134\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/unblock-ip"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "ip_address": "64.52.10.134"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-unblock-ip">
+</span>
+<span id="execution-results-POSTapi-unblock-ip" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-unblock-ip"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-unblock-ip"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-unblock-ip" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-unblock-ip">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-unblock-ip" data-method="POST"
+      data-path="api/unblock-ip"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-unblock-ip', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-unblock-ip"
+                    onclick="tryItOut('POSTapi-unblock-ip');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-unblock-ip"
+                    onclick="cancelTryOut('POSTapi-unblock-ip');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-unblock-ip"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/unblock-ip</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-unblock-ip"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-unblock-ip"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-unblock-ip"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>ip_address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="ip_address"                data-endpoint="POSTapi-unblock-ip"
+               value="64.52.10.134"
+               data-component="body">
+    <br>
+<p>Must be a valid IP address. Example: <code>64.52.10.134</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-api-auth-subscribers--list_id-">GET api/api-auth/subscribers/{list_id}</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-api-auth-subscribers--list_id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/api-auth/subscribers/17" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscribers/17"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-api-auth-subscribers--list_id-">
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Invalid API token&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-api-auth-subscribers--list_id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-api-auth-subscribers--list_id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-api-auth-subscribers--list_id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-api-auth-subscribers--list_id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-api-auth-subscribers--list_id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-api-auth-subscribers--list_id-" data-method="GET"
+      data-path="api/api-auth/subscribers/{list_id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-api-auth-subscribers--list_id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-api-auth-subscribers--list_id-"
+                    onclick="tryItOut('GETapi-api-auth-subscribers--list_id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-api-auth-subscribers--list_id-"
+                    onclick="cancelTryOut('GETapi-api-auth-subscribers--list_id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-api-auth-subscribers--list_id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/api-auth/subscribers/{list_id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-api-auth-subscribers--list_id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-api-auth-subscribers--list_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-api-auth-subscribers--list_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>list_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="list_id"                data-endpoint="GETapi-api-auth-subscribers--list_id-"
+               value="17"
+               data-component="url">
+    <br>
+<p>The ID of the list. Example: <code>17</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-POSTapi-api-auth-subscribers--list_id-">POST api/api-auth/subscribers/{list_id}</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-api-auth-subscribers--list_id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/api-auth/subscribers/17" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"email\": \"qkunze@example.com\",
+    \"name\": \"consequatur\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscribers/17"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "email": "qkunze@example.com",
+    "name": "consequatur"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-api-auth-subscribers--list_id-">
+</span>
+<span id="execution-results-POSTapi-api-auth-subscribers--list_id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-api-auth-subscribers--list_id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-api-auth-subscribers--list_id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-api-auth-subscribers--list_id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-api-auth-subscribers--list_id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-api-auth-subscribers--list_id-" data-method="POST"
+      data-path="api/api-auth/subscribers/{list_id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-api-auth-subscribers--list_id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-api-auth-subscribers--list_id-"
+                    onclick="tryItOut('POSTapi-api-auth-subscribers--list_id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-api-auth-subscribers--list_id-"
+                    onclick="cancelTryOut('POSTapi-api-auth-subscribers--list_id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-api-auth-subscribers--list_id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/api-auth/subscribers/{list_id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>list_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="list_id"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="17"
+               data-component="url">
+    <br>
+<p>The ID of the list. Example: <code>17</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="qkunze@example.com"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>qkunze@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value="consequatur"
+               data-component="body">
+    <br>
+<p>Example: <code>consequatur</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>metadata</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="metadata"                data-endpoint="POSTapi-api-auth-subscribers--list_id-"
+               value=""
+               data-component="body">
+    <br>
+
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-api-auth-subscriber--subscriber_id-">GET api/api-auth/subscriber/{subscriber_id}</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-api-auth-subscriber--subscriber_id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/api-auth/subscriber/17" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscriber/17"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-api-auth-subscriber--subscriber_id-">
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Invalid API token&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-api-auth-subscriber--subscriber_id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-api-auth-subscriber--subscriber_id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-api-auth-subscriber--subscriber_id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-api-auth-subscriber--subscriber_id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-api-auth-subscriber--subscriber_id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-api-auth-subscriber--subscriber_id-" data-method="GET"
+      data-path="api/api-auth/subscriber/{subscriber_id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-api-auth-subscriber--subscriber_id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-api-auth-subscriber--subscriber_id-"
+                    onclick="tryItOut('GETapi-api-auth-subscriber--subscriber_id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-api-auth-subscriber--subscriber_id-"
+                    onclick="cancelTryOut('GETapi-api-auth-subscriber--subscriber_id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-api-auth-subscriber--subscriber_id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/api-auth/subscriber/{subscriber_id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-api-auth-subscriber--subscriber_id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-api-auth-subscriber--subscriber_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-api-auth-subscriber--subscriber_id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>subscriber_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="subscriber_id"                data-endpoint="GETapi-api-auth-subscriber--subscriber_id-"
+               value="17"
+               data-component="url">
+    <br>
+<p>The ID of the subscriber. Example: <code>17</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-PUTapi-api-auth-susbcriber--subscriber_id--status">PUT api/api-auth/susbcriber/{subscriber_id}/status</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-PUTapi-api-auth-susbcriber--subscriber_id--status">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost/api/api-auth/susbcriber/consequatur/status" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"status\": \"blacklisted\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/susbcriber/consequatur/status"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "status": "blacklisted"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-api-auth-susbcriber--subscriber_id--status">
+</span>
+<span id="execution-results-PUTapi-api-auth-susbcriber--subscriber_id--status" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-api-auth-susbcriber--subscriber_id--status"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-api-auth-susbcriber--subscriber_id--status"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-api-auth-susbcriber--subscriber_id--status" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-api-auth-susbcriber--subscriber_id--status">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-api-auth-susbcriber--subscriber_id--status" data-method="PUT"
+      data-path="api/api-auth/susbcriber/{subscriber_id}/status"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-api-auth-susbcriber--subscriber_id--status', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-api-auth-susbcriber--subscriber_id--status"
+                    onclick="tryItOut('PUTapi-api-auth-susbcriber--subscriber_id--status');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-api-auth-susbcriber--subscriber_id--status"
+                    onclick="cancelTryOut('PUTapi-api-auth-susbcriber--subscriber_id--status');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-api-auth-susbcriber--subscriber_id--status"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/api-auth/susbcriber/{subscriber_id}/status</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-api-auth-susbcriber--subscriber_id--status"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-api-auth-susbcriber--subscriber_id--status"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-api-auth-susbcriber--subscriber_id--status"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>subscriber_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="subscriber_id"                data-endpoint="PUTapi-api-auth-susbcriber--subscriber_id--status"
+               value="consequatur"
+               data-component="url">
+    <br>
+<p>The ID of the subscriber. Example: <code>consequatur</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="PUTapi-api-auth-susbcriber--subscriber_id--status"
+               value="blacklisted"
+               data-component="body">
+    <br>
+<p>Example: <code>blacklisted</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li> <li><code>blacklisted</code></li></ul>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-api-auth-subscription-lists">Get all subscription lists for the authenticated user.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-api-auth-subscription-lists">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/api-auth/subscription-lists" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscription-lists"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-api-auth-subscription-lists">
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Invalid API token&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-api-auth-subscription-lists" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-api-auth-subscription-lists"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-api-auth-subscription-lists"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-api-auth-subscription-lists" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-api-auth-subscription-lists">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-api-auth-subscription-lists" data-method="GET"
+      data-path="api/api-auth/subscription-lists"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-api-auth-subscription-lists', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-api-auth-subscription-lists"
+                    onclick="tryItOut('GETapi-api-auth-subscription-lists');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-api-auth-subscription-lists"
+                    onclick="cancelTryOut('GETapi-api-auth-subscription-lists');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-api-auth-subscription-lists"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/api-auth/subscription-lists</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-api-auth-subscription-lists"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-api-auth-subscription-lists"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-api-auth-subscription-lists"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-GETapi-api-auth-subscription-lists-subscribers-count">Get all subscription lists for the authenticated user.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-api-auth-subscription-lists-subscribers-count">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/api-auth/subscription-lists/subscribers-count" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscription-lists/subscribers-count"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-api-auth-subscription-lists-subscribers-count">
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Invalid API token&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-api-auth-subscription-lists-subscribers-count" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-api-auth-subscription-lists-subscribers-count"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-api-auth-subscription-lists-subscribers-count"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-api-auth-subscription-lists-subscribers-count" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-api-auth-subscription-lists-subscribers-count">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-api-auth-subscription-lists-subscribers-count" data-method="GET"
+      data-path="api/api-auth/subscription-lists/subscribers-count"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-api-auth-subscription-lists-subscribers-count', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-api-auth-subscription-lists-subscribers-count"
+                    onclick="tryItOut('GETapi-api-auth-subscription-lists-subscribers-count');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-api-auth-subscription-lists-subscribers-count"
+                    onclick="cancelTryOut('GETapi-api-auth-subscription-lists-subscribers-count');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-api-auth-subscription-lists-subscribers-count"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/api-auth/subscription-lists/subscribers-count</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-api-auth-subscription-lists-subscribers-count"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-api-auth-subscription-lists-subscribers-count"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-api-auth-subscription-lists-subscribers-count"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-api-auth-subscription-list-create">Store a new subscription list with restrictions</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-api-auth-subscription-list-create">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/api-auth/subscription-list/create" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"vmqeopfuudtdsufvyvddq\",
+    \"allow_business_email_only\": false,
+    \"block_temporary_email\": false,
+    \"require_email_verification\": true,
+    \"check_domain_existence\": false,
+    \"verify_dns_records\": false
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscription-list/create"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "vmqeopfuudtdsufvyvddq",
+    "allow_business_email_only": false,
+    "block_temporary_email": false,
+    "require_email_verification": true,
+    "check_domain_existence": false,
+    "verify_dns_records": false
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-api-auth-subscription-list-create">
+</span>
+<span id="execution-results-POSTapi-api-auth-subscription-list-create" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-api-auth-subscription-list-create"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-api-auth-subscription-list-create"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-api-auth-subscription-list-create" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-api-auth-subscription-list-create">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-api-auth-subscription-list-create" data-method="POST"
+      data-path="api/api-auth/subscription-list/create"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-api-auth-subscription-list-create', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-api-auth-subscription-list-create"
+                    onclick="tryItOut('POSTapi-api-auth-subscription-list-create');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-api-auth-subscription-list-create"
+                    onclick="cancelTryOut('POSTapi-api-auth-subscription-list-create');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-api-auth-subscription-list-create"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/api-auth/subscription-list/create</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-api-auth-subscription-list-create"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-api-auth-subscription-list-create"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-api-auth-subscription-list-create"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-api-auth-subscription-list-create"
+               value="vmqeopfuudtdsufvyvddq"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>allow_business_email_only</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="allow_business_email_only"
+                   value="true"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="allow_business_email_only"
+                   value="false"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>block_temporary_email</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="block_temporary_email"
+                   value="true"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="block_temporary_email"
+                   value="false"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>require_email_verification</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="require_email_verification"
+                   value="true"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="require_email_verification"
+                   value="false"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>check_domain_existence</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="check_domain_existence"
+                   value="true"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="check_domain_existence"
+                   value="false"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>verify_dns_records</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="verify_dns_records"
+                   value="true"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-api-auth-subscription-list-create" style="display: none">
+            <input type="radio" name="verify_dns_records"
+                   value="false"
+                   data-endpoint="POSTapi-api-auth-subscription-list-create"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-PUTapi-api-auth-subscription-lists--id-">Update an existing subscription list</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-PUTapi-api-auth-subscription-lists--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://localhost/api/api-auth/subscription-lists/17" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"vmqeopfuudtdsufvyvddq\",
+    \"allow_business_email_only\": true,
+    \"block_temporary_email\": false,
+    \"require_email_verification\": true,
+    \"check_domain_existence\": true,
+    \"verify_dns_records\": true
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscription-lists/17"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "vmqeopfuudtdsufvyvddq",
+    "allow_business_email_only": true,
+    "block_temporary_email": false,
+    "require_email_verification": true,
+    "check_domain_existence": true,
+    "verify_dns_records": true
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-api-auth-subscription-lists--id-">
+</span>
+<span id="execution-results-PUTapi-api-auth-subscription-lists--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-api-auth-subscription-lists--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-api-auth-subscription-lists--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-api-auth-subscription-lists--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-api-auth-subscription-lists--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-api-auth-subscription-lists--id-" data-method="PUT"
+      data-path="api/api-auth/subscription-lists/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-api-auth-subscription-lists--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-api-auth-subscription-lists--id-"
+                    onclick="tryItOut('PUTapi-api-auth-subscription-lists--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-api-auth-subscription-lists--id-"
+                    onclick="cancelTryOut('PUTapi-api-auth-subscription-lists--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-api-auth-subscription-lists--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/api-auth/subscription-lists/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+               value="17"
+               data-component="url">
+    <br>
+<p>The ID of the subscription list. Example: <code>17</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+               value="vmqeopfuudtdsufvyvddq"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>allow_business_email_only</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="allow_business_email_only"
+                   value="true"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="allow_business_email_only"
+                   value="false"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>block_temporary_email</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="block_temporary_email"
+                   value="true"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="block_temporary_email"
+                   value="false"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>require_email_verification</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="require_email_verification"
+                   value="true"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="require_email_verification"
+                   value="false"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>check_domain_existence</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="check_domain_existence"
+                   value="true"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="check_domain_existence"
+                   value="false"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>verify_dns_records</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="verify_dns_records"
+                   value="true"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="PUTapi-api-auth-subscription-lists--id-" style="display: none">
+            <input type="radio" name="verify_dns_records"
+                   value="false"
+                   data-endpoint="PUTapi-api-auth-subscription-lists--id-"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-api-auth-subscription-lists--id-">Delete the subscription list</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-api-auth-subscription-lists--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://localhost/api/api-auth/subscription-lists/17" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/api-auth/subscription-lists/17"
 );
 
 const headers = {
@@ -4322,45 +5453,45 @@ fetch(url, {
 
 </span>
 
-<span id="example-responses-DELETEapi-api-tokens-all-revoke">
+<span id="example-responses-DELETEapi-api-auth-subscription-lists--id-">
 </span>
-<span id="execution-results-DELETEapi-api-tokens-all-revoke" hidden>
+<span id="execution-results-DELETEapi-api-auth-subscription-lists--id-" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-DELETEapi-api-tokens-all-revoke"></span>:
+                id="execution-response-status-DELETEapi-api-auth-subscription-lists--id-"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-api-tokens-all-revoke"
+    <pre class="json"><code id="execution-response-content-DELETEapi-api-auth-subscription-lists--id-"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-DELETEapi-api-tokens-all-revoke" hidden>
+<span id="execution-error-DELETEapi-api-auth-subscription-lists--id-" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-api-tokens-all-revoke">
+    <pre><code id="execution-error-message-DELETEapi-api-auth-subscription-lists--id-">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-DELETEapi-api-tokens-all-revoke" data-method="DELETE"
-      data-path="api/api-tokens/all-revoke"
+<form id="form-DELETEapi-api-auth-subscription-lists--id-" data-method="DELETE"
+      data-path="api/api-auth/subscription-lists/{id}"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-api-tokens-all-revoke', this);">
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-api-auth-subscription-lists--id-', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-DELETEapi-api-tokens-all-revoke"
-                    onclick="tryItOut('DELETEapi-api-tokens-all-revoke');">Try it out ⚡
+                    id="btn-tryout-DELETEapi-api-auth-subscription-lists--id-"
+                    onclick="tryItOut('DELETEapi-api-auth-subscription-lists--id-');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-DELETEapi-api-tokens-all-revoke"
-                    onclick="cancelTryOut('DELETEapi-api-tokens-all-revoke');" hidden>Cancel 🛑
+                    id="btn-canceltryout-DELETEapi-api-auth-subscription-lists--id-"
+                    onclick="cancelTryOut('DELETEapi-api-auth-subscription-lists--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-DELETEapi-api-tokens-all-revoke"
+                    id="btn-executetryout-DELETEapi-api-auth-subscription-lists--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
@@ -4368,7 +5499,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </h3>
             <p>
             <small class="badge badge-red">DELETE</small>
-            <b><code>api/api-tokens/all-revoke</code></b>
+            <b><code>api/api-auth/subscription-lists/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -4376,7 +5507,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-api-tokens-all-revoke"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-api-auth-subscription-lists--id-"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -4387,7 +5518,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="DELETEapi-api-tokens-all-revoke"
+                              name="Content-Type"                data-endpoint="DELETEapi-api-auth-subscription-lists--id-"
                value="application/json"
                data-component="header">
     <br>
@@ -4398,13 +5529,25 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="DELETEapi-api-tokens-all-revoke"
+                              name="Accept"                data-endpoint="DELETEapi-api-auth-subscription-lists--id-"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-api-auth-subscription-lists--id-"
+               value="17"
+               data-component="url">
+    <br>
+<p>The ID of the subscription list. Example: <code>17</code></p>
+            </div>
+                    </form>
 
                     <h2 id="endpoints-GETapi-subscription-list-verify--token-">GET api/subscription-list/verify/{token}</h2>
 
@@ -4570,7 +5713,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/subscribers/1" \
+    --get "http://localhost/api/subscribers/17" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4578,7 +5721,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscribers/1"
+    "http://localhost/api/subscribers/17"
 );
 
 const headers = {
@@ -4596,7 +5739,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-subscribers--list_id-">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4608,64 +5751,8 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: true,
-    &quot;list_name&quot;: &quot;productmail&quot;,
-    &quot;subscribers&quot;: [
-        {
-            &quot;id&quot;: 1,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;new1&quot;,
-            &quot;email&quot;: &quot;new2@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-13 07:10:59&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13 07:10:59&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13 10:08:19&quot;
-        },
-        {
-            &quot;id&quot;: 2,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;new1&quot;,
-            &quot;email&quot;: &quot;brijesh@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-13 07:11:12&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13 07:11:12&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13 10:32:04&quot;
-        },
-        {
-            &quot;id&quot;: 3,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;new1&quot;,
-            &quot;email&quot;: &quot;shruti@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-13 07:11:21&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13 07:11:21&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13 09:50:51&quot;
-        },
-        {
-            &quot;id&quot;: 4,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;sita&quot;,
-            &quot;email&quot;: &quot;chetna@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-13 10:39:09&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13 10:39:09&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13 10:39:09&quot;
-        },
-        {
-            &quot;id&quot;: 5,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;rox&quot;,
-            &quot;email&quot;: &quot;brox@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-13 11:00:05&quot;,
-            &quot;created_at&quot;: &quot;2025-03-13 11:00:05&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-13 11:00:05&quot;
-        },
-        {
-            &quot;id&quot;: 6,
-            &quot;list_id&quot;: 1,
-            &quot;name&quot;: &quot;john&quot;,
-            &quot;email&quot;: &quot;john@gmail.com&quot;,
-            &quot;subscribed_at&quot;: &quot;2025-03-17 04:14:57&quot;,
-            &quot;created_at&quot;: &quot;2025-03-17 04:14:57&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17 05:22:09&quot;
-        }
-    ]
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Subscription list not found.&quot;
 }</code>
  </pre>
     </span>
@@ -4756,10 +5843,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="list_id"                data-endpoint="GETapi-subscribers--list_id-"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the list. Example: <code>1</code></p>
+<p>The ID of the list. Example: <code>17</code></p>
             </div>
                     </form>
 
@@ -4956,19 +6043,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost/api/subscribers/1/status" \
+    "http://localhost/api/subscribers/17/status" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"active\"
+    \"status\": \"inactive\"
 }"
 </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscribers/1/status"
+    "http://localhost/api/subscribers/17/status"
 );
 
 const headers = {
@@ -4978,7 +6065,7 @@ const headers = {
 };
 
 let body = {
-    "status": "active"
+    "status": "inactive"
 };
 
 fetch(url, {
@@ -5078,10 +6165,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="subscriber_id"                data-endpoint="PUTapi-subscribers--subscriber_id--status"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the subscriber. Example: <code>1</code></p>
+<p>The ID of the subscriber. Example: <code>17</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -5090,10 +6177,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-subscribers--subscriber_id--status"
-               value="active"
+               value="inactive"
                data-component="body">
     <br>
-<p>Example: <code>active</code></p>
+<p>Example: <code>inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li> <li><code>blacklisted</code></li></ul>
         </div>
@@ -5113,7 +6200,7 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/subscriber/1" \
+    --get "http://localhost/api/subscriber/17" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5121,7 +6208,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscriber/1"
+    "http://localhost/api/subscriber/17"
 );
 
 const headers = {
@@ -5139,7 +6226,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-subscriber--subscriber_id-">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -5151,18 +6238,8 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;success&quot;: true,
-    &quot;subscriber&quot;: {
-        &quot;id&quot;: 1,
-        &quot;list_id&quot;: 1,
-        &quot;name&quot;: &quot;new1&quot;,
-        &quot;email&quot;: &quot;new2@gmail.com&quot;,
-        &quot;tags&quot;: [],
-        &quot;metadata&quot;: {},
-        &quot;status&quot;: &quot;inactive&quot;,
-        &quot;created_at&quot;: &quot;2025-03-13 07:10:59&quot;,
-        &quot;updated_at&quot;: &quot;2025-03-13 10:08:19&quot;
-    }
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Subscriber not found.&quot;
 }</code>
  </pre>
     </span>
@@ -5253,10 +6330,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="subscriber_id"                data-endpoint="GETapi-subscriber--subscriber_id-"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the subscriber. Example: <code>1</code></p>
+<p>The ID of the subscriber. Example: <code>17</code></p>
             </div>
                     </form>
 
@@ -5274,7 +6351,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/subscribers/1/tags" \
+    "http://localhost/api/subscribers/17/tags" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5288,7 +6365,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/subscribers/1/tags"
+    "http://localhost/api/subscribers/17/tags"
 );
 
 const headers = {
@@ -5400,10 +6477,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="subscriber_id"                data-endpoint="POSTapi-subscribers--subscriber_id--tags"
-               value="1"
+               value="17"
                data-component="url">
     <br>
-<p>The ID of the subscriber. Example: <code>1</code></p>
+<p>The ID of the subscriber. Example: <code>17</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -5936,78 +7013,7 @@ access-control-allow-origin: *
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Unsubscribe logs retrieved successfully&quot;,
-    &quot;data&quot;: [
-        {
-            &quot;id&quot;: 2,
-            &quot;list_id&quot;: 1,
-            &quot;subscriber_id&quot;: 6,
-            &quot;unsubscribed_at&quot;: &quot;2025-03-17 05:22:09&quot;,
-            &quot;reason&quot;: &quot;spam&quot;,
-            &quot;created_at&quot;: &quot;2025-03-17T05:22:09.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T05:22:09.000000Z&quot;,
-            &quot;unsubscribed_count&quot;: 0,
-            &quot;recorded_date&quot;: &quot;2025-03-17&quot;,
-            &quot;subscriber&quot;: {
-                &quot;id&quot;: 6,
-                &quot;list_id&quot;: 1,
-                &quot;name&quot;: &quot;john&quot;,
-                &quot;email&quot;: &quot;john@gmail.com&quot;,
-                &quot;unsubscribe_token&quot;: &quot;adtJgSfuPA8QEXvi8eF3SLypVBwE5ov0&quot;,
-                &quot;metadata&quot;: &quot;null&quot;,
-                &quot;status&quot;: &quot;inactive&quot;,
-                &quot;created_at&quot;: &quot;2025-03-17T04:14:57.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-03-17T05:22:09.000000Z&quot;
-            },
-            &quot;subscription_list&quot;: {
-                &quot;id&quot;: 1,
-                &quot;user_id&quot;: 3,
-                &quot;name&quot;: &quot;productmail&quot;,
-                &quot;is_verified&quot;: 1,
-                &quot;allow_business_email_only&quot;: 1,
-                &quot;block_temporary_email&quot;: 1,
-                &quot;require_email_verification&quot;: 1,
-                &quot;check_domain_existence&quot;: 1,
-                &quot;verify_dns_records&quot;: 1,
-                &quot;created_at&quot;: &quot;2025-03-13T07:06:04.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-03-13T07:07:30.000000Z&quot;
-            }
-        },
-        {
-            &quot;id&quot;: 1,
-            &quot;list_id&quot;: 1,
-            &quot;subscriber_id&quot;: 5,
-            &quot;unsubscribed_at&quot;: &quot;2025-03-17 05:05:58&quot;,
-            &quot;reason&quot;: &quot;No longer interested&quot;,
-            &quot;created_at&quot;: &quot;2025-03-17T05:05:58.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-03-17T05:05:58.000000Z&quot;,
-            &quot;unsubscribed_count&quot;: 0,
-            &quot;recorded_date&quot;: &quot;2025-03-17&quot;,
-            &quot;subscriber&quot;: {
-                &quot;id&quot;: 5,
-                &quot;list_id&quot;: 1,
-                &quot;name&quot;: &quot;rox&quot;,
-                &quot;email&quot;: &quot;brox@gmail.com&quot;,
-                &quot;unsubscribe_token&quot;: &quot;qhXpyHKGUdq75tSEPrnDGLd28Ryfml0g&quot;,
-                &quot;metadata&quot;: &quot;null&quot;,
-                &quot;status&quot;: &quot;inactive&quot;,
-                &quot;created_at&quot;: &quot;2025-03-13T11:00:05.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-03-13T11:00:05.000000Z&quot;
-            },
-            &quot;subscription_list&quot;: {
-                &quot;id&quot;: 1,
-                &quot;user_id&quot;: 3,
-                &quot;name&quot;: &quot;productmail&quot;,
-                &quot;is_verified&quot;: 1,
-                &quot;allow_business_email_only&quot;: 1,
-                &quot;block_temporary_email&quot;: 1,
-                &quot;require_email_verification&quot;: 1,
-                &quot;check_domain_existence&quot;: 1,
-                &quot;verify_dns_records&quot;: 1,
-                &quot;created_at&quot;: &quot;2025-03-13T07:06:04.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-03-13T07:07:30.000000Z&quot;
-            }
-        }
-    ]
+    &quot;data&quot;: []
 }</code>
  </pre>
     </span>
@@ -6306,10 +7312,10 @@ access-control-allow-origin: *
 <code class="language-json" style="max-height: 300px;">[
     {
         &quot;id&quot;: 1,
-        &quot;date&quot;: &quot;2025-03-18&quot;,
-        &quot;count&quot;: 2,
-        &quot;created_at&quot;: &quot;2025-03-18T07:21:12.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-03-18T07:22:21.000000Z&quot;
+        &quot;date&quot;: &quot;2025-03-24&quot;,
+        &quot;count&quot;: 3,
+        &quot;created_at&quot;: &quot;2025-03-24T06:07:24.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2025-03-24T06:22:03.000000Z&quot;
     }
 ]</code>
  </pre>
@@ -6448,8 +7454,8 @@ access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;total_verified&quot;: 6,
-    &quot;total_failed&quot;: 1
+    &quot;total_verified&quot;: 3,
+    &quot;total_failed&quot;: 0
 }</code>
  </pre>
     </span>
@@ -6586,12 +7592,7 @@ content-type: application/json
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">[
-    {
-        &quot;date&quot;: &quot;2025-03-17&quot;,
-        &quot;unsubscribed_count&quot;: 2
-    }
-]</code>
+<code class="language-json" style="max-height: 300px;">[]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-analytics-unsubscribes" hidden>
