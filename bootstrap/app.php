@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.api_token' => \App\Http\Middleware\AuthenticateApiToken::class,
             'owner' => \App\Http\Middleware\OwnerMiddleware::class,
-            'recaptcha'=> \App\Http\Middleware\VerifyReCaptcha::class,
+            'recaptcha'=> \App\Http\Middleware\VerifyRecaptcha::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
