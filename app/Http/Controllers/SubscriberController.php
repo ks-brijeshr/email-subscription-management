@@ -1,72 +1,166 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Services\SubscriberExportService;
+use Symfony\Component\Mime\Part\HtmlPart;
+use App\Mail\SubscriberVerificationMail;
 use App\Models\SubscriptionAnalytics;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionList;
+use App\Models\EmailBlacklist;
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SubscriberController extends Controller
 {
-    // 1. Add Subscriber to a List   
+    // Add subscriber and send verification email
     public function addSubscriber(Request $request, $list_id)
     {
+
         $request->validate([
             'email' => 'required|email',
             'name' => 'nullable|string',
-            'metadata' => 'nullable|array' 
+            'metadata' => 'nullable|array'
         ]);
 
-        // Check if subscription list exists
+        // Get the logged-in user
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized. Please log in.'], 401);
+        }
+
+        // Only allow the owner to add subscribers
+        if (!$user->is_owner) {
+            return response()->json(['error' => 'Only an owner can add subscribers.'], 403);
+        }
+
+        // Find the subscription list
         $subscriptionList = SubscriptionList::find($list_id);
         if (!$subscriptionList) {
             return response()->json(['error' => 'Subscription list not found.'], 404);
         }
 
-        // Check if subscriber already exists in the list
+        // Check if subscriber already exists
         $existingSubscriber = Subscriber::where('list_id', $list_id)
             ->where('email', $request->email)
             ->first();
-
         if ($existingSubscriber) {
-            return response()->json(['error' => 'Subscriber already exists in this list.'], 409);
+            return response()->json(['error' => 'Subscriber already exists.'], 409);
         }
 
-        // Create new subscriber
+        // Validation based on subscription settings
+        $email = $request->email;
+        $validationErrors = [];
+
+        if ($subscriptionList->allow_business_email_only && $this->isPersonalEmail($email)) {
+            $validationErrors[] = 'Personal emails are not allowed.';
+        }
+
+        if ($subscriptionList->block_temporary_email && $this->isTemporaryEmail($email)) {
+            $validationErrors[] = 'Temporary emails are blocked.';
+        }
+
+        if ($subscriptionList->check_domain_existence && !$this->domainExists($email)) {
+            $validationErrors[] = 'Email domain does not exist.';
+        }
+
+        if ($subscriptionList->verify_dns_records && !$this->hasValidDnsRecords($email)) {
+            $validationErrors[] = 'Invalid DNS records.';
+        }
+
+        // If validation fails, blacklist the email & return an error
+        if (!empty($validationErrors)) {
+            EmailBlacklist::create([
+                'email' => $email,
+                'reason' => implode(', ', $validationErrors),
+                'blacklisted_by' => $user->id
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email failed validation and has been blacklisted.',
+                'errors' => $validationErrors
+            ], 422);
+        }
+
+        // Generate unique verification token 
+        $verificationToken = Str::uuid()->toString();
+
+        // Create subscriber
         $subscriber = Subscriber::create([
             'list_id' => $list_id,
-            'email' => $request->email,
+            'email' => $email,
             'name' => $request->name,
-            'metadata' => json_encode($request->metadata), 
-            'status' => 'inactive', 
-            'created_at' => now(),
-            'updated_at' => now()
+            'metadata' => json_encode($request->metadata ?? []),
+            'status' => $subscriptionList->require_email_verification ? 'inactive' : 'active',
+            'verification_token' => $subscriptionList->require_email_verification ? $verificationToken : null
         ]);
 
-        // Update subscription analytics
-        $today = now()->toDateString();
-        SubscriptionAnalytics::updateOrCreate(
-            ['list_id' => $list_id, 'recorded_date' => $today],
-            ['new_subscribers' => DB::raw('new_subscribers + 1')] 
-        );
+        // Send verification email if required
+        if ($subscriptionList->require_email_verification) {
+            try {
+                Mail::to($subscriber->email)->send(new SubscriberVerificationMail($subscriber, $verificationToken));
+            } catch (\Exception $e) {
+                Log::error("Failed to send verification email: " . $e->getMessage());
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Subscriber added but failed to send verification email.',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
 
         return response()->json([
             "success" => true,
             "message" => "Subscriber added successfully!",
-            "logs" => [
-                "subscriber_id" => $subscriber->id,
-                "email" => $subscriber->email,
-                "recorded_at" => Carbon::parse($subscriber->created_at)->toDateTimeString(),
-            ]
+            "verification_required" => $subscriptionList->require_email_verification
         ], 201);
     }
 
-    // 2. Get All Subscribers
+
+
+    public function verifyEmail($token)
+    {
+        // Find subscriber by token
+        $subscriber = Subscriber::where('verification_token', $token)->first();
+
+        if (!$subscriber) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid or expired verification token.'
+            ], 404);
+        }
+
+        if ($subscriber->status === 'active') {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email is already verified.'
+            ], 200);
+        }
+
+        // Update subscriber status to active & remove token
+        $subscriber->update([
+            'status' => 'active',
+            'verification_token' => null
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Email verified successfully. You are now subscribed.'
+        ], 200);
+    }
+
+
+
+    // Get All Subscribers
     public function getAllSubscribers($list_id)
     {
         // Find the subscription list
@@ -102,7 +196,7 @@ class SubscriberController extends Controller
         ]);
     }
 
-    // 3. Update Subscriber Status
+    // Update Subscriber Status
     public function updateSubscriberStatus(Request $request, $subscriber_id)
     {
         $request->validate([
@@ -121,7 +215,7 @@ class SubscriberController extends Controller
         ]);
     }
 
-    // 4. Get Subscriber Details
+    // Get Subscriber Details
     public function getSubscriberDetails($subscriber_id)
     {
         $subscriber = Subscriber::with('tags')->find($subscriber_id);
@@ -149,7 +243,7 @@ class SubscriberController extends Controller
         ]);
     }
 
-    // 5. Add Tags to Subscriber
+    // Add Tags to Subscriber
     public function addSubscriberTags(Request $request, $subscriber_id)
     {
         $request->validate([
@@ -177,7 +271,7 @@ class SubscriberController extends Controller
         ]);
     }
 
-    // 6. Update Subscriber Metadata
+    // Update Subscriber Metadata
     public function updateSubscriberMetadata(Request $request, $subscriber_id)
     {
         $request->validate([
@@ -266,5 +360,27 @@ class SubscriberController extends Controller
                 ];
             })
         ]);
+    }
+
+    private function isPersonalEmail($email)
+    {
+        return preg_match('/@(gmail\.com|yahoo\.com|hotmail\.com)$/i', $email);
+    }
+
+    private function isTemporaryEmail($email)
+    {
+        $tempDomains = ['tempmail.com', 'disposable.com'];
+        return in_array(explode('@', $email)[1], $tempDomains);
+    }
+
+    private function domainExists($email)
+    {
+        return checkdnsrr(explode('@', $email)[1], 'MX');
+    }
+
+    private function hasValidDnsRecords($email)
+    {
+        $domain = explode('@', $email)[1];
+        return checkdnsrr($domain, 'A') || checkdnsrr($domain, 'AAAA') || checkdnsrr($domain, 'MX');
     }
 }

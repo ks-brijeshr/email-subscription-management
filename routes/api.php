@@ -159,3 +159,5 @@ Route::get('/email-verification-stats', [EmailVerificationStatsController::class
 
 //Unsubscribe trends
 Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
+
+Route::get('/subscribers/verify/{token}', [SubscriberController::class, 'verifyEmail']);

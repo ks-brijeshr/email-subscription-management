@@ -112,4 +112,10 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+
+    'api' => [
+        'driver' => 'sanctum', // or 'jwt' or 'passport'
+        'provider' => 'users',
+        'hash' => false,
+    ],
 ];
