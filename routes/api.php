@@ -1,28 +1,29 @@
 <?php
 
-use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\ApiTokenController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmailVerificationStatsController;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SecurityController;
-use App\Http\Controllers\SignupAnalyticsController;
-use App\Http\Controllers\SubscriberController;
-use App\Http\Controllers\SubscriberListController;
-use App\Http\Controllers\SubscriptionAnalyticsController;
-use App\Http\Controllers\SubscriptionListController;
-use App\Http\Controllers\UnsubscribeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\VerifyRecaptcha;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\UnsubscribeController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\SubscriberListController;
+use App\Http\Controllers\SignupAnalyticsController;
+use App\Http\Controllers\SubscriptionListController;
+use App\Http\Controllers\SubscriptionAnalyticsController;
+use App\Http\Controllers\EmailVerificationStatsController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
 });
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('recaptcha');
+Route::post('/login', [AuthController::class, 'login'])->middleware('recaptcha');
 
 
 //verify the users email after register (API response)
@@ -34,7 +35,7 @@ Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])
 Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
 
 //Reset password
-Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword']);
+Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword'])->middleware('recaptcha');;
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
