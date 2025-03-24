@@ -33,12 +33,19 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = $this->authService->register($request->validated());
+
+        $data = $request->validated();
+        
+        $data['is_owner'] = filter_var($request->input('is_owner', false), FILTER_VALIDATE_BOOLEAN);
+
+        $user = $this->authService->register($data);
 
         Auth::login($user);
 
+       
         $this->activityLogService->logActivity('User registered', $request);
 
+        // Return JSON response
         return response()->json([
             'status' => 'success',
             'message' => 'User registered successfully. Please verify your email.',
@@ -46,6 +53,9 @@ class AuthController extends Controller
             'user' => $user
         ], 201);
     }
+
+
+
 
     /**
      * Handle user login

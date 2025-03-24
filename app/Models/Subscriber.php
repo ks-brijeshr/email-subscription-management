@@ -16,7 +16,8 @@ class Subscriber extends Model
         'email',
         'status',
         'metadata',
-        'unsubscribe_token'
+        'unsubscribe_token',
+        'verification_token'
     ];
 
     public function tags()

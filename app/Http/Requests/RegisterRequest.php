@@ -23,11 +23,12 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'is_owner' => 'nullable|in:true,false,1,0',
+            'is_owner' => 'sometimes|boolean'
         ];
     }
+
 
     public function messages()
     {
