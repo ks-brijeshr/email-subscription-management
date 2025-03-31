@@ -38,7 +38,8 @@ Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])
 Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
 
 //Reset password
-Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword'])->middleware('recaptcha');;
+// Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword'])->middleware('recaptcha');;
+Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword']);
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
