@@ -22,8 +22,11 @@ Route::get('/test', function () {
 });
 
 
-Route::post('/register', [AuthController::class, 'register'])->middleware('recaptcha');
-Route::post('/login', [AuthController::class, 'login'])->middleware('recaptcha');
+// Route::post('/register', [AuthController::class, 'register'])->middleware('recaptcha');
+Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/login', [AuthController::class, 'login'])->middleware('recaptcha');
+Route::post('/login', [AuthController::class, 'login']);
+
 
 
 //verify the users email after register (API response)

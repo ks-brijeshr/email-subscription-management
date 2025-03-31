@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -65,4 +65,134 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+} */
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f4f7fc;
+  color: #333;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+
+.link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #3498db;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+.home-container {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background: #3498db;
+  color: white;
+}
+
+.home-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.home-main {
+  padding: 40px;
+}
+
+.home-main h2 {
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+.home-main p {
+  font-size: 16px;
+  margin: 15px 0;
+  color: #555;
+}
+
+.home-footer {
+  margin-top: 30px;
+  font-size: 14px;
+  color: #888;
+}
+
+.btn-alt {
+  background: white;
+  color: #3498db;
+  border: 1px solid #3498db;
 }
