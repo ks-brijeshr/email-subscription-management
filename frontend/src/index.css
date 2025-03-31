@@ -86,6 +86,7 @@ body {
 .container {
   max-width: 500px;
   margin: auto;
+  margin-top: 250px;
   padding: 2rem;
   background: white;
   border-radius: 10px;
