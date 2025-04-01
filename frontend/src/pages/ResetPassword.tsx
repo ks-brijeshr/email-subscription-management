@@ -1,7 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import "../index.css";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -67,24 +67,43 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="container">
-      <div className="header">
-        <h2>Reset Password</h2>
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-30 text-black">
+      <div className="w-full max-w-md bg-white dark:bg-gray-200 p-8 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-black  mb-6">Reset Password</h2>
+
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <input
+            type="password"
+            placeholder="New Password"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 transition"
+            disabled={loading}
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+        </form>
       </div>
-
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
-
-      <form onSubmit={handleSubmit}>
-        <input type="password" name="password" placeholder="New Password" className="input-field" onChange={(e) => setPassword(e.target.value)} required />
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" className="input-field" onChange={(e) => setConfirmPassword(e.target.value)} required />
-
-        <button type="submit" className="btn" disabled={loading}>
-          {loading ? "Resetting..." : "Reset Password"}
-        </button>
-      </form>
     </div>
   );
 };
 
 export default ResetPassword;
+
+
+
