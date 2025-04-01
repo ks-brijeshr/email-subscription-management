@@ -103,7 +103,8 @@ class AuthService
 
         return response()->json([
             'token' => $token,
-            'user' => $user
+            'user' => $user,
+            'is_owner' => $user->is_owner,
         ], 200);
     }
 
