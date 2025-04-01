@@ -1,12 +1,16 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import Navbar from "../components/Navbar";
+
+import { useUser } from "../context/UserContext";
 
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();  // Accessing context to update the user
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,9 +34,14 @@ const Login = () => {
         return;
       }
 
+      // Update context with user data
+      setUser(user);
+
+      // Store user data and token in localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(user));
 
+      // Navigate to appropriate dashboard
       navigate(user.is_owner ? "/admin/dashboard" : "/user/dashboard");
     } catch (err: any) {
       setError(err.response?.data?.message || "Invalid email or password.");

@@ -35,14 +35,14 @@ class AuthController extends Controller
     {
 
         $data = $request->validated();
-        
+
         $data['is_owner'] = filter_var($request->input('is_owner', false), FILTER_VALIDATE_BOOLEAN);
 
         $user = $this->authService->register($data);
 
         Auth::login($user);
 
-       
+
         $this->activityLogService->logActivity('User registered', $request);
 
         // Return JSON response
@@ -67,7 +67,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle email verification when user clicks the verify email link 
+     * Handle email verification when user clicks the verify email link
      */
     public function verifyEmail(Request $request, $id, $hash): JsonResponse
     {
@@ -112,10 +112,10 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout removes the personal access token from databse  
+     * Logout removes the personal access token from databse
      *
      * @param Request $request
-     * @return json response  
+     * @return json response
      */
     public function logout(Request $request): JsonResponse
     {
