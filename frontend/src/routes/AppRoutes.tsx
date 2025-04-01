@@ -3,9 +3,13 @@ import { useUser } from "../context/UserContext";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Login from "../pages/Login";
+
 import AdminDashboard from "../pages/admin/Dashboard";
 import UserDashboard from "../pages/user/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
+
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 
 const AppRoutes = () => {
   const { user } = useUser();  // Access user from context
@@ -16,6 +20,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+
 
         {/* Protected Admin Route */}
         <Route element={<ProtectedRoute isAllowed={user?.is_owner === true} redirectPath="/user/dashboard" />}>
@@ -29,6 +34,10 @@ const AppRoutes = () => {
 
         {/* Default Fallback */}
         <Route path="*" element={<Login />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/password-reset" element={<ResetPassword />} />
+
       </Routes>
     </Router>
   );

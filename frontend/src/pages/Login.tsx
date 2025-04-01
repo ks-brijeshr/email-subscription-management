@@ -54,12 +54,32 @@ const Login = () => {
       {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" className="input-field" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" className="input-field" onChange={handleChange} required />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="input-field"
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="input-field"
+          onChange={handleChange}
+          required
+        />
 
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        {/* Forgot Password Link */}
+        <Link to="/forgot-password" className="link">
+          Forgot Password?
+        </Link>
       </form>
     </div>
   );
