@@ -22,6 +22,10 @@ Route::get('/test', function () {
 });
 
 
+
+Route::get('/admin/dashboard', [AnalyticsController::class, 'dashboardStats']);
+
+
 // Route::post('/register', [AuthController::class, 'register'])->middleware('recaptcha');
 Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login'])->middleware('recaptcha');
