@@ -92,7 +92,7 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 transition"
+            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
             disabled={loading}
           >
             {loading ? "Resetting..." : "Reset Password"}
