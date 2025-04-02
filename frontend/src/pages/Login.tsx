@@ -5,7 +5,6 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 
 import { useUser } from "../context/UserContext";
-import { Link } from "react-router-dom";
 
 
 const Login = () => {
