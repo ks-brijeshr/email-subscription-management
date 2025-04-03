@@ -64,7 +64,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-6 mt-6">
               {/* Add Subscriber Block */}
               <div
-                className="p-6 bg-blue-600 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 transition"
+                className="p-6 bg-blue-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 transition"
                 onClick={() => {
                   if (subscriptionLists.length > 0) {
                     navigate("/admin/add-subscriber");
@@ -84,7 +84,7 @@ const Dashboard = () => {
 
               {/* View All Subscribers Block */}
               <div
-                className="p-6 bg-green-600 text-white rounded-lg shadow-md cursor-pointer hover:bg-green-700 transition"
+                className="p-6 bg-green-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-green-700 transition"
                 onClick={() => navigate("/admin/view-subscribers")}
               >
                 <h3 className="text-lg font-semibold">View All Subscribers</h3>

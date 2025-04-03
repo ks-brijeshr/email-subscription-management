@@ -12,6 +12,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import AddSubscriber from "../pages/admin/AddSubscriber";
 import Dashboard from "../pages/admin/Dashboard";
+import ViewSubscribers from "../pages/admin/ViewSubscribers";
 
 
 const AppRoutes = () => {
@@ -44,6 +45,7 @@ const AppRoutes = () => {
 
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/add-subscriber" element={<AddSubscriber />} />
+        <Route path="/admin/view-subscribers" element={<ViewSubscribers />} />
       </Routes>
     </Router>
   );
