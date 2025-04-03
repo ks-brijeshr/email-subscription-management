@@ -14,13 +14,13 @@ interface Subscriber {
     id: string;
     name: string;
     email: string;
-    status: "active" | "unsubscribed";
+    status: "active" | "inactive";
 }
 
 const ViewSubscribers = () => {
     const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
     const [selectedListId, setSelectedListId] = useState<string | null>(null);
-    const [selectedListName, setSelectedListName] = useState<string | null>(null); 
+    const [selectedListName, setSelectedListName] = useState<string | null>(null);
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const navigate = useNavigate();
 
@@ -45,24 +45,57 @@ const ViewSubscribers = () => {
         fetchSubscriptionLists();
     }, []);
 
+    useEffect(() => {
+        if (selectedListId) {
+            fetchSubscribers(selectedListId, selectedListName || "");
+        }
+    }, [selectedListId]);
+
+
     const fetchSubscribers = async (listId: string, listName: string) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-
+    
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
+    
+            console.log("API Response:", response.data); //  Check backend response
+    
             if (response.data.subscribers) {
-                setSubscribers(response.data.subscribers);
+                setSubscribers(response.data.subscribers); 
                 setSelectedListId(listId);
-                setSelectedListName(listName); 
+                setSelectedListName(listName);
             }
         } catch (error) {
             console.error("Error fetching subscribers:", error);
         }
     };
+    
+    const updateSubscriberStatus = async (subscriberId: string, currentStatus: "active" | "inactive") => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            const newStatus = currentStatus === "active" ? "inactive" : "active";
+
+            await axios.put(
+                `http://localhost:8000/api/subscribers/${subscriberId}/status`,
+                { status: newStatus },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+          
+            if (selectedListId) {
+                fetchSubscribers(selectedListId, selectedListName || "");
+            }
+        } catch (error) {
+            console.error("Error updating subscriber status:", error);
+        }
+    };
+
+
 
     return (
         <>
@@ -115,8 +148,6 @@ const ViewSubscribers = () => {
                         >
                             Back to Subscription Lists
                         </button>
-
-                        {/* Subscriber Summary Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                                 <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
@@ -129,9 +160,9 @@ const ViewSubscribers = () => {
                                 </p>
                             </div>
                             <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
-                                <h3 className="text-xl font-semibold text-red-900">Unsubscribed</h3>
+                                <h3 className="text-xl font-semibold text-red-900">Inactive</h3>
                                 <p className="text-3xl font-bold">
-                                    {subscribers.filter((s) => s.status === "unsubscribed").length}
+                                    {subscribers.filter((s) => s.status === "inactive").length}
                                 </p>
                             </div>
                         </div>
@@ -159,18 +190,19 @@ const ViewSubscribers = () => {
                                                 </td>
                                                 <td className="border p-3">{email}</td>
                                                 <td className="border p-3">
-                                                    <span className={`px-2 py-1 text-white text-sm rounded-lg ${status === "active" ? "bg-green-500" : "bg-red-500"
-                                                        }`}>
-                                                        {status === "active" ? "✅ Active" : "❌ Unsubscribed"}
+                                                    <span className={`px-2 py-1 text-white text-sm rounded-lg ${status === "active" ? "bg-green-500" : "bg-red-500"}`}>
+                                                        {status === "active" ? "✅ Active" : "❌ Inactive"}
                                                     </span>
+                                                    <button
+                                                        onClick={() => updateSubscriberStatus(id, status as "active" | "inactive")} // Type assertion applied
+                                                        className="text-yellow-600 hover:text-yellow-800"
+                                                    >
+                                                        🔄 Update Status
+                                                    </button>
+
                                                 </td>
-                                                <td className="border p-3 flex space-x-3">
-                                                    <button className="text-blue-600 hover:text-blue-800">
-                                                        ✏️ Edit
-                                                    </button>
-                                                    <button className="text-green-600 hover:text-green-800">
-                                                        🏷️ Add Tags
-                                                    </button>
+                                                <td className="border p-3">
+                                                    <button className="text-green-600 hover:text-green-800">🏷️ Add Tags</button>
                                                 </td>
                                             </tr>
                                         ))}
