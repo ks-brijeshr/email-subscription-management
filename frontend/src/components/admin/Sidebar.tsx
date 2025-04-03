@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => void }) => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -12,10 +11,12 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
   }, []);
 
   const handleLogout = () => {
-    setShowModal(false); // Close Modal
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
   };
 
   return (
@@ -62,7 +63,7 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
           <div className="text-right text-white text-mg">{userName}</div>
 
           <button
-            onClick={() => setShowModal(true)}
+            onClick={handleLogout}
             className="mt-4 flex items-center space-x-2 p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition text-white w-full"
           >
             <img src="/logout-icon.png" alt="Logout" className="w-5 h-5" />
@@ -70,29 +71,6 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
           </button>
         </div>
       </aside>
-
-      {/* Logout Confirmation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-            <h3 className="text-lg font-semibold text-gray-800">Are you sure you want to logout?</h3>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

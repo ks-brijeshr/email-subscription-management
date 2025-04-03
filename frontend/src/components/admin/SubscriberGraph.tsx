@@ -1,25 +1,51 @@
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
-import { useEffect, useState } from "react";
-import { fetchDashboardStats } from "../../services/api";
+// import { useQuery } from "@tanstack/react-query";
+// import { getSubscriberGrowthData } from "../../services/api";
 
+// const SubscriberGraph = () => {
+//   const { data, error, isLoading } = useQuery({
+//     queryKey: ["subscriberGrowth"],
+//     queryFn: getSubscriberGrowthData,
+//   });
+
+//   if (isLoading) return <p>Loading graph...</p>;
+//   if (error) return <p className="text-red-500">Error loading graph</p>;
+
+//   return (
+//     <div className="p-4 bg-white shadow-md rounded-lg">
+//       <h3 className="text-lg font-bold">Subscriber Growth</h3>
+//       {/* Graph implementation here */}
+//     </div>
+//   );
+// };
+
+// export default SubscriberGraph;
+
+
+
+
+import { useQuery } from "@tanstack/react-query";
+import { getSubscriberGrowthData } from "../../services/api";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const SubscriberGraph = () => {
-  const [graphData, setGraphData] = useState([]);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["subscriberGrowth"],
+    queryFn: getSubscriberGrowthData,
+  });
 
-  useEffect(() => {
-    fetchDashboardStats().then((data) => setGraphData(data.subscriberGrowth)).catch(console.error);
-  }, []);
+  if (isLoading) return <p>Loading graph...</p>;
+  if (error) return <p className="text-red-500">Error loading graph.</p>;
 
   return (
-    <div className="bg-white p-4 shadow-md rounded-md">
-      <h3 className="text-lg font-semibold">Subscriber Growth</h3>
+    <div className="p-4 bg-white shadow-md rounded-lg">
+      <h3 className="text-lg font-bold">Subscriber Growth</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={graphData}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis />
           <Tooltip />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Line type="monotone" dataKey="subscribers" stroke="#8884d8" />
+          <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -27,4 +53,3 @@ const SubscriberGraph = () => {
 };
 
 export default SubscriberGraph;
-

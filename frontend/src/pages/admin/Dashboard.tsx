@@ -2,23 +2,52 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
 import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchDashboardStats, getAdminActivityLogs } from "../../services/api";
 
 const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar Toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await fetchDashboardStats();
+        setDashboardData(data);
+      } catch (error) {
+        setError("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchActivityLogs = async () => {
+      try {
+        const logs = await getAdminActivityLogs();
+        setActivityLogs(logs);
+      } catch (error) {
+        console.error("Failed to load activity logs");
+      }
+    };
+
+    fetchStats();
+    fetchActivityLogs();
+  }, []);
 
   return (
     <div className="flex">
-      {/* Sidebar (Show/Hide based on state) */}
       {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
-
-      <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
-        {/* Navbar */}
+      <main
+        className={`${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        } w-full transition-all duration-300`}
+      >
         <nav className="bg-gray-800 text-white p-5 flex justify-between items-center shadow-md">
-          
-          {/* Toggle Admin Panel */}
           <div className="flex items-center space-x-4">
-            {!isSidebarOpen && ( // Show button when sidebar is closed
+            {!isSidebarOpen && (
               <button
                 onClick={() => setIsSidebarOpen(true)}
                 className="p-2 rounded-md hover:bg-gray-700 transition"
@@ -26,21 +55,32 @@ const Dashboard = () => {
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
-
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
           </div>
-
-          {/* Right Side Options (Extra Space for Future Options) */}
-          <div className="flex items-center space-x-4"></div>
         </nav>
 
-        {/* Dashboard Content */}
         <div className="p-6">
-          <DashboardStats />
-          <div className="mt-6 grid grid-cols-2 gap-4">
-            <SubscriberGraph />
-            <ActivityLogs />
-          </div>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <>
+              <DashboardStats
+                stats={
+                  dashboardData || {
+                    totalSubscribers: 0,
+                    totalBlacklisted: 0,
+                    totalSubscriptionLists: 0,
+                  }
+                }
+              />
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                <SubscriberGraph />
+                <ActivityLogs logs={activityLogs} />
+              </div>
+            </>
+          )}
         </div>
       </main>
     </div>
