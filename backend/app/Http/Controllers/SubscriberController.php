@@ -160,22 +160,21 @@ class SubscriberController extends Controller
 
 
 
-    // Get All Subscribers
     public function getAllSubscribers($list_id)
     {
         // Find the subscription list
         $subscriptionList = SubscriptionList::find($list_id);
-
+    
         if (!$subscriptionList) {
             return response()->json([
                 "success" => false,
                 "message" => "Subscription list not found."
             ], 404);
         }
-
-        // Fetch all subscribers for this list
+    
+        // Fetch all subscribers for this list including status
         $subscribers = Subscriber::where('list_id', $list_id)
-            ->select('id', 'list_id', 'name', 'email', 'created_at', 'updated_at')
+            ->select('id', 'list_id', 'name', 'email', 'status', 'created_at', 'updated_at') // ✅ Added 'status'
             ->get()
             ->map(function ($subscriber) {
                 return [
@@ -183,18 +182,20 @@ class SubscriberController extends Controller
                     "list_id" => $subscriber->list_id,
                     "name" => $subscriber->name,
                     "email" => $subscriber->email,
+                    "status" => $subscriber->status, // ✅ Include status
                     "subscribed_at" => $subscriber->created_at->toDateTimeString(),
                     "created_at" => $subscriber->created_at->toDateTimeString(),
                     "updated_at" => $subscriber->updated_at->toDateTimeString()
                 ];
             });
-
+    
         return response()->json([
             "success" => true,
             "list_name" => $subscriptionList->name,
             "subscribers" => $subscribers
         ]);
     }
+    
 
     // Update Subscriber Status
     public function updateSubscriberStatus(Request $request, $subscriber_id)
