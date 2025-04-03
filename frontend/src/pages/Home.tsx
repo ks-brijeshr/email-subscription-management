@@ -119,7 +119,7 @@ const Home = () => {
         </nav>
       </header>
 
-      {/* Hero Section */}
+
       <main className="flex-grow flex flex-col items-center justify-center text-center px-6 py-16">
         <h2 className="text-5xl font-extrabold text-gray-900 leading-tight animate-fadeIn">
           Simplify Your <span className="text-blue-600">Email Subscriptions</span>
@@ -128,15 +128,12 @@ const Home = () => {
           Manage and streamline email subscriptions with ease. Our powerful tools ensure you never miss an important update.
         </p>
 
-        {/* Illustration Image */}
         <img
-          src="public/email.png"
+          src="email.png"
           alt="Email Management"
           className="mt-6 rounded-lg shadow-lg max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl w-80 h-auto"
         />
 
-
-        {/* CTA Buttons */}
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <Link
             to="/signup"
