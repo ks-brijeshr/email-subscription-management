@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => void }) => {
+const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOpen: (open: boolean) => void; setShowSubscriberBlocks: (show: boolean) => void }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
@@ -12,7 +12,7 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
   }, []);
 
   const handleLogout = () => {
-    setShowModal(false); // Close Modal
+    setShowModal(false);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
@@ -22,12 +22,8 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
     <>
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-gray-300 h-screen p-5 fixed flex flex-col justify-between shadow-md transition-all duration-300">
-        
-        {/* Header Section */}
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-medium">Admin Panel</h2>
-
-          {/* Close Button */}
           <button onClick={() => setIsSidebarOpen(false)} className="p-1 rounded-md hover:bg-gray-700 transition">
             <img src="/close-icon.png" alt="Close" className="w-5 h-5" />
           </button>
@@ -41,14 +37,20 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
             <img src="/dashboard-icon.png" alt="Dashboard" className="w-5 h-5" />
             <span className="text-sm">Dashboard</span>
           </Link>
+
           <Link to="/admin/subscription-lists" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
             <img src="/subscription-list-icon.png" alt="Subscription Lists" className="w-5 h-5" />
             <span className="text-sm">Subscription Lists</span>
           </Link>
-          <Link to="/admin/subscribers" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
+
+          <button
+            onClick={() => setShowSubscriberBlocks(true)}
+            className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition w-full text-left"
+          >
             <img src="/subscribers-icon.png" alt="Subscribers" className="w-5 h-5" />
             <span className="text-sm">Subscribers</span>
-          </Link>
+          </button>
+
           <Link to="/admin/blacklist" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
             <img src="/blacklist-icon.png" alt="Blacklist" className="w-5 h-5" />
             <span className="text-sm">Blacklist</span>
@@ -77,16 +79,10 @@ const Sidebar = ({ setIsSidebarOpen }: { setIsSidebarOpen: (open: boolean) => vo
           <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
             <h3 className="text-lg font-semibold text-gray-800">Are you sure you want to logout?</h3>
             <div className="mt-4 flex justify-center space-x-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-              >
+              <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition">
                 Cancel
               </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-              >
+              <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
                 Logout
               </button>
             </div>

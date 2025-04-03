@@ -10,6 +10,9 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import AddSubscriber from "../pages/admin/AddSubscriber";
+import Dashboard from "../pages/admin/Dashboard";
+
 
 const AppRoutes = () => {
   const { user } = useUser();  // Access user from context
@@ -38,6 +41,9 @@ const AppRoutes = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password-reset" element={<ResetPassword />} />
 
+
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/add-subscriber" element={<AddSubscriber />} />
       </Routes>
     </Router>
   );
