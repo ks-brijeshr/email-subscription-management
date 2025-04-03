@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOpen: (open: boolean) => void; setShowSubscriberBlocks: (show: boolean) => void }) => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -12,10 +11,14 @@ const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOp
   }, []);
 
   const handleLogout = () => {
-    setShowModal(false);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
+
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
+
   };
 
   return (
@@ -64,7 +67,7 @@ const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOp
           <div className="text-right text-white text-mg">{userName}</div>
 
           <button
-            onClick={() => setShowModal(true)}
+            onClick={handleLogout}
             className="mt-4 flex items-center space-x-2 p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition text-white w-full"
           >
             <img src="/logout-icon.png" alt="Logout" className="w-5 h-5" />
@@ -72,6 +75,7 @@ const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOp
           </button>
         </div>
       </aside>
+
 
       {/* Logout Confirmation Modal */}
       {showModal && (
@@ -89,6 +93,7 @@ const Sidebar = ({ setIsSidebarOpen, setShowSubscriberBlocks }: { setIsSidebarOp
           </div>
         </div>
       )}
+
     </>
   );
 };
