@@ -78,13 +78,15 @@ class DashboardController extends Controller
     {
         try {
             $logs = ActivityLog::where('user_id', $request->user()->id)
-                ->latest()
+                ->orderBy('created_at', 'desc')
                 ->limit(10)
-                ->get();
+                ->get(['action', 'created_at']); // Fetch only relevant fields
+
             return response()->json($logs, 200);
         } catch (\Exception $e) {
             Log::error("Error fetching activity logs: " . $e->getMessage());
             return response()->json(['error' => 'Failed to fetch activity logs'], 500);
         }
     }
+
 }
