@@ -18,14 +18,12 @@ const Sidebar = ({
   }, []);
 
   const handleLogout = () => {
-
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       navigate("/login");
     }
-
   };
 
   return (
@@ -86,7 +84,6 @@ const Sidebar = ({
         </div>
       </aside>
 
-
       {/* Logout Confirmation Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -109,7 +106,6 @@ const Sidebar = ({
           </div>
         </div>
       )}
-
     </>
   );
 };
