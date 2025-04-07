@@ -2,19 +2,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// Subscription List Type
-interface SubscriptionList {
-    id: string;
-    name: string;
-    subscriber_count: number;
+// Types
+interface Tag {
+    id: number;
+    tag: string;
 }
 
-// Subscriber Type
 interface Subscriber {
     id: string;
     name: string;
     email: string;
     status: "active" | "inactive";
+    tags?: string[];
+}
+
+interface SubscriptionList {
+    id: string;
+    name: string;
+    subscriber_count: number;
 }
 
 const ViewSubscribers = () => {
@@ -22,6 +27,8 @@ const ViewSubscribers = () => {
     const [selectedListId, setSelectedListId] = useState<string | null>(null);
     const [selectedListName, setSelectedListName] = useState<string | null>(null);
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+    const [tagInput, setTagInput] = useState<string>("");
+    const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -51,20 +58,17 @@ const ViewSubscribers = () => {
         }
     }, [selectedListId]);
 
-
     const fetchSubscribers = async (listId: string, listName: string) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-    
+
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-    
-            console.log("API Response:", response.data); //  Check backend response
-    
+
             if (response.data.subscribers) {
-                setSubscribers(response.data.subscribers); 
+                setSubscribers(response.data.subscribers);
                 setSelectedListId(listId);
                 setSelectedListName(listName);
             }
@@ -72,7 +76,7 @@ const ViewSubscribers = () => {
             console.error("Error fetching subscribers:", error);
         }
     };
-    
+
     const updateSubscriberStatus = async (subscriberId: string, currentStatus: "active" | "inactive") => {
         try {
             const token = localStorage.getItem("token");
@@ -86,7 +90,6 @@ const ViewSubscribers = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-          
             if (selectedListId) {
                 fetchSubscribers(selectedListId, selectedListName || "");
             }
@@ -95,7 +98,30 @@ const ViewSubscribers = () => {
         }
     };
 
+    const handleAddTag = async () => {
+        if (!selectedSubscriberId || !tagInput.trim()) return;
 
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            await axios.post(
+                `http://localhost:8000/api/subscribers/${selectedSubscriberId}/tags`,
+                { tags: [tagInput] }, // Important: 'tags' must be an array
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+
+            setTagInput("");
+            setSelectedSubscriberId(null);
+
+            if (selectedListId) {
+                fetchSubscribers(selectedListId, selectedListName || "");
+            }
+        } catch (error) {
+            console.error("Error adding tag:", error);
+        }
+    };
 
     return (
         <>
@@ -107,7 +133,7 @@ const ViewSubscribers = () => {
             </header>
 
             <div className="p-6 max-w-5xl mx-auto">
-                {/* Back Button when Viewing Subscription Lists */}
+                {/* Back Button */}
                 {!selectedListId && (
                     <button
                         onClick={() => navigate("/admin/dashboard")}
@@ -121,7 +147,7 @@ const ViewSubscribers = () => {
                     {selectedListId ? `Subscribers for ${selectedListName}` : "View All Subscription Lists"}
                 </h2>
 
-                {/* Subscription Lists Display */}
+                {/* Subscription Lists */}
                 {!selectedListId ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {subscriptionLists.map((list: SubscriptionList) => (
@@ -130,15 +156,13 @@ const ViewSubscribers = () => {
                                 onClick={() => fetchSubscribers(list.id, list.name)}
                                 className="p-6 bg-white border rounded-lg shadow-md cursor-pointer hover:bg-gray-100 transition duration-300"
                             >
-                                <h3 className="text-lg font-semibold text-gray-800">
-                                    {list.name}
-                                </h3>
+                                <h3 className="text-lg font-semibold text-gray-800">{list.name}</h3>
                             </div>
                         ))}
                     </div>
                 ) : (
                     <>
-                        {/* Back Button for Subscribers List */}
+                        {/* Back to Lists */}
                         <button
                             onClick={() => {
                                 setSelectedListId(null);
@@ -148,6 +172,8 @@ const ViewSubscribers = () => {
                         >
                             Back to Subscription Lists
                         </button>
+
+                        {/* Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                                 <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
@@ -182,27 +208,63 @@ const ViewSubscribers = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {subscribers.map(({ id, name, email, status }: Subscriber) => (
-                                            <tr key={id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
-                                                <td className="border p-3">{id}</td>
+                                        {subscribers.map((subscriber) => (
+                                            <tr key={subscriber.id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
+                                                <td className="border p-3">{subscriber.id}</td>
                                                 <td className="border p-3 font-semibold text-blue-700 cursor-pointer hover:underline">
-                                                    {name || "N/A"}
+                                                    {subscriber.name || "N/A"}
                                                 </td>
-                                                <td className="border p-3">{email}</td>
+                                                <td className="border p-3">{subscriber.email}</td>
                                                 <td className="border p-3">
-                                                    <span className={`px-2 py-1 text-white text-sm rounded-lg ${status === "active" ? "bg-green-500" : "bg-red-500"}`}>
-                                                        {status === "active" ? "✅ Active" : "❌ Inactive"}
+                                                    <span className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active" ? "bg-green-500" : "bg-red-500"}`}>
+                                                        {subscriber.status === "active" ? "✔️ Active" : "❌ Inactive"}
                                                     </span>
                                                     <button
-                                                        onClick={() => updateSubscriberStatus(id, status as "active" | "inactive")} // Type assertion applied
-                                                        className="text-yellow-600 hover:text-yellow-800"
+                                                        onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
+                                                        className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
                                                     >
                                                         🔄 Update Status
                                                     </button>
-
                                                 </td>
                                                 <td className="border p-3">
-                                                    <button className="text-green-600 hover:text-green-800">🏷️ Add Tags</button>
+                                                    {/* Tags Display */}
+                                                    <div className="flex flex-wrap gap-2 mb-2">
+                                                        {subscriber.tags?.map((tag: string, index: number) => (
+                                                            <span
+                                                                key={`tag-${index}`}
+                                                                className="bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
+                                                            >
+                                                                #{tag}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+
+
+                                                    {/* Tag Input */}
+                                                    {selectedSubscriberId === subscriber.id ? (
+                                                        <div className="flex gap-2">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Enter tag"
+                                                                value={tagInput}
+                                                                onChange={(e) => setTagInput(e.target.value)}
+                                                                className="border rounded p-1 text-sm"
+                                                            />
+                                                            <button
+                                                                onClick={handleAddTag}
+                                                                className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
+                                                            >
+                                                                Add
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => setSelectedSubscriberId(subscriber.id)}
+                                                            className="text-green-600 hover:text-green-800 text-sm"
+                                                        >
+                                                            ➕ Add Tag
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
