@@ -143,7 +143,7 @@ Route::get('/subscription-list/verify/{token}', [SubscriptionListController::cla
 Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
 
 Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
-    Route::get('/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
+    Route::get('/subscription-lists/{list_id}/subscribers', [SubscriberController::class, 'getAllSubscribers']);
     Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
     Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
     Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
