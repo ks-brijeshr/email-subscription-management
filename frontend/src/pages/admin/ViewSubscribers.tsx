@@ -29,6 +29,11 @@ const ViewSubscribers = () => {
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [tagInput, setTagInput] = useState<string>("");
     const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
+
+    const [emailSearch, setEmailSearch] = useState<string>("");
+    const [tagSearch, setTagSearch] = useState<string>("");
+    const [statusFilter, setStatusFilter] = useState<string>("all");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -107,10 +112,9 @@ const ViewSubscribers = () => {
 
             await axios.post(
                 `http://localhost:8000/api/subscribers/${selectedSubscriberId}/tags`,
-                { tags: [tagInput] }, // Important: 'tags' must be an array
+                { tags: [tagInput] },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-
 
             setTagInput("");
             setSelectedSubscriberId(null);
@@ -123,9 +127,15 @@ const ViewSubscribers = () => {
         }
     };
 
+    const filteredSubscribers = subscribers.filter((s) => {
+        const emailMatch = s.email.toLowerCase().includes(emailSearch.toLowerCase());
+        const tagMatch = tagSearch === "" || s.tags?.some(tag => tag.toLowerCase().includes(tagSearch.toLowerCase()));
+        const statusMatch = statusFilter === "all" || s.status === statusFilter;
+        return emailMatch && tagMatch && statusMatch;
+    });
+
     return (
         <>
-            {/* Navbar */}
             <header className="w-full flex justify-between items-center px-8 py-5 bg-gray-900 text-white shadow-md">
                 <h1 className="text-3xl font-bold tracking-wide">
                     <span className="text-blue-500">Email</span> Manager
@@ -133,7 +143,6 @@ const ViewSubscribers = () => {
             </header>
 
             <div className="p-6 max-w-5xl mx-auto">
-                {/* Back Button */}
                 {!selectedListId && (
                     <button
                         onClick={() => navigate("/admin/dashboard")}
@@ -147,7 +156,6 @@ const ViewSubscribers = () => {
                     {selectedListId ? `Subscribers for ${selectedListName}` : "View All Subscription Lists"}
                 </h2>
 
-                {/* Subscription Lists */}
                 {!selectedListId ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {subscriptionLists.map((list: SubscriptionList) => (
@@ -162,7 +170,6 @@ const ViewSubscribers = () => {
                     </div>
                 ) : (
                     <>
-                        {/* Back to Lists */}
                         <button
                             onClick={() => {
                                 setSelectedListId(null);
@@ -173,7 +180,6 @@ const ViewSubscribers = () => {
                             Back to Subscription Lists
                         </button>
 
-                        {/* Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                                 <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
@@ -193,6 +199,33 @@ const ViewSubscribers = () => {
                             </div>
                         </div>
 
+                        {/* Search & Filters */}
+                        <div className="flex flex-col md:flex-row gap-4 mb-4">
+                            <input
+                                type="text"
+                                placeholder="Search by Email"
+                                value={emailSearch}
+                                onChange={(e) => setEmailSearch(e.target.value)}
+                                className="border p-2 rounded w-full md:w-1/3"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Search by Tag"
+                                value={tagSearch}
+                                onChange={(e) => setTagSearch(e.target.value)}
+                                className="border p-2 rounded w-full md:w-1/3"
+                            />
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="border p-2 rounded w-full md:w-1/3"
+                            >
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
                         {/* Subscribers Table */}
                         <div className="bg-white p-6 rounded-xl shadow-lg border">
                             <h3 className="text-2xl font-bold text-gray-900 mb-4">Subscribers</h3>
@@ -208,7 +241,7 @@ const ViewSubscribers = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {subscribers.map((subscriber) => (
+                                        {filteredSubscribers.map((subscriber) => (
                                             <tr key={subscriber.id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
                                                 <td className="border p-3">{subscriber.id}</td>
                                                 <td className="border p-3 font-semibold text-blue-700 cursor-pointer hover:underline">
@@ -227,7 +260,6 @@ const ViewSubscribers = () => {
                                                     </button>
                                                 </td>
                                                 <td className="border p-3">
-                                                    {/* Tags Display */}
                                                     <div className="flex flex-wrap gap-2 mb-2">
                                                         {subscriber.tags?.map((tag: string, index: number) => (
                                                             <span
@@ -239,8 +271,6 @@ const ViewSubscribers = () => {
                                                         ))}
                                                     </div>
 
-
-                                                    {/* Tag Input */}
                                                     {selectedSubscriberId === subscriber.id ? (
                                                         <div className="flex gap-2">
                                                             <input
