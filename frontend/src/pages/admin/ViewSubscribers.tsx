@@ -157,10 +157,14 @@ const ViewSubscribers = () => {
 
     return (
         <>
+
             <header className="w-full flex justify-between items-center px-8 py-5 bg-gray-900 text-white shadow-md">
                 <h1 className="text-3xl font-bold tracking-wide">
                     <span className="text-blue-500">Email</span> Manager
                 </h1>
+                <nav className="space-x-6">
+                    <a href="/admin/dashboard" className="hover:text-blue-400 transition">Home</a>
+                </nav>
             </header>
 
             <div className="p-6 max-w-5xl mx-auto">
