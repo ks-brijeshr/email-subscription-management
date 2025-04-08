@@ -16,10 +16,24 @@ use App\Http\Controllers\SignupAnalyticsController;
 use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
 });
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'dashboardStats']); // Fetch all dashboard stats
+    Route::get('/admin/dashboard/stats', [DashboardController::class, 'getStats']); // Individual stats
+    Route::get('/admin/dashboard/subscriber-growth', [DashboardController::class, 'getSubscriberGrowth']); // Graph data
+    Route::get('/admin/dashboard/activity-logs', [DashboardController::class, 'getActivityLogs']); // Admin logs
+});
+
+
+
 
 
 // Route::post('/register', [AuthController::class, 'register'])->middleware('recaptcha');
@@ -101,7 +115,7 @@ Route::middleware('auth.api_token')->group(function () {
     Route::get('/api-auth/subscribers/{list_id}', [SubscriberController::class, 'getAllSubscribers']);
     Route::post('/api-auth/subscribers/{list_id}', [SubscriberController::class, 'addSubscriber'])->middleware('owner');
     Route::get('/api-auth/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails'])->middleware('owner');
-    Route::put('/api-auth/susbcriber/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus'])->middleware('owner');
+    Route::put('/api-auth/subscriber/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus'])->middleware('owner');
 
     // Email Validation APIs
     // Route::get('/email-validation/business/{email}', [EmailValidationController::class, 'checkBusinessEmail']);
