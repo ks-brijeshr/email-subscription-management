@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// Types
-interface Tag {
-    id: number;
-    tag: string;
-}
-
 interface Subscriber {
     id: string;
     name: string;
@@ -127,6 +121,33 @@ const ViewSubscribers = () => {
         }
     };
 
+    const exportSubscribers = async (format: "csv" | "json") => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token || !selectedListId || !selectedListName) return;
+
+            const response = await axios.get(
+                `http://localhost:8000/api/subscriptions/${selectedListId}/export/${format}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    responseType: "blob",
+                }
+            );
+
+            const blob = new Blob([response.data], { type: format === "csv" ? "text/csv" : "application/json" });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = `${selectedListName}_subscribers.${format}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Error exporting subscribers:", error);
+            alert("Failed to export subscribers.");
+        }
+    };
+
     const filteredSubscribers = subscribers.filter((s) => {
         const emailMatch = s.email.toLowerCase().includes(emailSearch.toLowerCase());
         const tagMatch = tagSearch === "" || s.tags?.some(tag => tag.toLowerCase().includes(tagSearch.toLowerCase()));
@@ -180,6 +201,21 @@ const ViewSubscribers = () => {
                             Back to Subscription Lists
                         </button>
 
+                        <div className="flex gap-4 mb-6">
+                            <button
+                                onClick={() => exportSubscribers("csv")}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                            >
+                                Export as CSV
+                            </button>
+                            <button
+                                onClick={() => exportSubscribers("json")}
+                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
+                            >
+                                Export as JSON
+                            </button>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                                 <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
@@ -199,7 +235,6 @@ const ViewSubscribers = () => {
                             </div>
                         </div>
 
-                        {/* Search & Filters */}
                         <div className="flex flex-col md:flex-row gap-4 mb-4">
                             <input
                                 type="text"
@@ -226,7 +261,6 @@ const ViewSubscribers = () => {
                             </select>
                         </div>
 
-                        {/* Subscribers Table */}
                         <div className="bg-white p-6 rounded-xl shadow-lg border">
                             <h3 className="text-2xl font-bold text-gray-900 mb-4">Subscribers</h3>
                             <div className="overflow-x-auto">
@@ -237,7 +271,7 @@ const ViewSubscribers = () => {
                                             <th className="border p-3">Name</th>
                                             <th className="border p-3">Email</th>
                                             <th className="border p-3">Status</th>
-                                            <th className="border p-3">Actions</th>
+                                            <th className="border p-3">Tags</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -250,7 +284,7 @@ const ViewSubscribers = () => {
                                                 <td className="border p-3">{subscriber.email}</td>
                                                 <td className="border p-3">
                                                     <span className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active" ? "bg-green-500" : "bg-red-500"}`}>
-                                                        {subscriber.status === "active" ? "✔️ Active" : "❌ Inactive"}
+                                                        {subscriber.status === "active" ? "✓ Active" : "✗ Inactive"}
                                                     </span>
                                                     <button
                                                         onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
