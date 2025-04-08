@@ -71,17 +71,27 @@ const Sidebar = ({
         {/* Bottom Section */}
         <div className="mt-auto">
           <hr className="my-4 border-gray-700" />
-          <div className="text-right text-sm text-gray-400">Admin</div>
-          <div className="text-right text-white text-md">{userName}</div>
 
+
+          <Link
+            to="/profile"
+            className="block px-4 py-2 text-gray-700 hover:bg-gray-700 rounded"
+          >
+            <div className="text-right text-sm text-gray-400">Admin</div>
+            <div className="text-right text-white text-mg">{userName}</div>
+          </Link>
           <button
             onClick={handleLogout}
             className="mt-4 flex items-center space-x-2 p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition text-white w-full"
           >
+
+
             <img src="/logout-icon.png" alt="Logout" className="w-5 h-5" />
             <span className="text-sm">Logout</span>
           </button>
         </div>
+
+
       </aside>
 
       {/* Logout Confirmation Modal */}
