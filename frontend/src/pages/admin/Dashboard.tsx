@@ -5,12 +5,20 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
 import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
+import EmailVerificationStatus from "./EmailVerificationStatus";
 import { fetchDashboardStats, getAdminActivityLogs } from "../../services/api";
 
 interface SubscriptionList {
   id: number;
   name: string;
 }
+
+const getGreetingMessage = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning ☀️";
+  if (hour < 18) return "Good Afternoon 🌤️";
+  return "Good Evening 🌙";
+};
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -46,16 +54,13 @@ const Dashboard = () => {
     const fetchSubscriptionLists = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token missing");
-          return;
-        }
+        if (!token) return;
 
-        const response = await axios.get("http://localhost:8000/api/subscription-lists", {
+        const res = await axios.get("http://localhost:8000/api/subscription-lists", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setSubscriptionLists(response.data.subscription_lists || []);
+        setSubscriptionLists(res.data.subscription_lists || []);
       } catch (error) {
         console.error("Failed to fetch subscription lists:", error);
       }
@@ -68,21 +73,31 @@ const Dashboard = () => {
 
   return (
     <div className="flex">
-      {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} setShowSubscriberBlocks={setShowSubscriberBlocks} />}
+      {isSidebarOpen && (
+        <Sidebar
+          setIsSidebarOpen={setIsSidebarOpen}
+          setShowSubscriberBlocks={setShowSubscriberBlocks}
+        />
+      )}
 
       <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
-        <nav className="bg-gray-800 text-white p-5 flex justify-between items-center shadow-md">
+        {/* Navbar */}
+        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
-              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-700 transition">
+              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-100 transition">
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-white">Admin Dashboard</h1>
+          </div>
+          <div className="text-right text-gray-600">
+            <p className="text-white font-medium">{getGreetingMessage()}</p>
+            <p className="text-white">{new Date().toLocaleTimeString()}</p>
           </div>
         </nav>
 
-        <div className="p-6">
+        <div className="p-6 bg-gray-50 min-h-screen">
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
@@ -95,42 +110,47 @@ const Dashboard = () => {
                   totalBlacklisted: 0,
                   totalSubscriptionLists: 0,
                 }}
-
               />
-              <div className="mt-6 grid grid-cols-2 gap-4">
+
+              <div className="mt-6">
+                <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  <EmailVerificationStatus />
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <SubscriberGraph />
                 <ActivityLogs />
               </div>
             </>
           )}
 
+          {/* Add/View Subscriber Blocks */}
           {showSubscriberBlocks && (
-
-
-            <div className="grid grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div
-                className="p-6 bg-blue-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 transition"
+                className="p-6 bg-blue-500 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
                 onClick={() => {
                   if (subscriptionLists.length > 0) {
                     navigate("/admin/add-subscriber");
                   }
                 }}
               >
-                <h3 className="text-lg font-semibold">Add Subscriber</h3>
-                <p className="text-sm opacity-80">Click to add a new subscriber.</p>
+                <h3 className="text-lg font-semibold text-white">Add Subscriber</h3>
+                <p className="text-sm text-white">Click to add a new subscriber.</p>
                 {subscriptionLists.length === 0 && (
-                  <p className="mt-2 p-2 text-black font-semibold bg-yellow-300 rounded">
-                     No subscription lists available. Please create one first.
+                  <p className="mt-2 p-2 bg-yellow-100 text-yellow-800 rounded text-sm font-medium">
+                    No subscription lists available.
                   </p>
                 )}
               </div>
 
               <div
-                className="p-6 bg-green-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-green-700 transition"
+                className="p-6 bg-green-500 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
                 onClick={() => navigate("/admin/view-subscribers")}
               >
-                <h3 className="text-lg font-semibold">View All Subscribers</h3>
-                <p className="text-sm opacity-80">Click to see all subscribers.</p>
+                <h3 className="text-lg font-semibold text-white">View All Subscribers</h3>
+                <p className="text-sm text-white">Click to see all subscribers.</p>
               </div>
             </div>
           )}
@@ -141,3 +161,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
