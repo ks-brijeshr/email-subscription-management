@@ -67,6 +67,12 @@ const Sidebar = ({
             >
               ➕ Add List
             </Link>
+            <Link
+              to="/admin/subscription-lists"
+              className="block px-3 py-1 rounded-md text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+            >
+              👁️ View All Lists
+            </Link>
            
           </div>
 
