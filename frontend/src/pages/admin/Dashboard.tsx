@@ -25,7 +25,6 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [activityLogs, setActivityLogs] = useState<any[]>([]);
   const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
-  const [showSubscriberBlocks, setShowSubscriberBlocks] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -76,7 +75,7 @@ const Dashboard = () => {
       {isSidebarOpen && (
         <Sidebar
           setIsSidebarOpen={setIsSidebarOpen}
-          setShowSubscriberBlocks={setShowSubscriberBlocks}
+         
         />
       )}
 
@@ -85,7 +84,10 @@ const Dashboard = () => {
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
-              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-100 transition">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 rounded-md hover:bg-gray-100 transition"
+              >
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
@@ -124,36 +126,6 @@ const Dashboard = () => {
               </div>
             </>
           )}
-
-          {/* Add/View Subscriber Blocks */}
-          {showSubscriberBlocks && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <div
-                className="p-6 bg-blue-500 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
-                onClick={() => {
-                  if (subscriptionLists.length > 0) {
-                    navigate("/admin/add-subscriber");
-                  }
-                }}
-              >
-                <h3 className="text-lg font-semibold text-white">Add Subscriber</h3>
-                <p className="text-sm text-white">Click to add a new subscriber.</p>
-                {subscriptionLists.length === 0 && (
-                  <p className="mt-2 p-2 bg-yellow-100 text-yellow-800 rounded text-sm font-medium">
-                    No subscription lists available.
-                  </p>
-                )}
-              </div>
-
-              <div
-                className="p-6 bg-green-500 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
-                onClick={() => navigate("/admin/view-subscribers")}
-              >
-                <h3 className="text-lg font-semibold text-white">View All Subscribers</h3>
-                <p className="text-sm text-white">Click to see all subscribers.</p>
-              </div>
-            </div>
-          )}
         </div>
       </main>
     </div>
@@ -161,4 +133,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
