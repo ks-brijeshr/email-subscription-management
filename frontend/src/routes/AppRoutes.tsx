@@ -14,10 +14,11 @@ import AddSubscriber from "../pages/admin/AddSubscriber";
 import Dashboard from "../pages/admin/Dashboard";
 import ViewSubscribers from "../pages/admin/ViewSubscribers";
 import Profile from "../pages/admin/Profile";
+import AddSubscriptionList from "../pages/admin/AddSubscriptionList";
 
 
 const AppRoutes = () => {
-  const { user } = useUser();  // Access user from context
+  const { user } = useUser();  
 
   return (
     <Router>
@@ -50,6 +51,8 @@ const AppRoutes = () => {
 
 
         <Route path="/profile" element={<Profile />} />
+
+        <Route path="/admin/subscription-list/add" element={<AddSubscriptionList />} />
 
       </Routes>
     </Router>
