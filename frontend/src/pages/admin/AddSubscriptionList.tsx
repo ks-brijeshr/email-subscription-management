@@ -5,7 +5,7 @@ import Sidebar from "../../components/admin/Sidebar";
 
 const AddSubscriptionList = () => {
     const [name, setName] = useState<string>("");
-    const [isVerified, setIsVerified] = useState<boolean>(false);
+    
     const [allowBusinessEmailOnly, setAllowBusinessEmailOnly] = useState<boolean>(false);
     const [blockTemporaryEmail, setBlockTemporaryEmail] = useState<boolean>(false);
     const [requireEmailVerification, setRequireEmailVerification] = useState<boolean>(false);
@@ -32,7 +32,6 @@ const AddSubscriptionList = () => {
                 "http://localhost:8000/api/subscription-list/create",
                 {
                     name,
-                    is_verified: isVerified,
                     allow_business_email_only: allowBusinessEmailOnly,
                     block_temporary_email: blockTemporaryEmail,
                     require_email_verification: requireEmailVerification,
@@ -91,16 +90,6 @@ const AddSubscriptionList = () => {
 
                             {/* Custom Checkbox Design */}
                             <div className="space-y-4">
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="isVerified"
-                                        checked={isVerified}
-                                        onChange={() => setIsVerified(!isVerified)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <label htmlFor="isVerified" className="ml-2 text-gray-700">Verified</label>
-                                </div>
 
                                 <div className="flex items-center">
                                     <input
