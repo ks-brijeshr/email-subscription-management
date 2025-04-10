@@ -3,20 +3,21 @@ import { useUser } from "../context/UserContext";
 import Home from "../pages/Home";
 import Signup from "../pages/Signup";
 import Login from "../pages/Login";
-
 import AdminDashboard from "../pages/admin/Dashboard";
 import UserDashboard from "../pages/user/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
-
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import AddSubscriber from "../pages/admin/AddSubscriber";
 import Dashboard from "../pages/admin/Dashboard";
 import ViewSubscribers from "../pages/admin/ViewSubscribers";
+import Profile from "../pages/admin/Profile";
+import AddSubscriptionList from "../pages/admin/AddSubscriptionList";
+import SubscriptionListPage from "../pages/admin/SubscriptionListPage";
 
 
 const AppRoutes = () => {
-  const { user } = useUser();  // Access user from context
+  const { user } = useUser();
 
   return (
     <Router>
@@ -46,6 +47,14 @@ const AppRoutes = () => {
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/add-subscriber" element={<AddSubscriber />} />
         <Route path="/admin/view-subscribers" element={<ViewSubscribers />} />
+
+
+        <Route path="/profile" element={<Profile />} />
+
+        <Route path="/admin/subscription-list/add" element={<AddSubscriptionList />} />
+
+        <Route path="/admin/subscription-lists" element={<SubscriptionListPage />} />
+
       </Routes>
     </Router>
   );

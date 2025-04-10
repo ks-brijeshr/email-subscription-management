@@ -25,8 +25,10 @@ class SubscriptionList extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function subscribers(): HasMany
+    // app/Models/SubscriptionList.php
+
+    public function subscribers()
     {
-        return $this->hasMany(Subscriber::class, 'list_id');
+        return $this->hasMany(\App\Models\Subscriber::class, 'list_id');
     }
 }

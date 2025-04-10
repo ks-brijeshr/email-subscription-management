@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = ({ 
-  setIsSidebarOpen, 
-  setShowSubscriberBlocks 
-}: { 
-  setIsSidebarOpen: (open: boolean) => void; 
-  setShowSubscriberBlocks: (show: boolean) => void; 
+const Sidebar = ({
+  setIsSidebarOpen,
+}: {
+  setIsSidebarOpen: (open: boolean) => void;
 }) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showSubscribersMenu, setShowSubscribersMenu] = useState(false);
+  const [showSubscriptionMenu, setShowSubscriptionMenu] = useState(false);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -27,86 +26,116 @@ const Sidebar = ({
   };
 
   return (
-    <>
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-gray-300 h-screen p-5 fixed flex flex-col justify-between shadow-md transition-all duration-300">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-medium">Admin Panel</h2>
-          <button 
-            onClick={() => setIsSidebarOpen(false)} 
-            className="p-1 rounded-md hover:bg-gray-700 transition"
+    <aside className="w-64 h-screen fixed flex flex-col justify-between shadow-2xl z-50 transition-all duration-300 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-r border-gray-700">
+      <div className="flex justify-between items-center px-5 pt-5">
+        <h2 className="text-xl font-semibold text-cyan-400 tracking-wide">Admin Panel</h2>
+        <button
+          onClick={() => setIsSidebarOpen(false)}
+          className="p-1 rounded-md hover:bg-gray-800 transition"
+        >
+          <img src="/close-icon.png" alt="Close" className="w-5 h-5" />
+        </button>
+      </div>
+
+      <hr className="my-4 border-gray-700 mx-5" />
+
+      {/* Navigation */}
+      <nav className="space-y-2 px-5">
+        <Link to="/admin/dashboard" className="flex items-center space-x-3 p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all">
+          <img src="/dashboard-icon.svg" alt="Dashboard" className="w-6 h-6" />
+          <span className="text-sm text-white">Dashboard</span>
+        </Link>
+
+        {/* Subscription List */}
+        <div>
+          <button
+            onClick={() => setShowSubscriptionMenu(!showSubscriptionMenu)}
+            className="flex justify-between items-center w-full p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
           >
-            <img src="/close-icon.png" alt="Close" className="w-5 h-5" />
+            <div className="flex items-center space-x-3">
+              <img src="/subscription-list.svg" alt="Subscription" className="w-6 h-6" />
+              <span className="text-sm text-white">Subscription Lists</span>
+            </div>
+
           </button>
+
+          <div className={`ml-10 mt-1 space-y-1 overflow-hidden transition-all duration-300 ${showSubscriptionMenu ? "max-h-32" : "max-h-0"
+            }`}>
+            <Link
+              to="/admin/subscription-list/add"
+              className="block px-3 py-1 rounded-md text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+            >
+              ➕ Add List
+            </Link>
+            <Link
+              to="/admin/subscription-lists"
+              className="block px-3 py-1 rounded-md text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+            >
+              👁️ View All Lists
+            </Link>
+           
+          </div>
+
         </div>
 
+        {/* Subscribers Dropdown */}
+        <div>
+          <button
+            onClick={() => setShowSubscribersMenu(!showSubscribersMenu)}
+            className="flex justify-between items-center w-full p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
+          >
+            <div className="flex items-center space-x-3">
+              <img src="/subscribers-iconn.svg" alt="Subscribers" className="w-6 h-6" />
+              <span className="text-sm text-white">Subscribers</span>
+            </div>
+
+          </button>
+
+          <div className={`ml-10 mt-1 space-y-1 overflow-hidden transition-all duration-300 ${showSubscribersMenu ? "max-h-32" : "max-h-0"
+            }`}>
+            <Link
+              to="/admin/add-subscriber"
+              className="block px-3 py-1 rounded-md text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+            >
+              ➕ Add Subscriber
+            </Link>
+            <Link
+              to="/admin/view-subscribers"
+              className="block px-3 py-1 rounded-md text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+            >
+              👁️ View All Subscribers
+            </Link>
+          </div>
+
+        </div>
+
+        <Link to="/admin/blacklist" className="flex items-center space-x-3 p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all">
+          <img src="/blacklist-icon.svg" alt="Blacklist" className="w-6 h-6" />
+          <span className="text-sm text-white">Blacklist</span>
+        </Link>
+      </nav>
+
+      {/* Bottom */}
+      <div className="px-5 pb-6 mt-auto">
         <hr className="my-4 border-gray-700" />
 
-        {/* Navigation Links */}
-        <nav className="space-y-4">
-          <Link to="/admin/dashboard" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
-            <img src="/dashboard-icon.png" alt="Dashboard" className="w-5 h-5" />
-            <span className="text-sm">Dashboard</span>
-          </Link>
+        <Link
+          to="/profile"
+          className="block px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition"
+        >
+          <div className="text-sm text-gray-400 text-right">Admin</div>
+          <div className="text-right text-white font-medium">{userName}</div>
+        </Link>
 
-          <Link to="/admin/subscription-lists" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
-            <img src="/subscription-list-icon.png" alt="Subscription Lists" className="w-5 h-5" />
-            <span className="text-sm">Subscription Lists</span>
-          </Link>
-
-          <button
-            onClick={() => setShowSubscriberBlocks(true)}
-            className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition w-full text-left"
-          >
-            <img src="/subscribers-icon.png" alt="Subscribers" className="w-5 h-5" />
-            <span className="text-sm">Subscribers</span>
-          </button>
-
-          <Link to="/admin/blacklist" className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-800 transition">
-            <img src="/blacklist-icon.png" alt="Blacklist" className="w-5 h-5" />
-            <span className="text-sm">Blacklist</span>
-          </Link>
-        </nav>
-
-        {/* Bottom Section */}
-        <div className="mt-auto">
-          <hr className="my-4 border-gray-700" />
-          <div className="text-right text-sm text-gray-400">Admin</div>
-          <div className="text-right text-white text-md">{userName}</div>
-
-          <button
-            onClick={handleLogout}
-            className="mt-4 flex items-center space-x-2 p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition text-white w-full"
-          >
-            <img src="/logout-icon.png" alt="Logout" className="w-5 h-5" />
-            <span className="text-sm">Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Logout Confirmation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-            <h3 className="text-lg font-semibold text-gray-800">Are you sure you want to logout?</h3>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button 
-                onClick={() => setShowModal(false)} 
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleLogout} 
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+        <button
+          onClick={handleLogout}
+          className="mt-4 flex items-center space-x-2 p-3 rounded-lg bg-red-500 hover:bg-red-600 transition text-white w-full"
+        >
+          <img src="/logout-iconn.svg" alt="Logout" className="w-8 h-8" />
+          <span className="text-ml">Logout</span>
+        </button>
+      </div>
+    </aside>
   );
 };
 

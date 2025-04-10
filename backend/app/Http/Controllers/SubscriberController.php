@@ -172,9 +172,9 @@ class SubscriberController extends Controller
             ], 404);
         }
     
-        // Fetch all subscribers for this list including status
-        $subscribers = Subscriber::where('list_id', $list_id)
-            ->select('id', 'list_id', 'name', 'email', 'status', 'created_at', 'updated_at') // ✅ Added 'status'
+        // Fetch all subscribers with their tags
+        $subscribers = Subscriber::with('tags')
+            ->where('list_id', $list_id)
             ->get()
             ->map(function ($subscriber) {
                 return [
@@ -182,10 +182,11 @@ class SubscriberController extends Controller
                     "list_id" => $subscriber->list_id,
                     "name" => $subscriber->name,
                     "email" => $subscriber->email,
-                    "status" => $subscriber->status, // ✅ Include status
+                    "status" => $subscriber->status,
                     "subscribed_at" => $subscriber->created_at->toDateTimeString(),
                     "created_at" => $subscriber->created_at->toDateTimeString(),
-                    "updated_at" => $subscriber->updated_at->toDateTimeString()
+                    "updated_at" => $subscriber->updated_at->toDateTimeString(),
+                    "tags" => $subscriber->tags->pluck('tag') // Just tag names
                 ];
             });
     

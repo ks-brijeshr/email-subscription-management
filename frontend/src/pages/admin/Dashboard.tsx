@@ -5,12 +5,20 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
 import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
+import EmailVerificationStatus from "./EmailVerificationStatus";
 import { fetchDashboardStats, getAdminActivityLogs } from "../../services/api";
 
 interface SubscriptionList {
   id: number;
   name: string;
 }
+
+const getGreetingMessage = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning ☀️";
+  if (hour < 18) return "Good Afternoon 🌤️";
+  return "Good Evening 🌙";
+};
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -73,17 +81,26 @@ const Dashboard = () => {
 
   return (
     <div className="flex">
-      {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} setShowSubscriberBlocks={setShowSubscriberBlocks} />}
+      {isSidebarOpen && (
+        <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
+      )}
 
       <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
-        <nav className="bg-gray-800 text-white p-5 flex justify-between items-center shadow-md">
+        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
-              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-700 transition">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 rounded-md hover:bg-gray-100 transition"
+              >
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-white">Admin Dashboard</h1>
+          </div>
+          <div className="text-right text-gray-600">
+            <p className="text-white font-medium">{getGreetingMessage()}</p>
+            <p className="text-white">{new Date().toLocaleTimeString()}</p>
           </div>
         </nav>
 
@@ -121,10 +138,10 @@ const Dashboard = () => {
                   totalSubscriptionLists: 0,
                 }}
               />
+
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <SubscriberGraph listId={selectedListId || undefined} />
-
-                <ActivityLogs  />
+                <ActivityLogs />
               </div>
             </>
           )}
@@ -147,16 +164,14 @@ const Dashboard = () => {
                   </p>
                 )}
               </div>
-
-              <div
-                className="p-6 bg-green-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-green-700 transition"
-                onClick={() => navigate("/admin/view-subscribers")}
-              >
-                <h3 className="text-lg font-semibold">View All Subscribers</h3>
-                <p className="text-sm opacity-80">Click to see all subscribers.</p>
-              </div>
             </div>
           )}
+
+          <div className="mt-6">
+            <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+              <EmailVerificationStatus />
+            </div>
+          </div>
         </div>
       </main>
     </div>

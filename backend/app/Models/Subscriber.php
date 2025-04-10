@@ -22,8 +22,11 @@ class Subscriber extends Model
 
     public function tags()
     {
-        return $this->hasMany(SubscriberTag::class, 'subscriber_id');
+        return $this->hasMany(SubscriberTag::class);
     }
+
+
+
 
     protected $casts = [
         'metadata' => 'array',
