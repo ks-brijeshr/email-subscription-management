@@ -16,77 +16,100 @@ class DashboardController extends Controller
     public function getStats(Request $request)
     {
         $ownerId = $request->user()->id;
+        $listId = $request->query('subscription_list_id'); // Get selected list
+
+        $subscriptionListIds = SubscriptionList::where('user_id', $ownerId)
+            ->when($listId, fn($q) => $q->where('id', $listId))
+            ->pluck('id');
 
         return response()->json([
-            'totalSubscribers' => Subscriber::whereHas('subscriptionList', fn($query) => $query->where('user_id', $ownerId))->count(),
+            'totalSubscribers' => Subscriber::whereIn('list_id', $subscriptionListIds)->count(),
             'totalBlacklisted' => EmailBlacklist::where('blacklisted_by', $ownerId)->count(),
-            'totalSubscriptionLists' => SubscriptionList::where('user_id', $ownerId)->count(),
+            'totalSubscriptionLists' => $subscriptionListIds->count(),
             'totalEmailVerifications' => EmailVerificationLog::where('user_id', $ownerId)->count(),
             'totalActivityLogs' => ActivityLog::where('user_id', $ownerId)->count(),
         ], 200);
     }
 
-    public function getSubscriberGrowth(Request $request)
-    {
-        $ownerId = $request->user()->id;
-
-        $growthData = Subscriber::whereHas('subscriptionList', fn($query) => $query->where('user_id', $ownerId))
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderByDesc('date')
-            ->limit(7)
-            ->get();
-
-        return response()->json($growthData, 200);
-    }
-
     public function dashboardStats(Request $request)
     {
-        Log::info(ActivityLog::orderBy('created_at', 'desc')->limit(10)->get());
-
         $ownerId = $request->user()->id;
-        $subscriptionListIds = SubscriptionList::where('user_id', $ownerId)->pluck('id');
+        $listId = $request->query('subscription_list_id');
+
+        $subscriptionListIds = SubscriptionList::where('user_id', $ownerId)
+            ->when($listId, fn($q) => $q->where('id', $listId))
+            ->pluck('id');
 
         return response()->json([
             'totalSubscribers' => Subscriber::whereIn('list_id', $subscriptionListIds)->count(),
             'subscriptionListsCount' => $subscriptionListIds->count(),
             'recentSubscriptions' => Subscriber::whereIn('list_id', $subscriptionListIds)->latest()->take(5)->get(),
             'emailVerificationStatus' => [
-                'verified' => EmailVerificationLog::whereIn('user_id', Subscriber::whereIn('list_id', $subscriptionListIds)->pluck('email'))
-                    ->where('status', 'verified')->count(),
-                'pending' => EmailVerificationLog::whereIn('user_id', Subscriber::whereIn('list_id', $subscriptionListIds)->pluck('email'))
-                    ->where('status', 'pending')->count(),
+                'verified' => Subscriber::whereIn('list_id', $subscriptionListIds)->whereNotNull('email_verified_at')->count(),
+                'pending' => Subscriber::whereIn('list_id', $subscriptionListIds)->whereNull('email_verified_at')->count(),
             ],
             'blacklistedEmails' => EmailBlacklist::where('blacklisted_by', $ownerId)->count(),
-            'adminActivityLogs' => ActivityLog::where('user_id', $ownerId)->latest()->take(5)->get(),
-            'graphData' => $this->getGraphData($ownerId),
+            'adminActivityLogs' => ActivityLog::where('user_id', $ownerId)
+                ->when($listId, fn($q) => $q->where('list_id', $listId))
+                ->latest()->take(5)->get(),
+            'graphData' => $this->getSubscriberGrowthData($ownerId, $subscriptionListIds),
         ], 200);
     }
 
-    private function getGraphData($ownerId)
+    public function getSubscriberGrowthData($ownerId, $subscriptionListIds)
     {
-        return Subscriber::whereHas('subscriptionList', fn($query) => $query->where('user_id', $ownerId))
+        return Subscriber::whereIn('list_id', $subscriptionListIds)
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
-            ->orderByDesc('date')
-            ->limit(7)
+            ->orderBy('date')
+            ->get();
+    }
+
+    public function getSubscriberGrowth(Request $request)
+    {
+        try {
+            $ownerId = $request->user()->id;
+            $listId = $request->query('subscription_list_id');
+
+            $subscriptionListIds = SubscriptionList::where('user_id', $ownerId)
+                ->when($listId, fn($q) => $q->where('id', $listId))
+                ->pluck('id');
+
+            $growthData = Subscriber::whereIn('list_id', $subscriptionListIds)
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
+            return response()->json($growthData);
+        } catch (\Exception $e) {
+            Log::error('Subscriber growth error: ' . $e->getMessage());
+            return response()->json(['error' => 'Server error while fetching subscriber growth.'], 500);
+        }
+    }
+
+    public function getOwnerSubscriptionLists(Request $request)
+    {
+        $ownerId = $request->user()->id;
+
+        $lists = SubscriptionList::where('user_id', $ownerId)
+            ->select('id', 'name')
             ->get();
 
+        return response()->json($lists, 200);
     }
 
     public function getActivityLogs(Request $request)
     {
-        try {
-            $logs = ActivityLog::where('user_id', $request->user()->id)
-                ->orderBy('created_at', 'desc')
-                ->limit(10)
-                ->get(['action', 'created_at']); // Fetch only relevant fields
+        $listId = $request->input('list_id');
+        $logs = ActivityLog::when($listId, fn($q) => $q->where('list_id', $listId))
+            ->latest()->take(10)->get();
 
-            return response()->json($logs, 200);
-        } catch (\Exception $e) {
-            Log::error("Error fetching activity logs: " . $e->getMessage());
-            return response()->json(['error' => 'Failed to fetch activity logs'], 500);
-        }
+        return response()->json($logs);
     }
 
+    public function getSubscriptionLists()
+    {
+        return response()->json(SubscriptionList::all(['id', 'name']));
+    }
 }
