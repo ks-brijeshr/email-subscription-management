@@ -337,7 +337,7 @@ const ViewSubscribers = () => {
                                             </tr>
                                         ))}
                                     </tbody>
-                                </table>
+                                </table>    
                             </div>
                         </div>
                     </>
