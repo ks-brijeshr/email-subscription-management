@@ -18,6 +18,15 @@ const SubscriptionListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [editingListId, setEditingListId] = useState<string | null>(null);
   const [editSubscriptionList, setEditSubscriptionList] = useState<SubscriptionList | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
+    name: "",
+    allow_business_email_only: false,
+    block_temporary_email: false,
+    require_email_verification: false,
+    check_domain_existence: false,
+    verify_dns_records: false,
+  });
 
   useEffect(() => {
     fetchSubscriptionLists();
@@ -108,16 +117,52 @@ const SubscriptionListPage = () => {
     }
   };
 
+  const handleAddSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No authentication token found.");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:8000/api/subscription-list/create", newList, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSubscriptionLists((prev) => [...prev, response.data.subscription_list]);
+      setShowAddForm(false);
+      setNewList({
+        name: "",
+        allow_business_email_only: false,
+        block_temporary_email: false,
+        require_email_verification: false,
+        check_domain_existence: false,
+        verify_dns_records: false,
+      });
+    } catch (error) {
+      console.error("Error adding subscription list:", error);
+      alert("Failed to add subscription list.");
+    }
+  };
+
   return (
     <div className="flex">
       <Sidebar setIsSidebarOpen={() => { }} />
       <main className="w-full ml-64">
         <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-white">Subscription Lists</h1>
-          <a href="/admin/dashboard" className="text-white ml-auto">
-            Dashboard
-          </a>
+          <a href="/admin/dashboard" className="text-white ml-auto">Dashboard</a>
         </nav>
+
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-semibold text-gray-800"></h1>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-9 mr-8"
+          >
+            + Add Subscription List
+          </button>
+        </div>
 
         <div className="p-6 bg-gray-100 min-h-screen">
           {loading ? (
@@ -173,7 +218,68 @@ const SubscriptionListPage = () => {
             </div>
           )}
 
-          {/* Edit Form */}
+          {/* Add Subscription List Modal */}
+          {showAddForm && (
+            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
+              <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
+                <h2 className="text-xl font-semibold mb-4">Add Subscription List</h2>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block font-medium mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={newList.name}
+                      onChange={(e) =>
+                        setNewList({ ...newList, name: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  {[
+                    { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                    { label: "Block Temporary Email", key: "block_temporary_email" },
+                    { label: "Require Email Verification", key: "require_email_verification" },
+                    { label: "Check Domain Existence", key: "check_domain_existence" },
+                    { label: "Verify DNS Records", key: "verify_dns_records" },
+                  ].map((field) => (
+                    <div key={field.key} className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={(newList as any)[field.key]}
+                        onChange={(e) =>
+                          setNewList({
+                            ...newList,
+                            [field.key]: e.target.checked,
+                          })
+                        }
+                        className="w-5 h-5"
+                      />
+                      <label className="text-gray-700">{field.label}</label>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-4">
+                  <button
+                    onClick={() => setShowAddForm(false)}
+                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddSubmit}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Subscription List Modal */}
           {editSubscriptionList && (
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
               <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
@@ -233,6 +339,7 @@ const SubscriptionListPage = () => {
               </div>
             </div>
           )}
+
         </div>
       </main>
     </div>
