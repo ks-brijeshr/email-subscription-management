@@ -24,13 +24,14 @@ Route::get('/test', function () {
 
 
 
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'dashboardStats']); // Fetch all dashboard stats
-    Route::get('/admin/dashboard/stats', [DashboardController::class, 'getStats']); // Individual stats
-    Route::get('/admin/dashboard/subscriber-growth', [DashboardController::class, 'getSubscriberGrowth']); // Graph data
-    Route::get('/admin/dashboard/activity-logs', [DashboardController::class, 'getActivityLogs']); // Admin logs
+    Route::get('/admin/dashboard', [DashboardController::class, 'dashboardStats']);
+    Route::get('/admin/dashboard/stats', [DashboardController::class, 'getStats']);
+    Route::get('/admin/dashboard/subscriber-growth', [DashboardController::class, 'getSubscriberGrowth']);
+    Route::get('/admin/dashboard/activity-logs', [DashboardController::class, 'getActivityLogs']);
+    Route::get('/admin/subscription-lists', [DashboardController::class, 'getOwnerSubscriptionLists']);
 });
+
 
 
 

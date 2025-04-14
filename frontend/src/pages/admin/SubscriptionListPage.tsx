@@ -151,7 +151,9 @@ const SubscriptionListPage = () => {
       <main className="w-full ml-64">
         <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-white">Subscription Lists</h1>
+          <a href="/admin/dashboard" className="text-white ml-auto">Dashboard</a>
         </nav>
+
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold text-gray-800"></h1>
           <button
@@ -161,6 +163,7 @@ const SubscriptionListPage = () => {
             + Add Subscription List
           </button>
         </div>
+
         <div className="p-6 bg-gray-100 min-h-screen">
           {loading ? (
             <div className="text-center">Loading...</div>
@@ -215,7 +218,68 @@ const SubscriptionListPage = () => {
             </div>
           )}
 
-          {/* Edit Form */}
+          {/* Add Subscription List Modal */}
+          {showAddForm && (
+            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
+              <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
+                <h2 className="text-xl font-semibold mb-4">Add Subscription List</h2>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block font-medium mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={newList.name}
+                      onChange={(e) =>
+                        setNewList({ ...newList, name: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  {[
+                    { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                    { label: "Block Temporary Email", key: "block_temporary_email" },
+                    { label: "Require Email Verification", key: "require_email_verification" },
+                    { label: "Check Domain Existence", key: "check_domain_existence" },
+                    { label: "Verify DNS Records", key: "verify_dns_records" },
+                  ].map((field) => (
+                    <div key={field.key} className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={(newList as any)[field.key]}
+                        onChange={(e) =>
+                          setNewList({
+                            ...newList,
+                            [field.key]: e.target.checked,
+                          })
+                        }
+                        className="w-5 h-5"
+                      />
+                      <label className="text-gray-700">{field.label}</label>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-4">
+                  <button
+                    onClick={() => setShowAddForm(false)}
+                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddSubmit}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Subscription List Modal */}
           {editSubscriptionList && (
             <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
               <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
@@ -276,64 +340,6 @@ const SubscriptionListPage = () => {
             </div>
           )}
 
-          {/* Add Form */}
-          {showAddForm && (
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
-              <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
-                <h2 className="text-xl font-semibold mb-4">Add Subscription List</h2>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block font-medium mb-1">Name</label>
-                    <input
-                      type="text"
-                      value={newList.name}
-                      onChange={(e) => setNewList({ ...newList, name: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  {[
-                    { label: "Allow Business Email Only", key: "allow_business_email_only" },
-                    { label: "Block Temporary Email", key: "block_temporary_email" },
-                    { label: "Require Email Verification", key: "require_email_verification" },
-                    { label: "Check Domain Existence", key: "check_domain_existence" },
-                    { label: "Verify DNS Records", key: "verify_dns_records" },
-                  ].map((field) => (
-                    <div key={field.key} className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        checked={(newList as any)[field.key]}
-                        onChange={(e) =>
-                          setNewList({
-                            ...newList,
-                            [field.key]: e.target.checked,
-                          })
-                        }
-                        className="w-5 h-5"
-                      />
-                      <label className="text-gray-700">{field.label}</label>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex justify-end space-x-4">
-                  <button
-                    onClick={() => setShowAddForm(false)}
-                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleAddSubmit}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                  >
-                    Create
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </main>
     </div>
