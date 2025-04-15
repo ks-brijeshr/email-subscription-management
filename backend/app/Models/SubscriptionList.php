@@ -31,4 +31,10 @@ class SubscriptionList extends Model
     {
         return $this->hasMany(\App\Models\Subscriber::class, 'list_id');
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

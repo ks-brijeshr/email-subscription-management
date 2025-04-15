@@ -10,24 +10,24 @@ class CustomEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subjectLine;
-    public $bodyContent;
+    public $subjectText;
+    public $bodyText;
 
-    public function __construct($subjectLine, $bodyContent)
+    public function __construct($subjectText, $bodyText, $fromEmail)
     {
-        $this->subjectLine = $subjectLine;
-        $this->bodyContent = $bodyContent;
+        $this->subjectText = $subjectText;
+        $this->bodyText = $bodyText;
+
+        // From email set karna yaha
+        $this->from($fromEmail);
     }
 
     public function build()
     {
-        return $this->subject($this->subjectLine)
-                    ->view('emails.custom')
-                    ->with([
-                        'bodyContent' => $this->bodyContent,
-                    ]);
+        return $this->view('emails.custom')
+            ->subject($this->subjectText)
+            ->with([
+                'bodyText' => $this->bodyText,
+            ]);
     }
 }
-
-
-
