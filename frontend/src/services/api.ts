@@ -1,6 +1,7 @@
-
 import axios from "axios";
 import axiosInstance from "../routes/axiosInstance";
+
+export const api = axiosInstance;
 
 export const fetchDashboardStats = async (listId?: string) => {
   const token = localStorage.getItem("token");
@@ -45,3 +46,38 @@ export const getSubscriptionLists = async () => {
   });
   return response.data;
 };
+
+
+
+
+
+export const sendCustomEmail = async (data: {
+  subscription_list_id: string;
+  subject: string;
+  body: string;
+}) => {
+  const response = await api.post("/admin/send-custom-email", data);
+  return response.data;
+};
+
+// export const fetchSubscriptionLists = async () => {
+//   const token = localStorage.getItem("token");
+//   const res = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+//   return res.data;
+// };
+
+// export const sendEmailsToSubscribers = async (payload: {
+//   subscription_list_id: number;
+//   subject: string;  
+//   body: string;
+// }) => {
+//   const token = localStorage.getItem("token");
+//   return await axios.post("http://localhost:8000/api/admin/send-mails", payload, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+// };
+
+
+

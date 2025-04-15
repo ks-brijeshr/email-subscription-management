@@ -14,7 +14,7 @@ import ViewSubscribers from "../pages/admin/ViewSubscribers";
 import Profile from "../pages/admin/Profile";
 import AddSubscriptionList from "../pages/admin/AddSubscriptionList";
 import SubscriptionListPage from "../pages/admin/SubscriptionListPage";
-
+import SendMailPage from "../pages/admin/SendMailPage";
 
 const AppRoutes = () => {
   const { user } = useUser();
@@ -54,6 +54,9 @@ const AppRoutes = () => {
         <Route path="/admin/subscription-list/add" element={<AddSubscriptionList />} />
 
         <Route path="/admin/subscription-lists" element={<SubscriptionListPage />} />
+
+        <Route path="/admin/send-mail" element={<SendMailPage />} />
+
 
       </Routes>
     </Router>
