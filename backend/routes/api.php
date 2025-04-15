@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\UnsubscribeController;
@@ -14,9 +15,10 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\SignupAnalyticsController;
 use App\Http\Controllers\SubscriptionListController;
+use App\Http\Controllers\CustomEmailController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
-use App\Http\Controllers\DashboardController;
+
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -30,9 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/dashboard/subscriber-growth', [DashboardController::class, 'getSubscriberGrowth']);
     Route::get('/admin/dashboard/activity-logs', [DashboardController::class, 'getActivityLogs']);
     Route::get('/admin/subscription-lists', [DashboardController::class, 'getOwnerSubscriptionLists']);
+
+    //bulk mail sending by owner
+    Route::post('/admin/send-custom-email', [CustomEmailController::class, 'sendCustomEmail']);
 });
-
-
 
 
 
