@@ -25,7 +25,7 @@ const ActivityLogs = () => {
       {loading ? (
         <p className="text-gray-500">Loading logs...</p>
       ) : logs.length > 0 ? (
-        <ul className="mt-2">
+        <ul className="mt-2 max-h-96 overflow-y-auto">
           {logs.map((log, index) => (
             <li key={index} className="border-b p-2">
               {log.action} - {new Date(log.created_at).toLocaleString()}
