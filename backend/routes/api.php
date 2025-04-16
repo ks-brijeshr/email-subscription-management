@@ -165,9 +165,19 @@ Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class,
 
 
 
+
+
+
 //Unsubscribe link for each subscription list
-Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
-Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);
+// Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
+// Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);
+Route::get('/unsubscribe/{subscriberId}/{token}', [UnsubscribeController::class, 'showUnsubscribePage'])->name('unsubscribe.page');
+Route::post('/unsubscribe/{subscriberId}/{token}', [UnsubscribeController::class, 'confirmUnsubscribe'])->name('unsubscribe.confirm.post');
+Route::get('/unsubscribe-success', [UnsubscribeController::class, 'unsubscribeSuccess'])->name('unsubscribe.success');
+
+
+
+
 
 
 //Subscription analytics

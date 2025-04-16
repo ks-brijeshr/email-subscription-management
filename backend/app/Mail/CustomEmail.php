@@ -12,13 +12,13 @@ class CustomEmail extends Mailable
 
     public $subjectText;
     public $bodyText;
+    public $unsubscribeLink;
 
-    public function __construct($subjectText, $bodyText, $fromEmail)
+    public function __construct($subjectText, $bodyText, $fromEmail, $unsubscribeLink)
     {
         $this->subjectText = $subjectText;
         $this->bodyText = $bodyText;
-
-        // From email set karna yaha
+        $this->unsubscribeLink = $unsubscribeLink;
         $this->from($fromEmail);
     }
 
@@ -28,6 +28,7 @@ class CustomEmail extends Mailable
             ->subject($this->subjectText)
             ->with([
                 'bodyText' => $this->bodyText,
+                'unsubscribeLink' => $this->unsubscribeLink
             ]);
     }
 }

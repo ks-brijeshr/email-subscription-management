@@ -50,7 +50,7 @@ class SubscriberController extends Controller
 
         $response = $this->subscriberService->updateStatus($subscriber_id, $data['status']);
 
-        return response()->json($response, $response['code'] ?? 200);
+        return response()->json($response, $response['code']);
     }
 
     public function getDetails($subscriber_id)

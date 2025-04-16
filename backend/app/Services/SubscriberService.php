@@ -146,7 +146,7 @@ class SubscriberService
 
         $subscriber->update(['status' => $status]);
 
-        return ['message' => 'Subscriber status updated successfully.'];
+        return ['message' => 'Subscriber status updated successfully.', 'code' => 200];
     }
 
     public function getDetails($subscriber_id)
