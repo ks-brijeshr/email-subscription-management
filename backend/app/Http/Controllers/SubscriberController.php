@@ -42,7 +42,7 @@ class SubscriberController extends Controller
         return response()->json($response, $response['code'] ?? 200);
     }
 
-    public function updateStatus(Request $request, $subscriber_id)
+    public function updateSubscriberStatus(Request $request, $subscriber_id)
     {
         $data = $request->validate([
             'status' => 'required|string|in:active,inactive',
