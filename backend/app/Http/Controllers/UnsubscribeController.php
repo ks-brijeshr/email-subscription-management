@@ -103,7 +103,10 @@ class UnsubscribeController extends Controller
         $subscriber->status = 'inactive';
         $subscriber->save();
 
-        return redirect()->route('unsubscribe.success');
+        // return redirect()->route('unsubscribe.success');
+
+        //redirection in frontend home page after unsubcribe
+        return redirect()->away(env('FRONTEND_URL'));
     }
 
     /**

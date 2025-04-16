@@ -79,25 +79,25 @@ const ViewSubscribers = () => {
 
     const updateSubscriberStatus = async (subscriberId: string, currentStatus: "active" | "inactive") => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-
-            const newStatus = currentStatus === "active" ? "inactive" : "active";
-
-            await axios.put(
-                `http://localhost:8000/api/subscribers/${subscriberId}/status`,
-                { status: newStatus },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-            if (selectedListId) {
-                fetchSubscribers(selectedListId, selectedListName || "");
-            }
+          const token = localStorage.getItem("token");
+          if (!token) return;
+      
+          const newStatus = currentStatus === "active" ? "inactive" : "active";
+      
+          await axios.put(
+            `http://localhost:8000/api/subscribers/${subscriberId}/status`,
+            { status: newStatus },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+      
+          if (selectedListId) {
+            fetchSubscribers(selectedListId, selectedListName || "");
+          }
         } catch (error) {
-            console.error("Error updating subscriber status:", error);
+          console.error("Error updating subscriber status:", error);
         }
-    };
-
+      };
+      
     const handleAddTag = async () => {
         if (!selectedSubscriberId || !tagInput.trim()) return;
 
