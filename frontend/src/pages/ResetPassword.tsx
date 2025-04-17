@@ -67,8 +67,8 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center dark:bg-gray-30 text-black">
-      <div className="w-full max-w-md bg-white dark:bg-gray-200 p-8 rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center dark:bg-white text-black">
+      <div className="w-full max-w-md bg-white dark:bg-white p-8 rounded-2xl shadow-xl">
         <h2 className="text-2xl font-bold text-center text-black  mb-6">Reset Password</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -92,7 +92,7 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+            className="w-full py-3 bg-gray-900 text-white font-semibold rounded-md hover:bg-gray-800 transition"
             disabled={loading}
           >
             {loading ? "Resetting..." : "Reset Password"}

@@ -53,14 +53,14 @@ class SubscriberController extends Controller
         return response()->json($response, $response['code']);
     }
 
-    public function getDetails($subscriber_id)
+    public function getSubscriberDetails($subscriber_id)
     {
         $response = $this->subscriberService->getDetails($subscriber_id);
 
         return response()->json($response, $response['code'] ?? 200);
     }
 
-    public function addTags(Request $request, $subscriber_id)
+    public function addSubscriberTags(Request $request, $subscriber_id)
     {
         $data = $request->validate([
             'tags' => 'required|array',

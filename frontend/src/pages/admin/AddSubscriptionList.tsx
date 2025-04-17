@@ -5,7 +5,7 @@ import Sidebar from "../../components/admin/Sidebar";
 
 const AddSubscriptionList = () => {
     const [name, setName] = useState<string>("");
-    
+
     const [allowBusinessEmailOnly, setAllowBusinessEmailOnly] = useState<boolean>(false);
     const [blockTemporaryEmail, setBlockTemporaryEmail] = useState<boolean>(false);
     const [requireEmailVerification, setRequireEmailVerification] = useState<boolean>(false);
@@ -66,40 +66,49 @@ const AddSubscriptionList = () => {
 
 
                 {/* Centering the form */}
-                <div className="flex justify-center items-center p-6 bg-gray-50 min-h-screen">
-                    <div className="w-full max-w-lg bg-gray-200 shadow-md rounded-lg p-6 relative">
-                        <button onClick={() => navigate("/admin/dashboard")} className="absolute top-4 left-4">
-                            <img src="/back-icon.png" alt="Back" className="w-6 h-6" />
+
+                <div className="flex justify-center items-center p-10 bg-gray-100 min-h-screen">
+                    <div className="w-full max-w-4xl bg-white border border-gray-300 rounded-2xl shadow-xl p-10 relative">
+
+                        {/* Back Button */}
+                        <button
+                            onClick={() => navigate("/admin/dashboard")}
+                            className="absolute top-4 left-4 p-2 bg-gray-200 hover:bg-gray-300 rounded-full transition duration-300 shadow"
+                            title="Back to Dashboard"
+                        >
+                            <img src="/back.svg" alt="Back" className="w-5 h-5" />
                         </button>
 
-                        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Add Subscription List</h2>
+                        <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
+                        📋 Add Subscription List
+                        </h2>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+
                             {/* Name Input */}
                             <div>
-                                <label className="block text-gray-700 font-semibold mb-1">Name</label>
+                                <label className="block text-m font-medium text-gray-700 mb-2">Name :</label>
                                 <input
                                     type="text"
                                     placeholder="Enter Subscription List Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full p-3 border rounded bg-gray-50"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gray-50 text-gray-800"
                                     required
                                 />
                             </div>
 
-                            {/* Custom Checkbox Design */}
+                           
                             <div className="space-y-4">
-
                                 <div className="flex items-center">
                                     <input
                                         type="checkbox"
                                         id="allowBusinessEmailOnly"
                                         checked={allowBusinessEmailOnly}
                                         onChange={() => setAllowBusinessEmailOnly(!allowBusinessEmailOnly)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <label htmlFor="allowBusinessEmailOnly" className="ml-2 text-gray-700">Allow Business Email Only</label>
+                                    <label htmlFor="allowBusinessEmailOnly" className="ml-3 text-gray-700">Allow Business Email Only</label>
                                 </div>
 
                                 <div className="flex items-center">
@@ -108,9 +117,9 @@ const AddSubscriptionList = () => {
                                         id="blockTemporaryEmail"
                                         checked={blockTemporaryEmail}
                                         onChange={() => setBlockTemporaryEmail(!blockTemporaryEmail)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <label htmlFor="blockTemporaryEmail" className="ml-2 text-gray-700">Block Temporary Email</label>
+                                    <label htmlFor="blockTemporaryEmail" className="ml-3 text-gray-700">Block Temporary Email</label>
                                 </div>
 
                                 <div className="flex items-center">
@@ -119,9 +128,9 @@ const AddSubscriptionList = () => {
                                         id="requireEmailVerification"
                                         checked={requireEmailVerification}
                                         onChange={() => setRequireEmailVerification(!requireEmailVerification)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <label htmlFor="requireEmailVerification" className="ml-2 text-gray-700">Require Email Verification</label>
+                                    <label htmlFor="requireEmailVerification" className="ml-3 text-gray-700">Require Email Verification</label>
                                 </div>
 
                                 <div className="flex items-center">
@@ -130,9 +139,9 @@ const AddSubscriptionList = () => {
                                         id="checkDomainExistence"
                                         checked={checkDomainExistence}
                                         onChange={() => setCheckDomainExistence(!checkDomainExistence)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <label htmlFor="checkDomainExistence" className="ml-2 text-gray-700">Check Domain Existence</label>
+                                    <label htmlFor="checkDomainExistence" className="ml-3 text-gray-700">Check Domain Existence</label>
                                 </div>
 
                                 <div className="flex items-center">
@@ -141,27 +150,28 @@ const AddSubscriptionList = () => {
                                         id="verifyDnsRecords"
                                         checked={verifyDnsRecords}
                                         onChange={() => setVerifyDnsRecords(!verifyDnsRecords)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <label htmlFor="verifyDnsRecords" className="ml-2 text-gray-700">Verify DNS Records</label>
+                                    <label htmlFor="verifyDnsRecords" className="ml-3 text-gray-700">Verify DNS Records</label>
                                 </div>
                             </div>
 
-                            {/* Submit Button with Loading State */}
+                            {/* Submit Button */}
                             <button
                                 type="submit"
-                                className={`bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
+                                className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 ease-in-out shadow-sm hover:shadow-md ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 disabled={loading}
                             >
-                                {loading ? (
-                                    <span>Loading...</span>
-                                ) : (
-                                    "Add Subscription List"
-                                )}
+                                {loading ? 'Loading...' : 'Add Subscription List'}
                             </button>
+
                         </form>
                     </div>
                 </div>
+
+
+
+
             </main>
         </div>
     );
