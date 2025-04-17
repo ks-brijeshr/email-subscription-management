@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\CustomEmail;
+use App\Jobs\SendCustomEmailJob;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class CustomEmailController extends Controller
 {
@@ -27,7 +26,8 @@ class CustomEmailController extends Controller
         foreach ($subscribers as $subscriber) {
             $unsubscribeLink = url("/unsubscribe/{$subscriber->id}/{$subscriber->unsubscribe_token}");
 
-            Mail::to($subscriber->email)->send(new CustomEmail(
+            dispatch(new SendCustomEmailJob(
+                $subscriber->email,
                 $validated['subject'],
                 $validated['body'],
                 $ownerEmail,
@@ -36,7 +36,7 @@ class CustomEmailController extends Controller
         }
 
         return response()->json([
-            'message' => 'Emails sent successfully.',
+            'message' => 'Emails queued successfully.',
             'sent_count' => $subscribers->count()
         ]);
     }
