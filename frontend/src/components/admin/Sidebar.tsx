@@ -26,7 +26,7 @@ const Sidebar = ({
   };
 
   return (
-    <aside className="w-64 h-screen fixed flex flex-col justify-between shadow-2xl z-50 transition-all duration-300 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-r border-gray-700">
+    <aside className="w-64 h-screen fixed flex flex-col justify-between z-50  bg-gray-900">
       <div className="flex justify-between items-center px-5 pt-5">
         <h2 className="text-xl font-semibold text-cyan-400 tracking-wide">
           Admin Panel
@@ -70,7 +70,7 @@ const Sidebar = ({
           <div
             className={`ml-10 mt-1 space-y-1 overflow-hidden transition-all duration-300 ${
               showSubscriptionMenu ? "max-h-32" : "max-h-0"
-            }`}
+              }`}
           >
             <Link
               to="/admin/subscription-list/add"
@@ -106,7 +106,7 @@ const Sidebar = ({
           <div
             className={`ml-10 mt-1 space-y-1 overflow-hidden transition-all duration-300 ${
               showSubscribersMenu ? "max-h-32" : "max-h-0"
-            }`}
+              }`}
           >
             <Link
               to="/admin/add-subscriber"
@@ -134,8 +134,8 @@ const Sidebar = ({
           to="/admin/send-mail"
           className="flex items-center space-x-3 p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
         >
-          <img src="/mail-icon.svg" alt="Send Mail" className="w-6 h-6" />
-          <span className="text-sm text-white">  📧 Send Email</span>
+          <img src="/mail.svg" alt="Send Mail" className="w-6 h-6" />
+          <span className="text-sm text-white"> Send Email</span>
         </Link>
       </nav>
 

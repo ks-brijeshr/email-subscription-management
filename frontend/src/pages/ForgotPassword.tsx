@@ -29,21 +29,24 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-30 ">
-      <div className="w-full max-w-md bg-white dark:bg-gray-200 p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-black mb-6">Forgot Password</h2>
-        {message && <p className="text-green-500 text-center mb-4">{message}</p>}
-        <form onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
+      <div className="w-full max-w-md bg-white dark:bg-gray-100 p-8 rounded-2xl shadow-xl">
+        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Forgot Password</h2>
+
+        {message && <p className="text-green-600 text-sm text-center mb-4">{message}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Enter your email"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-600"
             onChange={handleChange}
             required
           />
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+            className="w-full bg-gray-900 text-white py-3 rounded-xl shadow-md hover:bg-gray-800 transition duration-300"
             disabled={loading}
           >
             {loading ? "Sending..." : "Send Reset Link"}
@@ -51,6 +54,7 @@ const ForgotPassword = () => {
         </form>
       </div>
     </div>
+
   );
 };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getSubscriptionLists, sendCustomEmail } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/admin/Sidebar";
 
 const SendMailPage = () => {
   const [subscriptionLists, setSubscriptionLists] = useState<any[]>([]);
@@ -19,7 +20,6 @@ const SendMailPage = () => {
       const response = await getSubscriptionLists();
       console.log("Subscription lists response:", response);
 
-      // Yeh directly array hai — koi subscription_lists key nahi
       if (response) {
         setSubscriptionLists(response);
       } else {
@@ -61,53 +61,95 @@ const SendMailPage = () => {
   };
 
   return (
-    <div className="p-8 max-w-xl mx-auto bg-gray-800 text-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6">Send Email to Subscribers</h2>
+    <div className="flex h-screen bg-white">
+      {/* Sidebar */}
+      <Sidebar setIsSidebarOpen={() => { }} />
+      <main className="w-full transition-all duration-300 ml-64">
+        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-2xl font-semibold text-white">Send Emails to Subscribers</h1>
+          </div>
+          <a href="/admin/dashboard" className="text-white transition item-center ml-auto">Dashboard</a>
+        </nav>
 
-      <div className="mb-4">
-        <label className="block mb-1 text-gray-300">
-          Select Subscription List:
-        </label>
-        <select
-          value={selectedListId}
-          onChange={(e) => setSelectedListId(e.target.value)}
-          className="w-full p-2 rounded bg-gray-700 text-white"
-        >
-          <option value="">-- Select List --</option>
-          {subscriptionLists.map((list) => (
-            <option key={list.id} value={list.id}>
-              {list.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="flex justify-center items-center p-10 bg-gray-100 min-h-screen">
+          <div className="w-full max-w-4xl bg-white border border-gray-300 rounded-2xl shadow-xl p-10 relative">
 
-      <div className="mb-4">
-        <label className="block mb-1 text-gray-300">Subject:</label>
-        <input
-          type="text"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          className="w-full p-2 rounded bg-gray-700 text-white"
-        />
-      </div>
+            {/* Back Button */}
+            <button
+              onClick={() => {
+                navigate("/admin/dashboard");
 
-      <div className="mb-4">
-        <label className="block mb-1 text-gray-300">Message:</label>
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={5}
-          className="w-full p-2 rounded bg-gray-700 text-white"
-        ></textarea>
-      </div>
+              }}
+              className="absolute top-4 left-4 p-2 bg-gray-200 hover:bg-gray-300 rounded-full transition duration-300 shadow"
+              title={selectedListId ? "Back" : "Back to Dashboard"}
+            >
+              <img
+                src="/back.svg"
+                alt="Back"
+                className="w-5 h-5"
+              />
+            </button>
 
-      <button
-        onClick={handleSendEmail}
-        className="w-full py-2 rounded bg-cyan-500 hover:bg-cyan-600 text-white font-bold"
-      >
-        Send Email
-      </button>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
+              📧 Send Email to Subscribers
+            </h2>
+
+            {/* Subscription List Dropdown */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subscription List
+              </label>
+              <select
+                value={selectedListId}
+                onChange={(e) => setSelectedListId(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-800"
+              >
+                <option value="">-- Select List --</option>
+                {subscriptionLists.map((list) => (
+                  <option key={list.id} value={list.id}>
+                    {list.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Subject */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="Enter email subject"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-800"
+              />
+            </div>
+
+            {/* Message */}
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                rows={8}
+                placeholder="Write your message here..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-800"
+              ></textarea>
+            </div>
+
+            <button
+              onClick={handleSendEmail}
+              className="w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 ease-in-out shadow-sm hover:shadow-md"
+            >
+              📤 Send Email
+            </button>
+
+          </div>
+        </div>
+
+
+      </main>
     </div>
   );
 };

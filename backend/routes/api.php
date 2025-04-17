@@ -165,9 +165,6 @@ Route::get('/subscriptions/{list_id}/subscribers', [SubscriberController::class,
 
 
 
-
-
-
 //Unsubscribe link for each subscription list
 // Route::get('/unsubscribe-link/{subscriberId}', [UnsubscribeController::class, 'getUnsubscribeLink']);
 // Route::get('/unsubscribe-logs', [UnsubscribeController::class, 'getUnsubscribeLogs']);

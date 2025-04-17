@@ -174,7 +174,6 @@ const SubscriptionListPage = () => {
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="text-xs text-gray-600 uppercase bg-gray-200">
                   <tr>
-                    <th className="px-4 py-3">ID</th>
                     <th className="px-4 py-3">Name</th>
                     <th className="px-4 py-3">Business Email Only</th>
                     <th className="px-4 py-3">Block Temp Email</th>
@@ -190,7 +189,7 @@ const SubscriptionListPage = () => {
                       key={list.id}
                       className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-gray-100`}
                     >
-                      <td className="px-4 py-3">{list.id}</td>
+
                       <td className="px-4 py-3">{list.name}</td>
                       <td className="px-4 py-3 text-center">{list.allow_business_email_only ? "✔" : "✘"}</td>
                       <td className="px-4 py-3 text-center">{list.block_temporary_email ? "✔" : "✘"}</td>
