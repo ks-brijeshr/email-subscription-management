@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\EmailVerificationLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\SendVerificationEmailJob;
 use Illuminate\Auth\Events\Registered;
 
 
@@ -33,13 +34,11 @@ class AuthService
             'is_owner' => filter_var($data['is_owner'], FILTER_VALIDATE_BOOLEAN),
         ]);
 
-
-        // Track daily signups
         $date = Carbon::today()->toDateString();
         $signup = DailySignup::where('date', $date)->first();
 
         if ($signup) {
-            $signup->increment('count'); // Increase count if record exists
+            $signup->increment('count');
         } else {
             DailySignup::create([
                 'date' => $date,
@@ -47,15 +46,16 @@ class AuthService
             ]);
         }
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        // Log as "failed" (unverified user)
+        // Dispatch queued verification email
+        SendVerificationEmailJob::dispatch($user);
+
         EmailVerificationLog::create([
             'user_id' => $user->id,
             'status' => 'failed',
             'attempted_at' => now(),
         ]);
-
 
         return $user;
     }
