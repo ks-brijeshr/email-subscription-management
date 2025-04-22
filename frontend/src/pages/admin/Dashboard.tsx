@@ -80,99 +80,115 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex bg-gray-100 min-h-screen">
       {isSidebarOpen && (
         <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
       )}
 
       <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
-        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="p-2 rounded-md hover:bg-gray-100 transition"
+                className="p-2 rounded-md hover:bg-gray-800"
               >
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
             <h1 className="text-2xl font-semibold text-white">Admin Dashboard</h1>
           </div>
-          <div className="text-right text-gray-600">
-            <p className="text-white font-medium">{getGreetingMessage()}</p>
-            <p className="text-white">{new Date().toLocaleTimeString()}</p>
+          <div className="text-right text-white">
+            <p className="font-medium">{getGreetingMessage()}</p>
+            <p className="text-sm">{new Date().toLocaleTimeString()}</p>
           </div>
         </nav>
 
-        <div className="p-6">
-          {/* Dropdown to select Subscription List */}
-          <div className="mb-4">
-            <label htmlFor="subscriptionList" className="block text-sm font-medium text-gray-700">
-              Filter by Subscription List
-            </label>
-            <select
-              id="subscriptionList"
-              value={selectedListId || ""}
-              onChange={(e) => setSelectedListId(e.target.value || undefined)}
-              className="mt-1 block w-64 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-            >
-              <option value="">All Lists</option>
-              {subscriptionLists.map((list) => (
-                <option key={list.id} value={list.id}>
-                  {list.name}
-                </option>
-              ))}
-            </select>
+        <div className="p-8 bg-gradient-to-r from-gray-100 to-gray-200 min-h-[calc(100vh-64px)]">
+          {/* Header Section with Filter and Email Verification */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            {/* Filter Section */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <label htmlFor="subscriptionList" className="block text-lg font-semibold text-gray-800 mb-4">
+                Filter by Subscription List
+              </label>
+              <select
+                id="subscriptionList"
+                value={selectedListId || ""}
+                onChange={(e) => setSelectedListId(e.target.value || undefined)}
+                className="block w-full sm:w-72 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white transition duration-300"
+              >
+                <option value="">All Lists</option>
+                {subscriptionLists.map((list) => (
+                  <option key={list.id} value={list.id}>
+                    {list.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Email Verification Block */}
+            <div className="bg-white p-8 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              <EmailVerificationStatus />
+            </div>
           </div>
 
           {loading ? (
-            <p>Loading...</p>
+            <p className="text-center text-gray-500">Loading...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-center text-red-500 font-semibold">{error}</p>
           ) : (
             <>
-              <DashboardStats
-                stats={dashboardData || {
-                  totalSubscribers: 0,
-                  totalBlacklisted: 0,
-                  totalSubscriptionLists: 0,
-                }}
-              />
+              {/* Stats Block */}
+              <div className="mb-8">
+                <DashboardStats
+                  stats={dashboardData || {
+                    totalSubscribers: 0,
+                    totalBlacklisted: 0,
+                    totalSubscriptionLists: 0,
+                  }}
+                />
+              </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-4">
-                <SubscriberGraph listId={selectedListId || undefined} />
-                <ActivityLogs />
+              {/* Graph & Logs Block */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                  <SubscriberGraph listId={selectedListId || undefined} />
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                  <ActivityLogs />
+                </div>
               </div>
             </>
           )}
 
+
           {showSubscriberBlocks && (
-            <div className="grid grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
               <div
-                className="p-6 bg-blue-500 text-white rounded-lg shadow-md cursor-pointer hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white p-6 rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-2xl cursor-pointer transition-all duration-300"
                 onClick={() => {
                   if (subscriptionLists.length > 0) {
                     navigate("/admin/add-subscriber");
                   }
                 }}
               >
-                <h3 className="text-lg font-semibold">Add Subscriber</h3>
-                <p className="text-sm opacity-80">Click to add a new subscriber.</p>
+                <h3 className="text-xl font-semibold">Add Subscriber</h3>
+                <p className="text-sm opacity-90">Click to add a new subscriber.</p>
                 {subscriptionLists.length === 0 && (
-                  <p className="mt-2 p-2 text-black font-semibold bg-yellow-300 rounded">
+                  <p className="mt-4 p-3 bg-yellow-300 text-black font-semibold rounded-md shadow-md">
                     No subscription lists available. Please create one first.
                   </p>
                 )}
               </div>
             </div>
           )}
-
-          <div className="mt-6">
-            <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-              <EmailVerificationStatus />
-            </div>
-          </div>
         </div>
+
+
+
+
+
       </main>
     </div>
   );
