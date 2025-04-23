@@ -257,4 +257,33 @@ class SubscriberService
     {
         return checkdnsrr(explode('@', $email)[1], 'A') && checkdnsrr(explode('@', $email)[1], 'MX');
     }
+
+    public function getBlacklistedEmails()
+{
+    $user = Auth::user();
+
+    if (!$user || !$user->is_owner) {
+        return ['error' => 'Unauthorized access.', 'code' => 403];
+    }
+
+    // Only get blacklisted emails that were added by the current user (i.e. the logged-in owner)
+    $blacklisted = EmailBlacklist::with('blacklistedBy:id,name,email')
+        ->where('blacklisted_by', $user->id)  // Filter by the logged-in user's ID
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return [
+        'success' => true,
+        'blacklisted_emails' => $blacklisted->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'email' => $item->email,
+                'reason' => $item->reason,
+                'blacklisted_by' => $item->blacklistedBy ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')' : 'Unknown',
+                'created_at' => $item->created_at->toDateTimeString(),
+            ];
+        })
+    ];
+}
+
 }

@@ -100,4 +100,11 @@ class SubscriberController extends Controller
             return response()->json(['error' => 'Invalid format. Use CSV or JSON.'], 400);
         }
     }
+
+    public function getBlacklistedEmails()
+    {
+        $response = $this->subscriberService->getBlacklistedEmails();
+        return response()->json($response, $response['code'] ?? 200);
+    }
+
 }

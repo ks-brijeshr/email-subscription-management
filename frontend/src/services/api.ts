@@ -60,6 +60,14 @@ export const sendCustomEmail = async (data: {
   return response.data;
 };
 
+
+// Add this to api.ts
+export const getBlacklistedEmails = async () => {
+  const response = await api.get("/admin/blacklisted-emails"); //backend endpoint
+  return response.data; 
+};
+
+
 // export const fetchSubscriptionLists = async () => {
 //   const token = localStorage.getItem("token");
 //   const res = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
