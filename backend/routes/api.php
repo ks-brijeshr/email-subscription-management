@@ -151,6 +151,7 @@ Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
     Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
     Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
     Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
+    Route::get('/admin/blacklisted-emails', [SubscriberController::class, 'getBlacklistedEmails']);
 });
 
 //Add subscriber tags

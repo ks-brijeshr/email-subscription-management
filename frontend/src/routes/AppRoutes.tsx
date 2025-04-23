@@ -15,6 +15,7 @@ import Profile from "../pages/admin/Profile";
 import AddSubscriptionList from "../pages/admin/AddSubscriptionList";
 import SubscriptionListPage from "../pages/admin/SubscriptionListPage";
 import SendMailPage from "../pages/admin/SendMailPage";
+import Blacklist from "../pages/admin/Blacklist";
 
 const AppRoutes = () => {
   const { user } = useUser();
@@ -56,6 +57,8 @@ const AppRoutes = () => {
         <Route path="/admin/subscription-lists" element={<SubscriptionListPage />} />
 
         <Route path="/admin/send-mail" element={<SendMailPage />} />
+
+        <Route path="/admin/blacklist" element={<Blacklist />} />
 
 
       </Routes>
