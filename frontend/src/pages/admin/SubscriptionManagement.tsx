@@ -14,10 +14,15 @@ interface Subscriber {
 interface SubscriptionList {
     id: string;
     name: string;
-    subscriber_count: number;
+    allow_business_email_only: boolean;
+    block_temporary_email: boolean;
+    require_email_verification: boolean;
+    check_domain_existence: boolean;
+    verify_dns_records: boolean;
+    created_at: string;
 }
 
-const ViewSubscribers = () => {
+const SubscriptionManagement = () => {
     const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
     const [selectedListId, setSelectedListId] = useState<string | null>(null);
     const [selectedListName, setSelectedListName] = useState<string | null>(null);
@@ -35,6 +40,19 @@ const ViewSubscribers = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [metadata, setMetadata] = useState<string>("");
+    const [editingListId, setEditingListId] = useState<string | null>(null);
+    const [editSubscriptionList, setEditSubscriptionList] = useState<SubscriptionList | null>(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string>('');
+    const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
+        name: "",
+        allow_business_email_only: false,
+        block_temporary_email: false,
+        require_email_verification: false,
+        check_domain_existence: false,
+        verify_dns_records: false,
+        created_at: "",
+    });
 
     const handleAddSubscriberClick = () => {
         setShowAddSubscriberModal(true);
@@ -67,6 +85,28 @@ const ViewSubscribers = () => {
         fetchSubscriptionLists();
     }, []);
 
+    const handleDelete = async (id: string) => {
+        const confirmed = confirm("Are you sure you want to delete this subscription list?");
+        if (!confirmed) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("No authentication token found.");
+                return;
+            }
+
+            await axios.delete(`http://localhost:8000/api/subscription-lists/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setSubscriptionLists((prev) => prev.filter((list) => list.id !== id));
+        } catch (error) {
+            console.error("Error deleting subscription list:", error);
+            alert("Failed to delete subscription list.");
+        }
+    };
+
     useEffect(() => {
         if (selectedListId) {
             fetchSubscribers(selectedListId, selectedListName || "");
@@ -91,6 +131,54 @@ const ViewSubscribers = () => {
             console.error("Error fetching subscribers:", error);
         }
     };
+
+    const handleEditClick = (list: SubscriptionList) => {
+        setEditingListId(list.id);
+        setEditSubscriptionList({
+            id: list.id,
+            name: list.name,
+            allow_business_email_only: list.allow_business_email_only,
+            block_temporary_email: list.block_temporary_email,
+            require_email_verification: list.require_email_verification,
+            check_domain_existence: list.check_domain_existence,
+            verify_dns_records: list.verify_dns_records,
+            created_at: list.created_at,
+        });
+    };
+
+
+
+    const handleCancelEdit = () => {
+        setEditingListId(null);
+        setEditSubscriptionList(null);
+    };
+
+    const handleEditSubmit = async () => {
+        if (!editSubscriptionList || !editingListId) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return alert("No token");
+
+            await axios.put(
+                `http://localhost:8000/api/subscription-lists/${editingListId}`,
+                editSubscriptionList,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            setSubscriptionLists((prev) =>
+                prev.map((list) =>
+                    list.id === editingListId ? { ...editSubscriptionList } : list
+                )
+            );
+
+            handleCancelEdit(); // close modal
+        } catch (error) {
+            console.error("Error updating subscription list:", error);
+            alert("Update failed");
+        }
+    };
+
 
     const handleNameClick = async (subscriberId: number) => {
         try {
@@ -140,7 +228,35 @@ const ViewSubscribers = () => {
             console.error("Error updating subscriber status:", error);
         }
     };
+    const handleAddSubmitList = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("No authentication token found.");
+                return;
+            }
 
+            const response = await axios.post("http://localhost:8000/api/subscription-list/create", newList, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setSubscriptionLists((prev) => [...prev, response.data.subscription_list]);
+            setShowAddForm(false);
+            setSuccessMessage("Subscription List added successfully!");
+            setNewList({
+                name: "",
+                allow_business_email_only: false,
+                block_temporary_email: false,
+                require_email_verification: false,
+                check_domain_existence: false,
+                verify_dns_records: false,
+                created_at: "",
+            });
+        } catch (error) {
+            console.error("Error adding subscription list:", error);
+            alert("Failed to add subscription list.");
+        }
+    };
     const handleAddTag = async () => {
         if (!selectedSubscriberId || !tagInput.trim()) return;
 
@@ -246,7 +362,7 @@ const ViewSubscribers = () => {
                     <a href="/admin/dashboard" className="text-white transition item-center ml-auto">Dashboard</a>
                 </nav>
 
-                <div className="p-4 max-w-5xl mx-auto">
+                <div className="p-4 max-w-7xl mx-auto">
                     <div className="relative mb-6 flex items-center">
                         {/* Back Button */}
                         <button
@@ -268,33 +384,225 @@ const ViewSubscribers = () => {
                         <h2 className="text-3xl font-bold text-gray-900 mx-auto">
                             {selectedListId ? `Subscribers for ${selectedListName}` : "View All Subscription Lists"}
                         </h2>
+                        <div className="flex items-center justify-between mb-4">
+
+                        </div>
+                        {successMessage && (
+                            <div className="fixed top-6 right-6 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50 flex items-center space-x-4">
+
+                                {/* Success message */}
+                                <span>{successMessage}</span>
+
+                                {/* Close Button */}
+                                <button
+                                    onClick={() => setSuccessMessage('')}
+                                    className="ml-4 text-white hover:text-gray-200"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        )}
+
+
+                        {showAddForm && (
+                            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
+                                <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
+                                    <h2 className="text-xl font-semibold mb-4">Add Subscription List</h2>
+
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block font-medium mb-1">Name</label>
+                                            <input
+                                                type="text"
+                                                value={newList.name}
+                                                onChange={(e) =>
+                                                    setNewList({ ...newList, name: e.target.value })
+                                                }
+                                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                                            />
+                                        </div>
+
+                                        {[
+                                            { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                                            { label: "Block Temporary Email", key: "block_temporary_email" },
+                                            { label: "Require Email Verification", key: "require_email_verification" },
+                                            { label: "Check Domain Existence", key: "check_domain_existence" },
+                                            { label: "Verify DNS Records", key: "verify_dns_records" },
+                                        ].map((field) => (
+                                            <div key={field.key} className="flex items-center space-x-3">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={(newList as any)[field.key]}
+                                                    onChange={(e) =>
+                                                        setNewList({
+                                                            ...newList,
+                                                            [field.key]: e.target.checked,
+                                                        })
+                                                    }
+                                                    className="w-5 h-5"
+                                                />
+                                                <label className="text-gray-700">{field.label}</label>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-6 flex justify-end space-x-4">
+                                        <button
+                                            onClick={() => setShowAddForm(false)}
+                                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleAddSubmitList}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
 
-
                     {!selectedListId ? (
-                        <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200 bg-white">
-                            <table className="min-w-full table-auto">
-                                <thead className="bg-gray-300 text-white">
-                                    <tr>
-                                        <th className="px-8 py-4 text-left text-m font-semibold text-black">Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {subscriptionLists.map((list: SubscriptionList) => (
-                                        <tr
-                                            key={list.id}
-                                            onClick={() => fetchSubscribers(list.id, list.name)}
-                                            className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-pointer"
-                                        >
-                                            <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800">{list.name}</td>
+                        <div className="w-full shadow-lg rounded-lg border border-gray-200 bg-white">
+                            <div className="flex justify-end px-6 pt-6">
+                                <button
+                                    onClick={() => setShowAddForm(true)}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                >
+                                    + Add Subscription List
+                                </button>
+                            </div>
+                            <div className="pt-4 px-4">
+                                <table className="min-w-full table-auto">
+                                    <thead className="bg-gray-300 text-white">
+                                        <tr>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Name</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Business Email Only</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Block Temp Email</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Email Verification</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Check Domain</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Verify DNS</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Created At</th>
+                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {subscriptionLists.map((list: SubscriptionList) => (
+                                            <tr
+                                                key={list.id}
+                                                className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-default"
+                                            >
+                                                <td
+                                                    onClick={() => fetchSubscribers(list.id, list.name)}
+                                                    className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 cursor-pointer hover:underline"
+                                                >
+                                                    {list.name}
+                                                </td>
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                    {list.allow_business_email_only ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                    {list.block_temporary_email ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                    {list.require_email_verification ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                    {list.check_domain_existence ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                    {list.verify_dns_records ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-8 py-4 border-t border-b border-gray-300">{new Date(list.created_at).toLocaleString()}</td>
+
+                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center space-x-2">
+                                                    <button
+                                                        className="px-3 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEditClick(list);
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </button>
+
+                                                    <button
+                                                        className="px-3 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded"
+                                                        onClick={() => handleDelete(list.id)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {editSubscriptionList && (
+                                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
+                                    <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
+                                        <h2 className="text-xl font-semibold mb-4">Edit Subscription List</h2>
+
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block font-medium mb-1">Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={editSubscriptionList.name}
+                                                    onChange={(e) =>
+                                                        setEditSubscriptionList({ ...editSubscriptionList, name: e.target.value })
+                                                    }
+                                                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                                                />
+                                            </div>
+
+                                            {[
+                                                { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                                                { label: "Block Temporary Email", key: "block_temporary_email" },
+                                                { label: "Require Email Verification", key: "require_email_verification" },
+                                                { label: "Check Domain Existence", key: "check_domain_existence" },
+                                                { label: "Verify DNS Records", key: "verify_dns_records" },
+                                            ].map((field) => (
+                                                <div key={field.key} className="flex items-center space-x-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={(editSubscriptionList as any)[field.key]}
+                                                        onChange={(e) =>
+                                                            setEditSubscriptionList({
+                                                                ...editSubscriptionList,
+                                                                [field.key]: e.target.checked,
+                                                            })
+                                                        }
+                                                        className="w-5 h-5"
+                                                    />
+                                                    <label className="text-gray-700">{field.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="mt-6 flex justify-end space-x-4">
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleEditSubmit}
+                                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            >
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )
-
-
                         : (
                             <>
 
@@ -377,7 +685,7 @@ const ViewSubscribers = () => {
 
 
                                             {/* Add Subscriber Form */}
-                                           
+
                                             <form onSubmit={handleSubmit} className="space-y-5 relative">
                                                 <div>
                                                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Add Subscriber</h2>
@@ -591,4 +899,4 @@ const ViewSubscribers = () => {
     );
 };
 
-export default ViewSubscribers;
+export default SubscriptionManagement;
