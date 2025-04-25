@@ -16,6 +16,7 @@ import AddSubscriptionList from "../pages/admin/AddSubscriptionList";
 import SubscriptionListPage from "../pages/admin/SubscriptionListPage";
 import SendMailPage from "../pages/admin/SendMailPage";
 import Blacklist from "../pages/admin/Blacklist";
+import EmailVerified from "../components/EmailVerified";
 
 const AppRoutes = () => {
   const { user } = useUser();
@@ -47,7 +48,7 @@ const AppRoutes = () => {
 
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/add-subscriber" element={<AddSubscriber />} />
-        <Route path="/admin/manage-subscriptions" element={<SubscriptionManagement/>} />
+        <Route path="/admin/manage-subscriptions" element={<SubscriptionManagement />} />
 
 
         <Route path="/profile" element={<Profile />} />
@@ -60,6 +61,7 @@ const AppRoutes = () => {
 
         <Route path="/admin/blacklist" element={<Blacklist />} />
 
+        <Route path="/email-verified" element={<EmailVerified />} />
 
       </Routes>
     </Router>

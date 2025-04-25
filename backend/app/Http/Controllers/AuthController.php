@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\LoginRequest;
 use App\Models\EmailVerificationLog;
 use App\Services\ActivityLogService;
@@ -69,7 +70,7 @@ class AuthController extends Controller
     /**
      * Handle email verification when user clicks the verify email link
      */
-    public function verifyEmail(Request $request, $id, $hash): JsonResponse
+    public function verifyEmail(Request $request, $id, $hash)
     {
         $user = User::findOrFail($id);
 
@@ -92,8 +93,10 @@ class AuthController extends Controller
 
         $this->activityLogService->logActivity('Email verified', $request);
 
-        return response()->json(['message' => 'Email verified successfully.'], 200);
+        // Redirect to frontend after successful verification
+        return redirect('http://localhost:5173/email/verified'); 
     }
+
 
     /**
      * Resend email verification link
