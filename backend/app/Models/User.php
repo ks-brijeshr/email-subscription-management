@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -66,5 +67,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function apiTokens()
     {
         return $this->hasMany(ApiToken::class);
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail); // This will use the built-in Laravel email verification notification
     }
 }

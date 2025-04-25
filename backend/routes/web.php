@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnsubscribeController;
 
@@ -18,3 +19,6 @@ Route::post('/unsubscribe/{subscriberId}/{token}/confirm', [UnsubscribeControlle
 
 Route::get('/unsubscribe/success', [UnsubscribeController::class, 'unsubscribeSuccess'])
     ->name('unsubscribe.success');
+
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->name('verification.verify');

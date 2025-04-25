@@ -48,7 +48,10 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 //verify the users email after register (API response)
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+// Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+// Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+//     ->name('verification.verify');
+
 
 Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])->middleware('auth:sanctum');
 

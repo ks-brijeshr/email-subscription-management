@@ -22,7 +22,7 @@ const Navbar = () => {
 
           {/* Show "Sign Up" only if NOT on the login or signup page */}
           {location.pathname !== "/signup" && location.pathname !== "/login" && (
-            <Link to="/signup" className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300">
+            <Link to="/signup" className="px-5 py-2 text-gray-300 hover:text-white transition duration-300">
               Sign Up
             </Link>
           )}
