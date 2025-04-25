@@ -101,12 +101,18 @@ class DashboardController extends Controller
 
     public function getActivityLogs(Request $request)
     {
+        $userId = $request->user()->id;
         $listId = $request->input('list_id');
-        $logs = ActivityLog::when($listId, fn($q) => $q->where('list_id', $listId))
-            ->latest()->take(10)->get();
+        $perPage = $request->query('per_page', 10); // Default = 10
+
+        $logs = ActivityLog::where('user_id', $userId)
+            ->when($listId, fn($q) => $q->where('list_id', $listId))
+            ->latest()
+            ->paginate($perPage); // Laravel pagination
 
         return response()->json($logs);
     }
+
 
     public function getSubscriptionLists()
     {

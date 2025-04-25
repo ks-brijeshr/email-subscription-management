@@ -3,6 +3,12 @@ import axiosInstance from "../routes/axiosInstance";
 
 export const api = axiosInstance;
 
+interface ActivityLogParams {
+  listId?: string;
+  page?: number;
+  perPage?: number;
+}
+
 export const fetchDashboardStats = async (listId?: string) => {
   const token = localStorage.getItem("token");
   const response = await axios.get(`http://localhost:8000/api/admin/dashboard/stats`, {
@@ -32,9 +38,13 @@ export const fetchActivityLogs = async () => {
 };
 
 
-export const getAdminActivityLogs = async (listId?: string) => {
+export const getAdminActivityLogs = async ({ listId, page, perPage }: ActivityLogParams = {}) => {
   const response = await axiosInstance.get("/admin/dashboard/activity-logs", {
-    params: listId ? { subscription_list_id: listId } : {},
+    params: {
+      ...(listId && { subscription_list_id: listId }),
+      ...(page && { page }),
+      ...(perPage && { per_page: perPage }),
+    },
   });
   return response.data;
 };
