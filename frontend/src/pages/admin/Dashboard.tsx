@@ -1,3 +1,4 @@
+// src/pages/admin/Dashboard.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,13 +24,16 @@ const getGreetingMessage = () => {
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardData, setDashboardData] = useState<any>(null);
-  const [activityLogs, setActivityLogs] = useState<any[]>([]);
   const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
   const [selectedListId, setSelectedListId] = useState<string | undefined>(undefined);
-  const [showSubscriberBlocks, setShowSubscriberBlocks] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [logs, setLogs] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [perPage] = useState(8);
 
   const fetchStats = async (listId?: string) => {
     try {
@@ -43,22 +47,27 @@ const Dashboard = () => {
     }
   };
 
-  const fetchActivityLogs = async (listId?: string) => {
+  const fetchActivityLogs = async (listId?: string, page = 1) => {
+    console.log("Fetching logs for:", { listId, page });
     try {
-      const logs = await getAdminActivityLogs(listId);
-      setActivityLogs(logs);
+      const response = await getAdminActivityLogs({
+        listId,
+        page,
+        perPage,
+      });
+      console.log("Fetched Logs:", response);
+      setLogs(response.data);
+      setTotalPages(response.last_page);
     } catch (error) {
-      console.error("Failed to load activity logs");
+      console.error("Failed to load activity logs", error);
     }
   };
+  
 
   const fetchSubscriptionLists = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Token missing");
-        return;
-      }
+      if (!token) return;
 
       const response = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
         headers: { Authorization: `Bearer ${token}` },
@@ -72,8 +81,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchStats(selectedListId);
-    fetchActivityLogs(selectedListId);
-  }, [selectedListId]);
+    fetchActivityLogs(selectedListId, currentPage);
+  }, [selectedListId, currentPage]);
 
   useEffect(() => {
     fetchSubscriptionLists();
@@ -81,18 +90,13 @@ const Dashboard = () => {
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
-      {isSidebarOpen && (
-        <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
-      )}
+      {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
 
       <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
         <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="p-2 rounded-md hover:bg-gray-800"
-              >
+              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-800">
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
@@ -105,9 +109,8 @@ const Dashboard = () => {
         </nav>
 
         <div className="p-8 bg-gradient-to-r from-gray-100 to-gray-200 min-h-[calc(100vh-64px)]">
-          {/* Header Section with Filter and Email Verification */}
+          {/* Header Filter and Email Verification */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {/* Filter Section */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <label htmlFor="subscriptionList" className="block text-lg font-semibold text-gray-800 mb-4">
                 Filter by Subscription List
@@ -115,8 +118,11 @@ const Dashboard = () => {
               <select
                 id="subscriptionList"
                 value={selectedListId || ""}
-                onChange={(e) => setSelectedListId(e.target.value || undefined)}
-                className="block w-full sm:w-72 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white transition duration-300"
+                onChange={(e) => {
+                  setSelectedListId(e.target.value || undefined);
+                  setCurrentPage(1); // Reset to page 1 on filter change
+                }}
+                className="block w-full sm:w-72 px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">All Lists</option>
                 {subscriptionLists.map((list) => (
@@ -127,7 +133,6 @@ const Dashboard = () => {
               </select>
             </div>
 
-            {/* Email Verification Block */}
             <div className="bg-white p-8 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <EmailVerificationStatus />
             </div>
@@ -139,56 +144,26 @@ const Dashboard = () => {
             <p className="text-center text-red-500 font-semibold">{error}</p>
           ) : (
             <>
-              {/* Stats Block */}
               <div className="mb-8">
-                <DashboardStats
-                  stats={dashboardData || {
-                    totalSubscribers: 0,
-                    totalBlacklisted: 0,
-                    totalSubscriptionLists: 0,
-                  }}
-                />
+                <DashboardStats stats={dashboardData} />
               </div>
 
-              {/* Graph & Logs Block */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <SubscriberGraph listId={selectedListId || undefined} />
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                  <ActivityLogs />
+                  <ActivityLogs
+                    logs={logs}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
                 </div>
               </div>
             </>
           )}
-
-
-          {showSubscriberBlocks && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
-              <div
-                className="bg-blue-600 text-white p-6 rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-2xl cursor-pointer transition-all duration-300"
-                onClick={() => {
-                  if (subscriptionLists.length > 0) {
-                    navigate("/admin/add-subscriber");
-                  }
-                }}
-              >
-                <h3 className="text-xl font-semibold">Add Subscriber</h3>
-                <p className="text-sm opacity-90">Click to add a new subscriber.</p>
-                {subscriptionLists.length === 0 && (
-                  <p className="mt-4 p-3 bg-yellow-300 text-black font-semibold rounded-md shadow-md">
-                    No subscription lists available. Please create one first.
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
         </div>
-
-
-
-
-
       </main>
     </div>
   );

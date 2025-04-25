@@ -1,39 +1,46 @@
-import { useEffect, useState } from "react";
-import { fetchActivityLogs } from "../../services/api";
+// src/components/admin/ActivityLogs.tsx
+interface ActivityLogsProps {
+  logs: any[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-const ActivityLogs = () => {
-  const [logs, setLogs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchActivityLogs()
-      .then((data) => {
-        setLogs(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching activity logs:", error);
-        setLogs([]);
-        setLoading(false);
-      });
-  }, []);
-
+const ActivityLogs = ({ logs, currentPage, totalPages, onPageChange }: ActivityLogsProps) => {
   return (
-    <div className="bg-white p-4 shadow-md rounded-md">
-      <h3 className="text-lg font-semibold">Admin Activity Logs</h3>
-
-      {loading ? (
-        <p className="text-gray-500">Loading logs...</p>
-      ) : logs.length > 0 ? (
-        <ul className="mt-2 max-h-96 overflow-y-auto">
-          {logs.map((log, index) => (
-            <li key={index} className="border-b p-2">
-              {log.action} - {new Date(log.created_at).toLocaleString()}
-            </li>
-          ))}
-        </ul>
+    <div>
+      <h3 className="text-lg font-semibold mb-4">Admin Activity Logs</h3>
+      {logs.length === 0 ? (
+        <p className="text-gray-500">No activity logs found.</p>
       ) : (
-        <p className="text-gray-500 mt-2">No activity logs found.</p>
+        <>
+          <ul className="space-y-2 max-h-96 overflow-y-auto pr-2">
+            {logs.map((log, index) => (
+              <li key={index} className="border-b pb-2 text-sm">
+                {log.action} - <span className="text-gray-500">{new Date(log.created_at).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Pagination */}
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => onPageChange(currentPage - 1)}
+              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="px-4 py-1">{currentPage} / {totalPages}</span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => onPageChange(currentPage + 1)}
+              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
