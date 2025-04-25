@@ -68,6 +68,8 @@ const Profile = () => {
                     },
                 }
             );
+            //Update localStorage so Sidebar reflects changes
+            localStorage.setItem("user", JSON.stringify(editableProfile));
 
             setProfile(editableProfile);
             setEditMode(false);
@@ -79,6 +81,7 @@ const Profile = () => {
             setLoading(false);
         }
     };
+
 
     const handlePasswordUpdate = async () => {
         if (newPassword !== confirmPassword) {
@@ -152,8 +155,9 @@ const Profile = () => {
                             className="text-blue-600 hover:text-blue-800"
                             title="Edit Profile"
                         >
-                            ✏️
+                            <img src="/edit-icon.svg" alt="Edit" className="w-6 h-6" />
                         </button>
+
                     </div>
 
                     {error && <p className="text-red-500 mb-4">{error}</p>}
