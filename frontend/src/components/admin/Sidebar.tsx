@@ -10,9 +10,21 @@ const Sidebar = ({
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user") || "{}");
-    setUserName(userData?.name || "Admin");
+    const updateUserName = () => {
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
+      setUserName(userData?.name || "Admin");
+    };
+
+    updateUserName(); 
+
+    const interval = setInterval(() => {
+      updateUserName(); 
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
+
+
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
