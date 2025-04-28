@@ -65,7 +65,7 @@ const SendMailPage = () => {
       {/* Sidebar */}
       <Sidebar setIsSidebarOpen={() => { }} />
       <main className="w-full transition-all duration-300 ml-64">
-        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
           <div className="flex items-center space-x-4">
             <h1 className="text-2xl font-semibold text-white">Send Emails to Subscribers</h1>
           </div>

@@ -62,7 +62,7 @@ const Dashboard = () => {
       console.error("Failed to load activity logs", error);
     }
   };
-  
+
 
   const fetchSubscriptionLists = async () => {
     try {
@@ -93,7 +93,7 @@ const Dashboard = () => {
       {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
 
       <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
-        <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md">
+        <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-50">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
               <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-800">
@@ -111,7 +111,7 @@ const Dashboard = () => {
         <div className="p-8 bg-gradient-to-r from-gray-100 to-gray-200 min-h-[calc(100vh-64px)]">
           {/* Header Filter and Email Verification */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 p-6">
               <label htmlFor="subscriptionList" className="block text-lg font-semibold text-gray-800 mb-4">
                 Filter by Subscription List
               </label>
