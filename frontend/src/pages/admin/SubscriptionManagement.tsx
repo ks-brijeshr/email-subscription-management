@@ -36,7 +36,6 @@ const SubscriptionManagement = () => {
     const [selectedSubscriberDetails, setSelectedSubscriberDetails] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showAddSubscriberModal, setShowAddSubscriberModal] = useState(false);
-    const [selectedList, setSelectedList] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [metadata, setMetadata] = useState<string>("");
@@ -307,9 +306,11 @@ const SubscriptionManagement = () => {
             alert("Failed to export subscribers.");
         }
     };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!selectedList || !email) {
+
+        if (!selectedListId || !email) {
             alert("Please select a subscription list and enter an email.");
             return;
         }
@@ -317,7 +318,12 @@ const SubscriptionManagement = () => {
         try {
             const token = localStorage.getItem("token");
 
-            //  Convert metadata from "key: value" format to JSON
+            if (!token) {
+                alert("Token is missing. Please log in again.");
+                return;
+            }
+
+            // Format metadata
             let formattedMetadata: Record<string, string> = {};
             if (metadata) {
                 metadata.split(",").forEach((item) => {
@@ -328,22 +334,34 @@ const SubscriptionManagement = () => {
                 });
             }
 
-            console.log("Submitting Data:", { name, email, metadata: formattedMetadata, list_id: selectedList });
-
             const response = await axios.post(
-                `http://localhost:8000/api/subscriptions/${selectedList}/subscribers`,
+                `http://localhost:8000/api/subscriptions/${selectedListId}/subscribers`,
                 { name, email, metadata: formattedMetadata },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
             console.log("Subscriber Added Successfully:", response.data);
+
             alert("Subscriber added successfully!");
-            navigate("/admin/dashboard");
+
+            // Form reset
+            setName("");
+            setEmail("");
+            setMetadata("");
+
+            // Close modal
+            handleCloseModal();
+
+
+            await fetchSubscribers(selectedListId, selectedListName || "");
+
         } catch (error: any) {
             console.error("Error adding subscriber:", error.response?.data || error.message);
             alert(`Failed to add subscriber: ${error.response?.data?.message || error.message}`);
         }
     };
+
+
     const filteredSubscribers = subscribers.filter((s) => {
         const emailMatch = s.email.toLowerCase().includes(emailSearch.toLowerCase());
         const tagMatch = tagSearch === "" || s.tags?.some(tag => tag.toLowerCase().includes(tagSearch.toLowerCase()));
@@ -355,7 +373,7 @@ const SubscriptionManagement = () => {
         <div className="flex">
             <Sidebar setIsSidebarOpen={() => { }} />
             <main className="w-full transition-all duration-300 ml-64">
-                <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+                <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
                     <div className="flex items-center space-x-4">
                         <h1 className="text-2xl font-semibold text-white">View All Subscriber</h1>
                     </div>
@@ -679,42 +697,24 @@ const SubscriptionManagement = () => {
                                 </div>
 
                                 {/* Add Subscriber Modal */}
-                                {showAddSubscriberModal && (
-                                    <div className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+                                {showAddSubscriberModal && selectedListId && (
+                                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
                                         <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
-
-
-                                            {/* Add Subscriber Form */}
-
                                             <form onSubmit={handleSubmit} className="space-y-5 relative">
                                                 <div>
                                                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Add Subscriber</h2>
                                                     {/* Close Button */}
                                                     <button
                                                         type="button"
-                                                        onClick={handleCloseModal}  // Close the form
+                                                        onClick={handleCloseModal}
                                                         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                                                     >
-                                                        <span className="text-2xl">&times;</span> {/* Close icon */}
+                                                        <span className="text-2xl">&times;</span>
                                                     </button>
                                                 </div>
-                                                {/* Subscription List Dropdown */}
-                                                <div>
-                                                    <label className="block text-gray-700 font-semibold mb-1">Subscription List</label>
-                                                    <select
-                                                        value={selectedList}
-                                                        onChange={(e) => setSelectedList(e.target.value)}
-                                                        className="w-full p-3 border rounded bg-gray-50"
-                                                        required
-                                                    >
-                                                        <option value="">Select Subscription List</option>
-                                                        {subscriptionLists.map((list) => (
-                                                            <option key={list.id} value={list.id}>
-                                                                {list.name}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
+
+                                                {/* Hidden List ID Field */}
+                                                <input type="hidden" value={selectedListId} />
 
                                                 {/* Name Input */}
                                                 <div>
@@ -762,10 +762,10 @@ const SubscriptionManagement = () => {
                                                     Add Subscriber
                                                 </button>
                                             </form>
-
                                         </div>
                                     </div>
                                 )}
+
 
                                 <div className="bg-white p-6 rounded-xl shadow-lg border">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">Subscribers</h3>

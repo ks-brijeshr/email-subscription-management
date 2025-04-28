@@ -44,7 +44,7 @@ const Blacklist = () => {
 
       <main className="w-full transition-all duration-300 ml-64">
         {/* Navbar */}
-        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm space-x-4">
+        <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm space-x-4 sticky top-0 z-50">
           <div className="flex space-x-80">
             <h1 className="text-2xl font-semibold text-white">Blacklisted Emails</h1>
           </div>
