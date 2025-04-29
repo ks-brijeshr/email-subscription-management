@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Models\Subscriber;
-use App\Models\SubscriptionList;
+use Illuminate\Support\Str;
 use App\Models\EmailBlacklist;
-use App\Mail\SubscriberVerificationMail;
+use App\Models\SubscriptionList;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Mail\SubscriberVerificationMail;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SubscriberService
 {
@@ -170,10 +172,14 @@ class SubscriberService
         ];
     }
 
+
+
+
     public function addTags($subscriber_id, $tags)
     {
         $subscriber = Subscriber::find($subscriber_id);
-        if (!$subscriber) return ['error' => 'Subscriber not found.', 'code' => 404];
+        if (!$subscriber)
+            return ['error' => 'Subscriber not found.', 'code' => 404];
 
         foreach ($tags as $tag) {
             $subscriber->tags()->create(['tag' => $tag]);
@@ -189,7 +195,8 @@ class SubscriberService
     public function updateMetadata($subscriber_id, $metadata)
     {
         $subscriber = Subscriber::find($subscriber_id);
-        if (!$subscriber) return ['error' => 'Subscriber not found.', 'code' => 404];
+        if (!$subscriber)
+            return ['error' => 'Subscriber not found.', 'code' => 404];
 
         $existing = json_decode($subscriber->metadata, true) ?? [];
         $subscriber->update(['metadata' => json_encode(array_merge($existing, $metadata))]);
@@ -200,7 +207,8 @@ class SubscriberService
     public function search($list_id, $filters)
     {
         $list = SubscriptionList::find($list_id);
-        if (!$list) return ['error' => 'Subscription list not found.', 'code' => 404];
+        if (!$list)
+            return ['error' => 'Subscription list not found.', 'code' => 404];
 
         $query = Subscriber::where('list_id', $list_id)->with('tags');
 
@@ -259,31 +267,31 @@ class SubscriberService
     }
 
     public function getBlacklistedEmails()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    if (!$user || !$user->is_owner) {
-        return ['error' => 'Unauthorized access.', 'code' => 403];
+        if (!$user || !$user->is_owner) {
+            return ['error' => 'Unauthorized access.', 'code' => 403];
+        }
+
+        // Only get blacklisted emails that were added by the current user (i.e. the logged-in owner)
+        $blacklisted = EmailBlacklist::with('blacklistedBy:id,name,email')
+            ->where('blacklisted_by', $user->id)  // Filter by the logged-in user's ID
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return [
+            'success' => true,
+            'blacklisted_emails' => $blacklisted->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'email' => $item->email,
+                    'reason' => $item->reason,
+                    'blacklisted_by' => $item->blacklistedBy ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')' : 'Unknown',
+                    'created_at' => $item->created_at->toDateTimeString(),
+                ];
+            })
+        ];
     }
-
-    // Only get blacklisted emails that were added by the current user (i.e. the logged-in owner)
-    $blacklisted = EmailBlacklist::with('blacklistedBy:id,name,email')
-        ->where('blacklisted_by', $user->id)  // Filter by the logged-in user's ID
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-    return [
-        'success' => true,
-        'blacklisted_emails' => $blacklisted->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'email' => $item->email,
-                'reason' => $item->reason,
-                'blacklisted_by' => $item->blacklistedBy ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')' : 'Unknown',
-                'created_at' => $item->created_at->toDateTimeString(),
-            ];
-        })
-    ];
-}
 
 }

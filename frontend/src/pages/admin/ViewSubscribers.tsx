@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/Sidebar";
@@ -24,6 +24,12 @@ const ViewSubscribers = () => {
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [tagInput, setTagInput] = useState<string>("");
     const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
+ 
+
+const [page, setPage] = useState<number>(1);
+const [perPage, setPerPage] = useState<number>(5);
+const [totalPages, setTotalPages] = useState<number>(1);
+const [totalSubscribers, setTotalSubscribers] = useState<number>(0);
 
     const [emailSearch, setEmailSearch] = useState<string>("");
     const [tagSearch, setTagSearch] = useState<string>("");
@@ -35,6 +41,7 @@ const ViewSubscribers = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [metadata, setMetadata] = useState<string>("");
+
 
     const handleAddSubscriberClick = () => {
         setShowAddSubscriberModal(true);
@@ -67,30 +74,50 @@ const ViewSubscribers = () => {
         fetchSubscriptionLists();
     }, []);
 
-    useEffect(() => {
-        if (selectedListId) {
-            fetchSubscribers(selectedListId, selectedListName || "");
-        }
-    }, [selectedListId]);
-
-    const fetchSubscribers = async (listId: string, listName: string) => {
+    
+    const fetchSubscribers = async (listId: string, listName: string, currentPage = 1) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-
+    
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
+                params: {
+                    page: currentPage,
+                    perPage: perPage,
+                }
             });
-
-            if (response.data.subscribers) {
+    
+            if (response.data?.subscribers) {
                 setSubscribers(response.data.subscribers);
                 setSelectedListId(listId);
                 setSelectedListName(listName);
+    
+                // Safe access
+                const pagination = response.data.pagination || {};
+    
+                setTotalPages(pagination.lastPage || 1);
+                setPage(pagination.currentPage || 1);
+                setTotalSubscribers(pagination.total || 0);
             }
         } catch (error) {
             console.error("Error fetching subscribers:", error);
         }
     };
+    
+
+    //   useEffect(() => {
+    //     if (selectedListId) {
+    //         fetchSubscribers(selectedListId, selectedListName || "", currentPage);
+    //     }
+    // }, [selectedListId, currentPage]);
+
+
+    useEffect(() => {
+        if (selectedListId) {
+            fetchSubscribers(selectedListId, selectedListName || "", 1);
+        }
+    }, [selectedListId, emailSearch, tagSearch, statusFilter]);
 
     const handleNameClick = async (subscriberId: number) => {
         try {
@@ -281,11 +308,11 @@ const ViewSubscribers = () => {
                                 </thead>
                                 <tbody>
                                     {subscriptionLists.map((list: SubscriptionList) => (
-                                        <tr
-                                            key={list.id}
+                                    <tr
+                                    key={list.id}
                                             onClick={() => fetchSubscribers(list.id, list.name)}
-                                            className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-pointer"
-                                        >
+                                    className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-pointer"
+                                >
                                             <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800">{list.name}</td>
                                         </tr>
                                     ))}
@@ -581,8 +608,32 @@ const ViewSubscribers = () => {
                                                 ))}
                                             </tbody>
                                         </table>
+                                        <div className="flex justify-center items-center space-x-4 mt-6">
+    <button
+        onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+        disabled={page === 1}
+        className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+    >
+        Previous
+    </button>
+
+    <span className="font-semibold">
+        Page {page} of {totalPages}
+    </span>
+
+    <button
+        onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+        disabled={page === totalPages}
+        className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+    >
+        Next
+    </button>
+</div>
+
                                     </div>
                                 </div>
+
+                                
                             </>
                         )}
                 </div>
