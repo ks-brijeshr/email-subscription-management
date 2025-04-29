@@ -144,9 +144,6 @@ const SubscriptionManagement = () => {
             created_at: list.created_at,
         });
     };
-
-
-
     const handleCancelEdit = () => {
         setEditingListId(null);
         setEditSubscriptionList(null);
@@ -256,6 +253,7 @@ const SubscriptionManagement = () => {
             alert("Failed to add subscription list.");
         }
     };
+
     const handleAddTag = async () => {
         if (!selectedSubscriberId || !tagInput.trim()) return;
 
@@ -279,6 +277,7 @@ const SubscriptionManagement = () => {
             console.error("Error adding tag:", error);
         }
     };
+
 
     const exportSubscribers = async (format: "csv" | "json") => {
         try {
@@ -623,42 +622,6 @@ const SubscriptionManagement = () => {
                     )
                         : (
                             <>
-
-
-                                <div className="flex gap-4 mb-6">
-                                    <button
-                                        onClick={() => exportSubscribers("csv")}
-                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
-                                    >
-                                        Export as CSV
-                                    </button>
-                                    <button
-                                        onClick={() => exportSubscribers("json")}
-                                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
-                                    >
-                                        Export as JSON
-                                    </button>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                    <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
-                                        <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
-                                        <p className="text-3xl font-bold">{subscribers.length}</p>
-                                    </div>
-                                    <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
-                                        <h3 className="text-xl font-semibold text-green-900">Active</h3>
-                                        <p className="text-3xl font-bold">
-                                            {subscribers.filter((s) => s.status === "active").length}
-                                        </p>
-                                    </div>
-                                    <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
-                                        <h3 className="text-xl font-semibold text-red-900">Inactive</h3>
-                                        <p className="text-3xl font-bold">
-                                            {subscribers.filter((s) => s.status === "inactive").length}
-                                        </p>
-                                    </div>
-                                </div>
-
                                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                                     <input
                                         type="text"
@@ -684,8 +647,30 @@ const SubscriptionManagement = () => {
                                         <option value="inactive">Inactive</option>
                                     </select>
                                 </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
+                                        <p className="text-3xl font-bold">{subscribers.length}</p>
+                                    </div>
+                                    <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-green-900">Active</h3>
+                                        <p className="text-3xl font-bold">
+                                            {subscribers.filter((s) => s.status === "active").length}
+                                        </p>
+                                    </div>
+                                    <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-red-900">Inactive</h3>
+                                        <p className="text-3xl font-bold">
+                                            {subscribers.filter((s) => s.status === "inactive").length}
+                                        </p>
+                                    </div>
+                                </div>
                                 <div className="flex justify-between items-center mb-4">
                                     <h1 className="text-2xl font-semibold text-gray-800">Subscriber Management</h1>
+
+
+
 
                                     {/* Add Subscription List Button */}
                                     <button
@@ -769,6 +754,22 @@ const SubscriptionManagement = () => {
 
                                 <div className="bg-white p-6 rounded-xl shadow-lg border">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">Subscribers</h3>
+                                    <div className="flex gap-4 mb-6">
+                                        <button
+                                            onClick={() => exportSubscribers("csv")}
+                                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                                        >
+                                            Export as CSV
+                                        </button>
+                                        <button
+                                            onClick={() => exportSubscribers("json")}
+                                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
+                                        >
+                                            Export as JSON
+                                        </button>
+                                    </div>
+
+
                                     <div className="overflow-x-auto">
                                         <table className="w-full border-collapse border border-gray-500">
                                             <thead>
