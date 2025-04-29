@@ -11,6 +11,7 @@ interface Subscriber {
     tags?: string[];
 }
 
+
 interface SubscriptionList {
     id: string;
     name: string;
@@ -52,6 +53,12 @@ const SubscriptionManagement = () => {
         verify_dns_records: false,
         created_at: "",
     });
+    // For example: tagSearch = "2025 2024"
+    const filters = {
+        email: emailSearch,
+        status: statusFilter,
+        tag: tagSearch.trim(), // "2025 2024"
+    };
 
     const handleAddSubscriberClick = () => {
         setShowAddSubscriberModal(true);
@@ -363,10 +370,17 @@ const SubscriptionManagement = () => {
 
     const filteredSubscribers = subscribers.filter((s) => {
         const emailMatch = s.email.toLowerCase().includes(emailSearch.toLowerCase());
-        const tagMatch = tagSearch === "" || s.tags?.some(tag => tag.toLowerCase().includes(tagSearch.toLowerCase()));
+
+        const tagKeywords = tagSearch.trim().toLowerCase().split(" ").filter(Boolean);
+        const tagMatch = tagKeywords.length === 0 || tagKeywords.every(keyword =>
+            s.tags?.some(tag => tag.toLowerCase().includes(keyword))
+        );
+
         const statusMatch = statusFilter === "all" || s.status === statusFilter;
+
         return emailMatch && tagMatch && statusMatch;
     });
+
 
     return (
         <div className="flex">
@@ -632,7 +646,7 @@ const SubscriptionManagement = () => {
                                     />
                                     <input
                                         type="text"
-                                        placeholder="Search by Tag"
+                                        placeholder="Search by tags (e.g. 2025 2024)"
                                         value={tagSearch}
                                         onChange={(e) => setTagSearch(e.target.value)}
                                         className="border p-2 rounded w-full md:w-1/3"
