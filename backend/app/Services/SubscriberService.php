@@ -266,6 +266,7 @@ class SubscriberService
         return checkdnsrr(explode('@', $email)[1], 'A') && checkdnsrr(explode('@', $email)[1], 'MX');
     }
 
+
     public function getBlacklistedEmails()
     {
         $user = Auth::user();
@@ -274,23 +275,39 @@ class SubscriberService
             return ['error' => 'Unauthorized access.', 'code' => 403];
         }
 
-        // Only get blacklisted emails that were added by the current user (i.e. the logged-in owner)
-        $blacklisted = EmailBlacklist::with('blacklistedBy:id,name,email')
-            ->where('blacklisted_by', $user->id)  // Filter by the logged-in user's ID
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $perPage = request()->query('perPage', 5);
+        $page = request()->query('page', 1);
+
+        $query = EmailBlacklist::with('blacklistedBy:id,name,email')
+            ->where('blacklisted_by', $user->id)
+            ->orderBy('created_at', 'desc');
+
+        $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+
+        $items = collect($paginator->items())->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'email' => $item->email,
+                'reason' => $item->reason,
+                'blacklisted_by' => $item->blacklistedBy
+                    ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')'
+                    : 'Unknown',
+                'created_at' => $item->created_at->toDateTimeString(),
+            ];
+        });
 
         return [
             'success' => true,
-            'blacklisted_emails' => $blacklisted->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'email' => $item->email,
-                    'reason' => $item->reason,
-                    'blacklisted_by' => $item->blacklistedBy ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')' : 'Unknown',
-                    'created_at' => $item->created_at->toDateTimeString(),
-                ];
-            })
+            'blacklisted_emails' => $items,
+            'pagination' => [
+                'total' => $paginator->total(),
+                'perPage' => $paginator->perPage(),
+                'currentPage' => $paginator->currentPage(),
+                'lastPage' => $paginator->lastPage(),
+                'nextPageUrl' => $paginator->nextPageUrl(),
+                'prevPageUrl' => $paginator->previousPageUrl(),
+            ]
         ];
     }
+
 }
