@@ -31,6 +31,11 @@ const SubscriptionManagement = () => {
     const [tagInput, setTagInput] = useState<string>("");
     const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
 
+    const [page, setPage] = useState<number>(1);
+    const [perPage, setPerPage] = useState<number>(5);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [totalSubscribers, setTotalSubscribers] = useState<number>(0);
+
     const [emailSearch, setEmailSearch] = useState<string>("");
     const [tagSearch, setTagSearch] = useState<string>("");
     const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -115,28 +120,39 @@ const SubscriptionManagement = () => {
 
     useEffect(() => {
         if (selectedListId) {
-            fetchSubscribers(selectedListId, selectedListName || "");
+            fetchSubscribers(selectedListId, selectedListName || "", 1);
         }
-    }, [selectedListId]);
+    }, [selectedListId, emailSearch, tagSearch, statusFilter]);
+    
 
-    const fetchSubscribers = async (listId: string, listName: string) => {
+    const fetchSubscribers = async (listId: string, listName: string, currentPage = 1) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-
+    
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
+                params: {
+                    page: currentPage,
+                    perPage: perPage,
+                }
             });
-
-            if (response.data.subscribers) {
+    
+            if (response.data?.subscribers) {
                 setSubscribers(response.data.subscribers);
                 setSelectedListId(listId);
                 setSelectedListName(listName);
+    
+                const pagination = response.data.pagination || {};
+                setTotalPages(pagination.lastPage || 1);
+                setPage(pagination.currentPage || 1);
+                setTotalSubscribers(pagination.total || 0);
             }
         } catch (error) {
             console.error("Error fetching subscribers:", error);
         }
     };
+    
 
     const handleEditClick = (list: SubscriptionList) => {
         setEditingListId(list.id);
@@ -904,6 +920,28 @@ const SubscriptionManagement = () => {
                                                 ))}
                                             </tbody>
                                         </table>
+                                        <div className="flex justify-center items-center space-x-4 mt-6">
+    <button
+        onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+        disabled={page === 1}
+        className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+    >
+        Previous
+    </button>
+
+    <span className="font-semibold">
+        Page {page} of {totalPages}
+    </span>
+
+    <button
+        onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+        disabled={page === totalPages}
+        className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+    >
+        Next
+    </button>
+</div>
+
                                     </div>
                                 </div>
                             </>
