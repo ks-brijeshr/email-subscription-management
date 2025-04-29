@@ -71,10 +71,11 @@ export const sendCustomEmail = async (data: {
 };
 
 
-// Add this to api.ts
-export const getBlacklistedEmails = async () => {
-  const response = await api.get("/admin/blacklisted-emails"); //backend endpoint
-  return response.data; 
+export const getBlacklistedEmails = async (page = 1, perPage = 5) => {
+  const response = await api.get("/admin/blacklisted-emails", {
+    params: { page, perPage },
+  });
+  return response.data;
 };
 
 
