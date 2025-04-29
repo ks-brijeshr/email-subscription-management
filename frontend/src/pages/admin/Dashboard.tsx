@@ -24,8 +24,12 @@ const getGreetingMessage = () => {
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardData, setDashboardData] = useState<any>(null);
-  const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
-  const [selectedListId, setSelectedListId] = useState<string | undefined>(undefined);
+  const [subscriptionLists, setSubscriptionLists] = useState<
+    SubscriptionList[]
+  >([]);
+  const [selectedListId, setSelectedListId] = useState<string | undefined>(
+    undefined
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -63,15 +67,17 @@ const Dashboard = () => {
     }
   };
 
-
   const fetchSubscriptionLists = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "http://localhost:8000/api/admin/subscription-lists",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setSubscriptionLists(response.data || []);
     } catch (error) {
@@ -92,19 +98,37 @@ const Dashboard = () => {
     <div className="flex bg-gray-100 min-h-screen">
       {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
 
-      <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
+      <main
+        className={`${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        } w-full transition-all duration-300`}
+      >
         <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md sticky top-0 z-50">
           <div className="flex items-center space-x-4">
             {!isSidebarOpen && (
-              <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-800">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 rounded-md hover:bg-gray-800"
+              >
                 <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
               </button>
             )}
-            <h1 className="text-2xl font-semibold text-white">Admin Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-white">
+              Admin Dashboard
+            </h1>
           </div>
-          <div className="text-right text-white">
-            <p className="font-medium">{getGreetingMessage()}</p>
-            <p className="text-sm">{new Date().toLocaleTimeString()}</p>
+          <div className="flex items-center space-x-6 text-white">
+            <div className="text-right">
+              <p className="font-medium">{getGreetingMessage()}</p>
+              <p className="text-sm">{new Date().toLocaleTimeString()}</p>
+            </div>
+            <button
+              onClick={() => navigate("/")}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg text-sm font-medium"
+              title="Go to Home"
+            >
+              🏠 Home
+            </button>
           </div>
         </nav>
 
@@ -112,7 +136,10 @@ const Dashboard = () => {
           {/* Header Filter and Email Verification */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div className="bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 p-6">
-              <label htmlFor="subscriptionList" className="block text-lg font-semibold text-gray-800 mb-4">
+              <label
+                htmlFor="subscriptionList"
+                className="block text-lg font-semibold text-gray-800 mb-4"
+              >
                 Filter by Subscription List
               </label>
               <select
