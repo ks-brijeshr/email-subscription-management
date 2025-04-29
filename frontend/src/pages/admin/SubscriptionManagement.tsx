@@ -13,7 +13,7 @@ interface Subscriber {
 
 
 interface SubscriptionList {
-    id: string;
+    id: string | null;
     name: string;
     allow_business_email_only: boolean;
     block_temporary_email: boolean;
@@ -96,7 +96,46 @@ const SubscriptionManagement = () => {
         fetchSubscriptionLists();
     }, []);
 
-    const handleDelete = async (id: string) => {
+    const handleCopyList = async (list: SubscriptionList) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("No authentication token found.");
+            return;
+        }
+
+        const newList = {
+            name: `${list.name} (Copy)`,
+            allow_business_email_only: list.allow_business_email_only,
+            block_temporary_email: list.block_temporary_email,
+            require_email_verification: list.require_email_verification,
+            check_domain_existence: list.check_domain_existence,
+            verify_dns_records: list.verify_dns_records,
+        };
+
+        try {
+            const response = await axios.post(
+                "http://localhost:8000/api/subscription-list/create",
+                newList,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            const createdList = response.data.subscription_list;
+            setSubscriptionLists((prev) => [...prev, createdList]);
+            alert("Subscription list copied successfully!");
+        } catch (error) {
+            console.error("Error copying subscription list:", error);
+            alert("Failed to copy subscription list.");
+        }
+    };
+
+
+
+    const handleDelete = async (id: string | null) => {
+        if (!id) {
+            alert("Invalid subscription list ID.");
+            return;
+        }
+
         const confirmed = confirm("Are you sure you want to delete this subscription list?");
         if (!confirmed) return;
 
@@ -118,18 +157,19 @@ const SubscriptionManagement = () => {
         }
     };
 
+
     useEffect(() => {
         if (selectedListId) {
             fetchSubscribers(selectedListId, selectedListName || "", 1);
         }
     }, [selectedListId, emailSearch, tagSearch, statusFilter]);
-    
+
 
     const fetchSubscribers = async (listId: string, listName: string, currentPage = 1) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-    
+
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params: {
@@ -137,12 +177,12 @@ const SubscriptionManagement = () => {
                     perPage: perPage,
                 }
             });
-    
+
             if (response.data?.subscribers) {
                 setSubscribers(response.data.subscribers);
                 setSelectedListId(listId);
                 setSelectedListName(listName);
-    
+
                 const pagination = response.data.pagination || {};
                 setTotalPages(pagination.lastPage || 1);
                 setPage(pagination.currentPage || 1);
@@ -152,7 +192,7 @@ const SubscriptionManagement = () => {
             console.error("Error fetching subscribers:", error);
         }
     };
-    
+
 
     const handleEditClick = (list: SubscriptionList) => {
         setEditingListId(list.id);
@@ -542,13 +582,19 @@ const SubscriptionManagement = () => {
                                             <tr
                                                 key={list.id}
                                                 className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-default"
+                                            ><td
+                                                onClick={() => {
+                                                    if (list.id) {
+                                                        fetchSubscribers(list.id, list.name);
+                                                    } else {
+                                                        alert("Invalid subscription list ID.");
+                                                    }
+                                                }}
+                                                className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 cursor-pointer hover:underline"
                                             >
-                                                <td
-                                                    onClick={() => fetchSubscribers(list.id, list.name)}
-                                                    className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 cursor-pointer hover:underline"
-                                                >
                                                     {list.name}
                                                 </td>
+
                                                 <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
                                                     {list.allow_business_email_only ? "✔" : "✘"}
                                                 </td>
@@ -575,6 +621,15 @@ const SubscriptionManagement = () => {
                                                         }}
                                                     >
                                                         Edit
+                                                    </button>
+                                                    <button
+                                                        className="px-3 py-1 text-green-600 bg-green-50 hover:bg-green-100 rounded"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // prevent row click
+                                                            handleCopyList(list);
+                                                        }}
+                                                    >
+                                                        Copy
                                                     </button>
 
                                                     <button
@@ -921,26 +976,26 @@ const SubscriptionManagement = () => {
                                             </tbody>
                                         </table>
                                         <div className="flex justify-center items-center space-x-4 mt-6">
-    <button
-        onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
-        disabled={page === 1}
-        className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
-    >
-        Previous
-    </button>
+                                            <button
+                                                onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+                                                disabled={page === 1}
+                                                className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                                            >
+                                                Previous
+                                            </button>
 
-    <span className="font-semibold">
-        Page {page} of {totalPages}
-    </span>
+                                            <span className="font-semibold">
+                                                Page {page} of {totalPages}
+                                            </span>
 
-    <button
-        onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
-        disabled={page === totalPages}
-        className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
-    >
-        Next
-    </button>
-</div>
+                                            <button
+                                                onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+                                                disabled={page === totalPages}
+                                                className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
 
                                     </div>
                                 </div>
