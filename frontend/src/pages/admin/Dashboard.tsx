@@ -96,7 +96,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
-      {isSidebarOpen && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
+      <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
       <main
         className={`${

@@ -23,6 +23,7 @@ const Blacklist = () => {
     lastPage: 1,
   });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   const fetchBlacklisted = async (currentPage = 1) => {
@@ -51,14 +52,27 @@ const Blacklist = () => {
 
   return (
     <div className="flex">
-      <Sidebar setIsSidebarOpen={() => {}} />
 
-      <main className="w-full transition-all duration-300 ml-64">
+      <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+
+      <main
+        className={`w-full transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm space-x-4 sticky top-0 z-50">
-          <div className="flex space-x-80">
-            <h1 className="text-2xl font-semibold text-white">Blacklisted Emails</h1>
-          </div>
-          <a href="/admin/dashboard" className="text-white transition item-center ml-auto">
+        {!isSidebarOpen && (
+          <button
+            className="text-white mr-4 focus:outline-none"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
+          </button>
+           )}
+          <h1 className="text-2xl font-semibold text-white">
+            Blacklisted Emails
+          </h1>
+          <a href="/admin/dashboard" className="text-white ml-auto">
             Dashboard
           </a>
         </nav>
@@ -80,28 +94,43 @@ const Blacklist = () => {
             {loading ? (
               <p className="text-center text-gray-500">Loading...</p>
             ) : emails.length === 0 ? (
-              <p className="text-center text-gray-600">No blacklisted emails found.</p>
+              <p className="text-center text-gray-600">
+                No blacklisted emails found.
+              </p>
             ) : (
               <>
                 <div className="grid gap-4">
                   {emails.map((item) => (
-                    <div key={item.id} className="p-4 shadow rounded border bg-gray-50">
-                      <p className="font-semibold text-lg text-gray-800">{item.email}</p>
-                      <p className="text-sm text-gray-600">Reason: {item.reason}</p>
-                      <p className="text-sm text-gray-500">Blacklisted By: {item.blacklisted_by}</p>
+                    <div
+                      key={item.id}
+                      className="p-4 shadow rounded border bg-gray-50"
+                    >
+                      <p className="font-semibold text-lg text-gray-800">
+                        {item.email}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Reason: {item.reason}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Blacklisted By: {item.blacklisted_by}
+                      </p>
                       <p className="text-sm text-gray-400">
-                        Blacklisted At: {new Date(item.created_at).toLocaleString()}
+                        Blacklisted At:{" "}
+                        {new Date(item.created_at).toLocaleString()}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                {/* Pagination Controls */}
                 <div className="flex justify-center items-center space-x-4 mt-6">
                   <button
                     onClick={() => fetchBlacklisted(page - 1)}
                     disabled={page === 1}
-                    className={`px-4 py-2 rounded ${page === 1 ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700"} text-white`}
+                    className={`px-4 py-2 rounded ${
+                      page === 1
+                        ? "bg-gray-300"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    } text-white`}
                   >
                     Previous
                   </button>
@@ -111,7 +140,11 @@ const Blacklist = () => {
                   <button
                     onClick={() => fetchBlacklisted(page + 1)}
                     disabled={page === pagination.lastPage}
-                    className={`px-4 py-2 rounded ${page === pagination.lastPage ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700"} text-white`}
+                    className={`px-4 py-2 rounded ${
+                      page === pagination.lastPage
+                        ? "bg-gray-300"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    } text-white`}
                   >
                     Next
                   </button>

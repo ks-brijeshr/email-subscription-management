@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = ({
-  setIsSidebarOpen,
-}: {
+interface SidebarProps {
+  isOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
-}) => {
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
 
@@ -15,16 +16,14 @@ const Sidebar = ({
       setUserName(userData?.name || "Admin");
     };
 
-    updateUserName(); 
+    updateUserName();
 
     const interval = setInterval(() => {
-      updateUserName(); 
+      updateUserName();
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
-
-
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
@@ -36,13 +35,17 @@ const Sidebar = ({
   };
 
   return (
-    <aside className="w-64 h-screen fixed flex flex-col justify-between z-50  bg-gray-900">
+    <aside
+      className={`w-64 h-screen fixed flex flex-col justify-between z-50 bg-gray-900 transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div className="flex justify-between items-center px-5 pt-5">
         <h2 className="text-xl font-semibold text-cyan-400 tracking-wide">
           Admin Panel
         </h2>
         <button
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => setIsSidebarOpen(false)} // Close sidebar
           className="p-1 rounded-md hover:bg-gray-800 transition"
         >
           <img src="/close-icon.png" alt="Close" className="w-5 h-5" />
@@ -61,8 +64,6 @@ const Sidebar = ({
           <span className="text-sm text-white">Dashboard</span>
         </Link>
 
-
-        {/* Subscribers Dropdown */}
         <Link
           to="/admin/manage-subscriptions"
           className="flex justify-between items-center w-full p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
@@ -77,7 +78,6 @@ const Sidebar = ({
           </div>
         </Link>
 
-
         <Link
           to="/admin/blacklist"
           className="flex items-center space-x-3 p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
@@ -85,6 +85,7 @@ const Sidebar = ({
           <img src="/blacklist-icon.svg" alt="Blacklist" className="w-6 h-6" />
           <span className="text-sm text-white">Blacklist</span>
         </Link>
+
         <Link
           to="/admin/send-mail"
           className="flex items-center space-x-3 p-3 rounded-lg hover:border-l-4 hover:border-cyan-400 hover:bg-gray-800 transition-all"
