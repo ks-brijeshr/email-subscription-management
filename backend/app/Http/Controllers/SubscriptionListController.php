@@ -69,11 +69,11 @@ class SubscriptionListController extends Controller
             'require_email_verification' => $request->require_email_verification ?? true,
             'check_domain_existence' => $request->check_domain_existence ?? true,
             'verify_dns_records' => $request->verify_dns_records ?? true,
-            'is_verified' => false, // Subscription is inactive until email verification
+            //'is_verified' => false, // Subscription is inactive until email verification
         ]);
 
         // Send verification email
-        $this->sendVerificationEmail($subscriptionList);
+        // $this->sendVerificationEmail($subscriptionList);
 
         return response()->json([
             'message' => 'Subscription list created successfully. Please verify your email.',
@@ -82,12 +82,12 @@ class SubscriptionListController extends Controller
     }
 
 
-    private function sendVerificationEmail($subscriptionList)
-    {
-        $token = encrypt($subscriptionList->id);
+    // private function sendVerificationEmail($subscriptionList)
+    // {
+    //     $token = encrypt($subscriptionList->id);
 
-        Mail::to(Auth::user()->email)->send(new SubscriptionVerificationMail($subscriptionList, $token));
-    }
+    //     Mail::to(Auth::user()->email)->send(new SubscriptionVerificationMail($subscriptionList, $token));
+    // }
 
 
     public function verify($token): JsonResponse
