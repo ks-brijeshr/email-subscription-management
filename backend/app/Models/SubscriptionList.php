@@ -18,7 +18,7 @@ class SubscriptionList extends Model
         'require_email_verification',
         'check_domain_existence',
         'verify_dns_records',
-        'is_verified'
+        // 'is_verified'
     ];
 
     public function user()

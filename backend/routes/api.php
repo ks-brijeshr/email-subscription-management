@@ -144,7 +144,7 @@ Route::middleware('auth.api_token')->group(function () {
 
 
 //Email verification for owners who create subscription list
-Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
+// Route::get('/subscription-list/verify/{token}', [SubscriptionListController::class, 'verify']);
 
 //Get subscriber by list
 Route::get('/subscribers/{list_id}', [SubscriberListController::class, 'getSubscribersByList']);
