@@ -49,6 +49,7 @@ const SubscriptionManagement = () => {
     const [editSubscriptionList, setEditSubscriptionList] = useState<SubscriptionList | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
         name: "",
         allow_business_email_only: false,
@@ -440,9 +441,19 @@ const SubscriptionManagement = () => {
 
     return (
         <div className="flex">
-            <Sidebar setIsSidebarOpen={() => { }} />
-            <main className="w-full transition-all duration-300 ml-64">
-                <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+            <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+            <main  className={`w-full transition-all duration-300 ${
+                isSidebarOpen ? "ml-64" : "ml-0"
+            }`}>
+            <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+            {!isSidebarOpen && (
+                <button
+                    className="text-white mr-4 focus:outline-none"
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                >
+                <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
+                </button>
+                )} 
                     <div className="flex items-center space-x-4">
                         <h1 className="text-2xl font-semibold text-white">View All Subscriber</h1>
                     </div>

@@ -8,9 +8,9 @@ const SendMailPage = () => {
   const [selectedListId, setSelectedListId] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
-  // Load subscription lists on page load
   useEffect(() => {
     fetchSubscriptionLists();
   }, []);
@@ -18,16 +18,14 @@ const SendMailPage = () => {
   const fetchSubscriptionLists = async () => {
     try {
       const response = await getSubscriptionLists();
-      console.log("Subscription lists response:", response);
-
       if (response) {
         setSubscriptionLists(response);
       } else {
-        setSubscriptionLists([]); // fallback empty list
+        setSubscriptionLists([]);
       }
     } catch (error) {
       console.error("Error fetching subscription lists:", error);
-      setSubscriptionLists([]); // fallback
+      setSubscriptionLists([]);
     }
   };
 
@@ -62,33 +60,45 @@ const SendMailPage = () => {
 
   return (
     <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <Sidebar setIsSidebarOpen={() => { }} />
-      <main className="w-full transition-all duration-300 ml-64">
+      <button
+        className="text-2xl px-4 py-2 z-50 fixed top-4 left-4 bg-gray-800 text-white rounded-md md:hidden"
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        ☰
+      </button>
+
+      <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+
+      <main
+        className={`w-full transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-semibold text-white">Send Emails to Subscribers</h1>
-          </div>
-          <a href="/admin/dashboard" className="text-white transition item-center ml-auto">Dashboard</a>
+        {!isSidebarOpen && (
+          <button
+            className="text-white mr-4 focus:outline-none"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
+          </button>
+           )} 
+          <h1 className="text-2xl font-semibold text-white">
+            Send Emails to Subscribers
+          </h1>
+          <a href="/admin/dashboard" className="text-white ml-auto">
+            Dashboard
+          </a>
         </nav>
 
         <div className="flex justify-center items-center p-10 bg-gray-100 min-h-screen">
           <div className="w-full max-w-4xl bg-white border border-gray-300 rounded-2xl shadow-xl p-10 relative">
-
-            {/* Back Button */}
             <button
-              onClick={() => {
-                navigate("/admin/dashboard");
-
-              }}
+              onClick={() => navigate("/admin/dashboard")}
               className="absolute top-4 left-4 p-2 bg-gray-200 hover:bg-gray-300 rounded-full transition duration-300 shadow"
               title={selectedListId ? "Back" : "Back to Dashboard"}
             >
-              <img
-                src="/back.svg"
-                alt="Back"
-                className="w-5 h-5"
-              />
+              <img src="/back.svg" alt="Back" className="w-5 h-5" />
             </button>
 
             <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
@@ -116,7 +126,9 @@ const SendMailPage = () => {
 
             {/* Subject */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subject
+              </label>
               <input
                 type="text"
                 value={subject}
@@ -128,7 +140,9 @@ const SendMailPage = () => {
 
             {/* Message */}
             <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Message
+              </label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -140,15 +154,12 @@ const SendMailPage = () => {
 
             <button
               onClick={handleSendEmail}
-              className="w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 ease-in-out shadow-sm hover:shadow-md"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
             >
-              📤 Send Email
+              Send Email
             </button>
-
           </div>
         </div>
-
-
       </main>
     </div>
   );
