@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../../routes/axiosInstance"; 
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,14 +25,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
 
     return () => clearInterval(interval);
   }, []);
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      navigate("/login");
+    if (!confirmLogout) return;
+  
+    try {
+      await axios.post("/logout"); // API call to log logout action
+    } catch (error) {
+      console.error("Logout logging failed:", error);
     }
+  
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (

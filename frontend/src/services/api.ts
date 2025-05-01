@@ -27,15 +27,15 @@ export const getSubscriberGrowthData = async (listId?: string) => {
   return response.data; // Make sure backend gives array here
 };
 
-export const fetchActivityLogs = async () => {
-  try {
-    const response = await axiosInstance.get("/admin/dashboard/activity-logs");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching activity logs:", error);
-    return [];
-  }
-};
+// export const fetchActivityLogs = async () => {
+//   try {
+//     const response = await axiosInstance.get("/admin/dashboard/activity-logs");
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching activity logs:", error);
+//     return [];
+//   }
+// };
 
 
 export const getAdminActivityLogs = async ({ listId, page, perPage }: ActivityLogParams = {}) => {
