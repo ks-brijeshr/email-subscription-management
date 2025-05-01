@@ -309,5 +309,15 @@ class SubscriberService
             ]
         ];
     }
+    public function deleteSubscriber($id)
+    {
+        $subscriber = Subscriber::findOrFail($id);
+        $subscriber->delete();
+    }
 
+    // Delete multiple subscribers
+    // public function deleteSubscribers(array $ids)
+    // {
+    //     Subscriber::whereIn('id', $ids)->delete();
+    // }
 }
