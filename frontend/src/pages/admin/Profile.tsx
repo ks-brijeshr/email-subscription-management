@@ -123,10 +123,15 @@ const Profile = () => {
 
     return (
         <div className="flex bg-gray-100 min-h-screen">
-            {isSidebarOpen && (
-                <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
-            )}
+            
+        <button
+            className="text-2xl px-4 py-2 z-50 fixed top-4 left-4 bg-gray-800 text-white rounded-md md:hidden"
+            onClick={() => setIsSidebarOpen(true)}
+        >
+            ☰
+        </button>
 
+      <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
             <main className={`${isSidebarOpen ? "ml-64" : "ml-0"} w-full transition-all duration-300`}>
                 <nav className="bg-gray-900 border-b px-6 py-4 flex justify-between items-center shadow-md">
                     <div className="flex items-center space-x-4">
