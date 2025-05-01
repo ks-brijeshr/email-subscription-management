@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
-use App\Models\DailySignup;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\ActivityLog;
+use App\Models\DailySignup;
+use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Log;
 use App\Models\EmailVerificationLog;
 use App\Services\ActivityLogService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
 
 
 class AuthController extends Controller
 {
-    protected AuthService $authService;
     protected ActivityLogService $activityLogService;
+    protected AuthService $authService;
+
 
     public function __construct(AuthService $authService, ActivityLogService $activityLogService)
     {
@@ -61,11 +63,35 @@ class AuthController extends Controller
     /**
      * Handle user login
      */
+    // public function login(LoginRequest $request): JsonResponse
+    // {
+    //     // Get the response from the AuthService
+    //     $response = $this->authService->login($request->validated());
+
+    //     // Decode the response to check if it was successful
+    //     if ($response->getStatusCode() === 200) {
+    //         // Log login activity now that the user is authenticated
+    //         $user = auth('sanctum')->user(); // Optional: fallback to request()->user()
+    //         if ($user) {
+    //             $this->activityLogService->logActivity('logged in');
+    //         }
+    //     }
+
+    //     return $response;
+    // }
+
+
     public function login(LoginRequest $request): JsonResponse
     {
-        //Directly return the JSON response from AuthService
-        return $this->authService->login($request->validated());
+        // $response = $this->authService->login($request);
+        // return response()->json($response, $response['status']);
+
+        return $this->authService->login($request);
+        // return $this->authService->login($request->validated());
     }
+
+
+
 
     /**
      * Handle email verification when user clicks the verify email link
@@ -94,7 +120,7 @@ class AuthController extends Controller
         $this->activityLogService->logActivity('Email verified', $request);
 
         // Redirect to frontend after successful verification
-        return redirect('http://localhost:5173/email/verified'); 
+        return redirect('http://localhost:5173/email/verified');
     }
 
 
@@ -120,15 +146,32 @@ class AuthController extends Controller
      * @param Request $request
      * @return json response
      */
-    public function logout(Request $request): JsonResponse
+    // public function logout(Request $request)
+    // {
+    //     $user = $request->user();
+
+    //     $user->tokens()->delete();
+
+    //     $this->activityLogService->logActivity('logged out', $request);
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'Logout successful',
+    //     ]);
+    // }
+    // app/Http/Controllers/AuthController.php
+
+    public function logout(Request $request)
     {
-        $user = $request->user(); // Get authenticated user
+        $user = $request->user();
 
-        // Revoke user's token
-        $user->currentAccessToken()->delete();
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'action' => 'logout',
+            'description' => 'User logged out',
+            'subscription_list_id' => null, // ya pass karo if required
+        ]);
 
-        return response()->json([
-            'message' => 'Logged out successfully'
-        ], 200);
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

@@ -6,10 +6,12 @@ use App\Models\User;
 use App\Models\BlockedIp;
 use App\Models\DailySignup;
 use App\Models\FailedLogin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\EmailVerificationLog;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendVerificationEmailJob;
@@ -17,8 +19,16 @@ use Illuminate\Auth\Events\Registered;
 
 
 
+
 class AuthService
 {
+    protected $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
     const MAX_FAILED_ATTEMPTS = 5; // Set limit before blocking
     const BLOCK_DURATION = 1; // Minutes to block
 
@@ -65,48 +75,87 @@ class AuthService
     /**
      * Handle user login (Only allow verified users)
      */
-    public function login(array $credentials)
+    // public function login(array $credentials)
+    // {
+
+    //     $ip = request()->ip();
+    //     $key = 'login_attempts_' . $ip;
+
+    //     // Check if the IP is blocked 
+    //     if ($this->isBlocked($ip)) {
+    //         return response()->json(['error' => 'Too many failed login attempts. Try again later.'], 429);
+    //     }
+
+    //     // Find user by email
+    //     $user = User::where('email', $credentials['email'])->first();
+
+    //     // If user not found or password incorrect
+    //     if (!$user || !Hash::check($credentials['password'], $user->password)) {
+    //         $this->logFailedAttempt($ip, $credentials['email']); // Log failed attempt
+
+    //         if ($this->getFailedAttempts($ip) >= self::MAX_FAILED_ATTEMPTS) {
+    //             $this->blockIP($ip); // Block IP after max attempts
+    //             return response()->json(['error' => 'Too many failed login attempts. Try again later.'], 429);
+    //         }
+
+    //         return response()->json(['error' => 'Invalid credentials'], 401);
+    //     }
+
+    //     // Check if email is verified
+    //     if (!$user->hasVerifiedEmail()) {
+    //         return response()->json(['error' => 'Your email is not verified. Please check your email.'], 403);
+    //     }
+
+    //     // Successful login, clear failed attempts
+    //     $this->clearFailedAttempts($ip);
+
+    //     $token = $user->createToken('auth_token')->plainTextToken;
+
+    //     //Log activity: User logged in
+    //     $this->activityLogService->logActivity('User logged in');
+
+    //     return response()->json([
+    //         'token' => $token,
+    //         'user' => $user,
+    //         'is_owner' => $user->is_owner,
+    //     ], 200);
+    // }
+    public function login(Request $request)
     {
+        $credentials = $request->only('email', 'password');
 
-        $ip = request()->ip();
-        $key = 'login_attempts_' . $ip;
-
-        // Check if the IP is blocked
-        if ($this->isBlocked($ip)) {
-            return response()->json(['error' => 'Too many failed login attempts. Try again later.'], 429);
-        }
-
-        // Find user by email
         $user = User::where('email', $credentials['email'])->first();
 
-        // If user not found or password incorrect
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            $this->logFailedAttempt($ip, $credentials['email']); // Log failed attempt
-
-            if ($this->getFailedAttempts($ip) >= self::MAX_FAILED_ATTEMPTS) {
-                $this->blockIP($ip); // Block IP after max attempts
-                return response()->json(['error' => 'Too many failed login attempts. Try again later.'], 429);
-            }
-
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json([
+                'status' => 401,
+                'message' => 'Invalid email or password',
+            ], 401);
         }
 
-        // Check if email is verified
         if (!$user->hasVerifiedEmail()) {
-            return response()->json(['error' => 'Your email is not verified. Please check your email.'], 403);
+            return response()->json([
+                'status' => 403,
+                'message' => 'Email not verified',
+            ], 403);
         }
 
-        // Successful login, clear failed attempts
-        $this->clearFailedAttempts($ip);
-
+        $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Pass user manually
+        $this->activityLogService->logActivity('logged in', $request, $user);
+
         return response()->json([
-            'token' => $token,
+            'status' => 200,
+            'message' => 'Login successful',
             'user' => $user,
-            'is_owner' => $user->is_owner,
-        ], 200);
+            'token' => $token,
+        ]);
     }
+
+
+
 
     /**
      *  Log failed login attempts

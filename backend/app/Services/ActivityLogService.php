@@ -11,21 +11,26 @@ class ActivityLogService
     /**
      * Log user activity dynamically
      */
-    public function logActivity(string $action, ?Request $request = null)
+    public function logActivity(string $activity, ?Request $request = null, $user = null): void
     {
-        $userId = Auth::id(); // Get logged-in user ID
+        $user = $user ?? $request?->user() ?? Auth::user();
+        $ip = $request?->ip() ?? request()->ip();
 
-        if (!$userId) {
-            return; // Don't log if user is not authenticated
+        if (!$user) {
+            return;
         }
 
         ActivityLog::create([
-            'user_id' => $userId,
-            'action' => $action,
-            'ip_address' => $request?->ip() ?? request()->ip(),
+            'user_id' => $user->id,
+            'activity' => $activity,
+            'action' => $activity, // Add this line to fix the error
+            'ip_address' => $ip,
             'user_agent' => $request?->header('User-Agent') ?? request()->header('User-Agent'),
         ]);
     }
+
+
+
 
     /**
      * Get all activities for the authenticated user
