@@ -12,7 +12,7 @@ const Signup = () => {
     email: "",
     password: "",
     password_confirmation: "",
-    is_owner: false,
+    is_owner: true,
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +87,9 @@ const Signup = () => {
               required
             />
 
-            <div className="flex items-center space-x-2">
+            {/* Register form checkbox for register as a website owner after comment this i change the default true all are the owners and 
+            remove from the registration form */}
+            {/* <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 name="is_owner"
@@ -96,7 +98,7 @@ const Signup = () => {
                 className="h-4 w-4 text-blue-500 focus:ring-gray-600"
               />
               <label className="text-sm text-gray-700">Register as Website Owner</label>
-            </div>
+            </div> */}
 
             <button
               type="submit"
