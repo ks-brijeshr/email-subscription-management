@@ -195,3 +195,9 @@ Route::get('/email-verification-stats', [EmailVerificationStatsController::class
 Route::get('/analytics/unsubscribes', [AnalyticsController::class, 'getUnsubscribeTrends']);
 
 Route::get('/subscribers/verify/{token}', [SubscriberController::class, 'verifyEmail']);
+
+// Delete single subscriber
+Route::delete('/subscribers/{id}', [SubscriberController::class, 'destroy']);
+
+// New route for deleting multiple subscribers
+// Route::delete('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDeleteSubscribers']);

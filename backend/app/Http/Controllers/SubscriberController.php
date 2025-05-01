@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subscriber;
 use App\Services\SubscriberExportService;
 use App\Services\SubscriberService;
 use Illuminate\Http\Request;
@@ -106,5 +107,32 @@ class SubscriberController extends Controller
         $response = $this->subscriberService->getBlacklistedEmails();
         return response()->json($response, $response['code'] ?? 200);
     }
+    public function destroy($id)
+    {
+        $subscriber = Subscriber::findOrFail($id);
+        $subscriber->delete();
 
+        return response()->json(['message' => 'Subscriber deleted successfully']);
+    }
+
+    // public function bulkDeleteSubscribers(Request $request)
+    // {
+    //     try {
+    //         // Validate that the 'ids' field is an array and contains numbers
+    //         $request->validate([
+    //             'ids' => 'required|array',
+    //             'ids.*' => 'integer',  // Each ID in the array must be an integer
+    //         ]);
+
+    //         // Retrieve the IDs from the request
+    //         $ids = $request->input('ids');
+
+    //         // Delete subscribers by the given IDs
+    //         Subscriber::whereIn('id', $ids)->delete();
+
+    //         return response()->json(['message' => 'Subscribers deleted successfully'], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Failed to delete subscribers: ' . $e->getMessage()], 500);
+    //     }
+    // }
 }

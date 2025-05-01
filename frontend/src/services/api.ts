@@ -100,3 +100,34 @@ export const getBlacklistedEmails = async (page = 1, perPage = 5) => {
 
 
 
+// src/pages/services/api.ts
+
+// frontend/src/services/api.ts
+
+export const deleteSubscriber = async (id: number) => {
+  return await fetch(`http://localhost:8000/api/subscribers/${id}`, {
+    method: 'DELETE',
+  });
+};
+
+// export const deleteSubscribers = async (ids: number[]) => {
+//   try {
+//     const response = await fetch('http://localhost:8000/api/subscribers/bulk-delete', {
+//       method: 'DELETE',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ ids }), // Send the array of IDs to delete
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to delete subscribers: ${response.statusText}`);
+//     }
+
+//     return await response.json(); // Assuming the server returns a JSON response
+//   } catch (error) {
+//     console.error('Error deleting subscribers:', error);
+//     throw error;  // Throw the error again to propagate it
+//   }
+// };
+
