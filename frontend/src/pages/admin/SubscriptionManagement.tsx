@@ -51,6 +51,8 @@ const SubscriptionManagement = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [totalStats, setTotalStats] = useState({ total: 0, active: 0, inactive: 0 });
+
     const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
         name: "",
         allow_business_email_only: false,
@@ -167,35 +169,55 @@ const SubscriptionManagement = () => {
     }, [selectedListId, emailSearch, tagSearch, statusFilter]);
 
 
-    const fetchSubscribers = async (listId: string, listName: string, currentPage = 1) => {
+    const fetchSubscribers = async (
+        listId: string,
+        listName: string,
+        currentPage = 1,
+        filtersOverride?: { email?: string; tag?: string; status?: string }
+    ) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) return;
-
+    
+            const params = {
+                page: currentPage,
+                perPage: perPage,
+                email: filtersOverride?.email ?? emailSearch,
+                tag: filtersOverride?.tag ?? tagSearch,
+                status: filtersOverride?.status ?? statusFilter,
+            };
+    
             const response = await axios.get(`http://localhost:8000/api/subscribers/${listId}`, {
                 headers: { Authorization: `Bearer ${token}` },
-                params: {
-                    page: currentPage,
-                    perPage: perPage,
-                }
+                params
             });
-
+    
             if (response.data?.subscribers) {
                 setSubscribers(response.data.subscribers);
                 setSelectedListId(listId);
                 setSelectedListName(listName);
-
+    
                 const pagination = response.data.pagination || {};
                 setTotalPages(pagination.lastPage || 1);
                 setPage(pagination.currentPage || 1);
                 setTotalSubscribers(pagination.total || 0);
+    
+                //Only update stats if currentPage === 1
+                if (currentPage === 1) {
+                    const stats = response.data.stats || {};
+                    setTotalStats({
+                        total: stats.total || 0,
+                        active: stats.active || 0,
+                        inactive: stats.inactive || 0,
+                    });
+                }
             }
         } catch (error) {
             console.error("Error fetching subscribers:", error);
         }
     };
-
-
+    
+    
     const handleEditClick = (list: SubscriptionList) => {
         setEditingListId(list.id);
         setEditSubscriptionList({
@@ -759,18 +781,18 @@ const SubscriptionManagement = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                     <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                                         <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
-                                        <p className="text-3xl font-bold">{subscribers.length}</p>
+                                        <p className="text-3xl font-bold">{totalStats.total}</p>
                                     </div>
                                     <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
                                         <h3 className="text-xl font-semibold text-green-900">Active</h3>
                                         <p className="text-3xl font-bold">
-                                            {subscribers.filter((s) => s.status === "active").length}
+                                        {totalStats.active}
                                         </p>
                                     </div>
                                     <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
                                         <h3 className="text-xl font-semibold text-red-900">Inactive</h3>
                                         <p className="text-3xl font-bold">
-                                            {subscribers.filter((s) => s.status === "inactive").length}
+                                        {totalStats.inactive}
                                         </p>
                                     </div>
                                 </div>
@@ -1015,7 +1037,15 @@ const SubscriptionManagement = () => {
                                         </table>
                                         <div className="flex justify-center items-center space-x-4 mt-6">
                                             <button
-                                                onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+                                                onClick={() =>
+                                                            page > 1 &&
+                                                            fetchSubscribers(selectedListId!, selectedListName!, page - 1, {
+                                                                email: emailSearch,
+                                                                tag: tagSearch,
+                                                                status: statusFilter,
+                                                            })
+                                                        }
+
                                                 disabled={page === 1}
                                                 className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
                                             >
@@ -1027,7 +1057,15 @@ const SubscriptionManagement = () => {
                                             </span>
 
                                             <button
-                                                onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+                                                onClick={() =>
+                                                    page < totalPages &&
+                                                    fetchSubscribers(selectedListId!, selectedListName!, page + 1, {
+                                                        email: emailSearch,
+                                                        tag: tagSearch,
+                                                        status: statusFilter,
+                                                    })
+                                                }
+                                                
                                                 disabled={page === totalPages}
                                                 className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
                                             >

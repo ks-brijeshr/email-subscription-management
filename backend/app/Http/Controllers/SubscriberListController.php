@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\SubscriptionList;
 use App\Models\Subscriber;
@@ -23,13 +25,20 @@ class SubscriberListController extends Controller
         $perPage = request()->query('perPage', 10);
         $page = request()->query('page', 1);
 
-        // Get paginated subscribers for this list
+        // Base query for this list
         $query = Subscriber::with('tags')
             ->where('list_id', $list_id)
             ->orderBy('created_at', 'desc');
 
+        // Get paginated results
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
+        // Total stats (independent of pagination)
+        $totalCount = $query->count();
+        $activeCount = (clone $query)->where('status', 'active')->count();
+        $inactiveCount = (clone $query)->where('status', 'inactive')->count();
+
+        // Format subscriber data
         $formattedSubscribers = collect($paginator->items())->map(function ($subscriber) {
             return [
                 'id' => $subscriber->id,
@@ -55,6 +64,11 @@ class SubscriberListController extends Controller
                 'lastPage' => $paginator->lastPage(),
                 'nextPageUrl' => $paginator->nextPageUrl(),
                 'prevPageUrl' => $paginator->previousPageUrl(),
+            ],
+            'stats' => [
+                'total' => $totalCount,
+                'active' => $activeCount,
+                'inactive' => $inactiveCount
             ]
         ]);
     }
