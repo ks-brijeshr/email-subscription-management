@@ -24,21 +24,39 @@ class SubscriberListController extends Controller
 
         $perPage = request()->query('perPage', 10);
         $page = request()->query('page', 1);
+        $email = request()->query('email');
+        $tag = request()->query('tag');
+        $status = request()->query('status');
 
-        // Base query for this list
-        $query = Subscriber::with('tags')
-            ->where('list_id', $list_id)
-            ->orderBy('created_at', 'desc');
+        // Base query
+        $query = Subscriber::with('tags')->where('list_id', $list_id);
 
-        // Get paginated results
-        $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+        // Filters
+        if (!empty($email)) {
+            $query->where('email', 'LIKE', '%' . $email . '%');
+        }
 
-        // Total stats (independent of pagination)
+        if (!empty($status) && in_array($status, ['active', 'inactive'])) {
+            $query->where('status', $status);
+        }
+
+        if (!empty($tag)) {
+            $tagsArray = explode(' ', $tag);
+            $query->whereHas('tags', function ($q) use ($tagsArray) {
+                foreach ($tagsArray as $keyword) {
+                    $q->where('tag', 'LIKE', '%' . $keyword . '%');
+                }
+            });
+        }
+
+        // Stats before pagination
         $totalCount = $query->count();
         $activeCount = (clone $query)->where('status', 'active')->count();
         $inactiveCount = (clone $query)->where('status', 'inactive')->count();
 
-        // Format subscriber data
+        // Paginate filtered results
+        $paginator = $query->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
+
         $formattedSubscribers = collect($paginator->items())->map(function ($subscriber) {
             return [
                 'id' => $subscriber->id,
