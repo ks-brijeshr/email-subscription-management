@@ -31,9 +31,8 @@ const SubscriptionManagement = () => {
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [tagInput, setTagInput] = useState<string>("");
     const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [selectedSubscribers, setSelectedSubscribers] = useState<number[]>([]); // Ensure numbers are stored
 
+    const [page, setPage] = useState<number>(1);
     const [perPage, setPerPage] = useState<number>(5);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [totalSubscribers, setTotalSubscribers] = useState<number>(0);
@@ -160,12 +159,13 @@ const SubscriptionManagement = () => {
         }
     };
 
+
     useEffect(() => {
         if (selectedListId) {
-          fetchSubscribers(selectedListId, selectedListName || "", 1);
+            fetchSubscribers(selectedListId, selectedListName || "", 1);
         }
-      }, [selectedListId, emailSearch, tagSearch, statusFilter]);
-      
+    }, [selectedListId, emailSearch, tagSearch, statusFilter]);
+
 
     const fetchSubscribers = async (listId: string, listName: string, currentPage = 1) => {
         try {
@@ -439,20 +439,6 @@ const SubscriptionManagement = () => {
         return emailMatch && tagMatch && statusMatch;
     });
 
-
-
-    // useEffect(() => {
-    //     const fetchSubscribers = async () => {
-    //         // Replace with actual API call to fetch the subscribers list
-    //         const response = await fetch('/api/subscribers'); // Change this API URL as needed
-    //         const data = await response.json();
-    //         setSubscribers(data);
-    //     };
-
-    //     fetchSubscribers();
-    // }, []);
-
-    // Function to handle single subscriber deletion
     const handleDeleteSubscriber = async (id: number) => {
         try {
             await deleteSubscriber(id);
@@ -464,64 +450,22 @@ const SubscriptionManagement = () => {
         }
     };
 
-    // const handleDeleteSelected = async () => {
-    //     if (selectedSubscribers.length > 0) {
-    //         try {
-    //             // Ensure all selected IDs are numbers
-    //             const subscriberIds = selectedSubscribers.map(id => Number(id));
-
-    //             // Call deleteSubscribers with the array of numbers
-    //             await deleteSubscribers(subscriberIds);
-
-    //             // Remove deleted subscribers from the list
-    //             setSubscribers(prevSubscribers =>
-    //                 prevSubscribers.filter(subscriber =>
-    //                     !subscriberIds.includes(Number(subscriber.id)) // Ensure we are comparing numbers
-    //                 )
-    //             );
-
-    //             // Reset selected subscribers after deletion
-    //             setSelectedSubscribers([]);
-    //         } catch (error) {
-    //             console.error('Failed to delete selected subscribers', error);
-    //         }
-    //     }
-    // };
-
-    // Function to handle subscriber selection for multiple deletion
-    const handleSelectSubscriber = (id: number) => {
-        setSelectedSubscribers(prevSelected =>
-            prevSelected.includes(id)
-                ? prevSelected.filter(subscriberId => subscriberId !== id)
-                : [...prevSelected, id]
-        );
-    };
-
-    // Function to handle select all checkboxes
-    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.checked) {
-            setSelectedSubscribers(subscribers.map(subscriber => Number(subscriber.id))); // Convert to number
-        } else {
-            setSelectedSubscribers([]);
-        }
-    };
 
 
     return (
         <div className="flex">
             <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-            <main  className={`w-full transition-all duration-300 ${
-                isSidebarOpen ? "ml-64" : "ml-0"
-            }`}>
-            <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
-            {!isSidebarOpen && (
-                <button
-                    className="text-white mr-4 focus:outline-none"
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                >
-                <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
-                </button>
-                )} 
+            <main className={`w-full transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
+                }`}>
+                <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+                    {!isSidebarOpen && (
+                        <button
+                            className="text-white mr-4 focus:outline-none"
+                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        >
+                            <img src="/options-icon.png" alt="Menu" className="w-8 h-8" />
+                        </button>
+                    )}
                     <div className="flex items-center space-x-4">
                         <h1 className="text-2xl font-semibold text-white">View All Subscriber</h1>
                     </div>
@@ -934,127 +878,122 @@ const SubscriptionManagement = () => {
                                     </div>
 
 
-                                    <div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse border border-gray-500">
+                                            <thead>
+                                                <tr className="bg-gray-300 text-gray-900 text-left">
+                                                    <th className="border p-3">Name</th>
+                                                    <th className="border p-3">Email</th>
+                                                    <th className="border p-3">Status</th>
+                                                    <th className="border p-3">Tags</th>
+                                                    <th className="border p-3">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {filteredSubscribers.map((subscriber) => (
+                                                    <tr key={subscriber.id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
 
-                                        {/* Table for Subscribers */}
-                                        <div className="overflow-x-auto">
-                                            <table className="w-full border-collapse border border-gray-500">
-                                                <thead>
-                                                    <tr className="bg-gray-300 text-gray-900 text-left">
-
-                                                        <th className="border p-3">Name</th>
-                                                        <th className="border p-3">Email</th>
-                                                        <th className="border p-3">Status</th>
-                                                        <th className="border p-3">Tags</th>
-                                                        <th className="border p-3">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {subscribers.map((subscriber) => (
-                                                        <tr key={subscriber.id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
-
-                                                            <td
-                                                                className="p-3 border text-blue-600 cursor-pointer hover:underline"
-                                                                onClick={() => handleNameClick(Number(subscriber.id))}
-                                                            >
-                                                                {subscriber.name || "N/A"}
-
-                                                                {isModalOpen && selectedSubscriberDetails && (
+                                                        <td
+                                                            className="p-2 border text-blue-600 cursor-pointer hover:underline"
+                                                            onClick={() => handleNameClick(Number(subscriber.id))}
+                                                        >
+                                                            {subscriber.name || "N/A"}
+                                                            {isModalOpen && selectedSubscriberDetails && (
+                                                                <div
+                                                                    className="fixed inset-0 z-50 flex items-center justify-center bg-white/1 backdrop-blur  -sm"
+                                                                    onClick={() => setIsModalOpen(false)}
+                                                                >
                                                                     <div
-                                                                        className="fixed inset-0 z-50 flex items-center justify-center bg-white/1 backdrop-blur  -sm"
-                                                                        onClick={() => setIsModalOpen(false)}
+                                                                        className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 transition-all duration-300"
+                                                                        onClick={(e) => e.stopPropagation()}
                                                                     >
-                                                                        <div
-                                                                            className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 transition-all duration-300"
-                                                                            onClick={(e) => e.stopPropagation()}
+                                                                        {/* Close Button */}
+                                                                        <button
+                                                                            onClick={() => setIsModalOpen(false)}
+                                                                            className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold"
                                                                         >
-                                                                            {/* Close Button */}
-                                                                            <button
-                                                                                onClick={() => setIsModalOpen(false)}
-                                                                                className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold"
-                                                                            >
-                                                                                &times;
-                                                                            </button>
+                                                                            &times;
+                                                                        </button>
 
-                                                                            {/* Header */}
-                                                                            <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Subscriber Details</h2>
+                                                                        {/* Header */}
+                                                                        <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Subscriber Details</h2>
 
-                                                                            {/* Content */}
-                                                                            <div className="space-y-3 text-sm text-gray-700">
-                                                                                <p><span className="font-medium">ID:</span> {selectedSubscriberDetails.id}</p>
-                                                                                <p><span className="font-medium">Name:</span> {selectedSubscriberDetails.name || "N/A"}</p>
-                                                                                <p><span className="font-medium">Email:</span> {selectedSubscriberDetails.email}</p>
-                                                                                <p><span className="font-medium">Status:</span> {selectedSubscriberDetails.status}</p>
-                                                                                <p>
-                                                                                    <span className="font-medium">Tags:</span>{" "}
-                                                                                    {selectedSubscriberDetails.tags?.length > 0
-                                                                                        ? selectedSubscriberDetails.tags.map((tag: string, index: number) => (
-                                                                                            <span
-                                                                                                key={index}
-                                                                                                className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                                                                            >
-                                                                                                {tag}
-                                                                                            </span>
-                                                                                        ))
-                                                                                        : "No tags"}
-                                                                                </p>
-                                                                                <p><span className="font-medium">Created At:</span> {selectedSubscriberDetails.created_at}</p>
-                                                                            </div>
+                                                                        {/* Content */}
+                                                                        <div className="space-y-3 text-sm text-gray-700">
+                                                                            <p><span className="font-medium">ID:</span> {selectedSubscriberDetails.id}</p>
+                                                                            <p><span className="font-medium">Name:</span> {selectedSubscriberDetails.name || "N/A"}</p>
+                                                                            <p><span className="font-medium">Email:</span> {selectedSubscriberDetails.email}</p>
+                                                                            <p><span className="font-medium">Status:</span> {selectedSubscriberDetails.status}</p>
+                                                                            <p>
+                                                                                <span className="font-medium">Tags:</span>{" "}
+                                                                                {selectedSubscriberDetails.tags?.length > 0
+                                                                                    ? selectedSubscriberDetails.tags.map((tag: string, index: number) => (
+                                                                                        <span
+                                                                                            key={index}
+                                                                                            className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                                                                                        >
+                                                                                            {tag}
+                                                                                        </span>
+                                                                                    ))
+                                                                                    : "No tags"}
+                                                                            </p>
+                                                                            <p><span className="font-medium">Created At:</span> {selectedSubscriberDetails.created_at}</p>
                                                                         </div>
                                                                     </div>
-                                                                )}
-                                                            </td>
-
-                                                            <td className="border p-3">{subscriber.email}</td>
-                                                            <td className="border p-3">
-                                                                <span
-                                                                    className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active" ? "bg-green-500" : "bg-red-500"}`}
-                                                                >
-                                                                    {subscriber.status === "active" ? "✓ Active" : "✗ Inactive"}
-                                                                </span>
-                                                                <button
-                                                                    onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
-                                                                    className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
-                                                                >
-                                                                    🔄 Update Status
-                                                                </button>
-                                                            </td>
-                                                            <td className="border p-3">
-                                                                <div className="flex flex-wrap gap-2 mb-2">
-                                                                    {subscriber.tags?.map((tag: string, index: number) => (
-                                                                        <span
-                                                                            key={`tag-${index}`}
-                                                                            className="bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
-                                                                        >
-                                                                            #{tag}
-                                                                        </span>
-                                                                    ))}
                                                                 </div>
+                                                            )}
 
-                                                                {selectedSubscriberId === subscriber.id ? (
-                                                                    <div className="flex gap-2">
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder="Enter tag"
-                                                                            value={tagInput}
-                                                                            onChange={(e) => setTagInput(e.target.value)}
-                                                                            className="border rounded p-1 text-sm"
-                                                                        />
-                                                                        <button
-                                                                            onClick={handleAddTag}
-                                                                            className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
-                                                                        >
-                                                                            Add
-                                                                        </button>
-                                                                    </div>
-                                                                ) : (
-                                                                    <button
-                                                                        onClick={() => setSelectedSubscriberId(subscriber.id)}
-                                                                        className="text-green-600 hover:text-green-800 text-sm"
+
+                                                        </td>
+
+                                                        <td className="border p-3">{subscriber.email}</td>
+                                                        <td className="border p-3">
+                                                            <span className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active" ? "bg-green-500" : "bg-red-500"}`}>
+                                                                {subscriber.status === "active" ? "✓ Active" : "✗ Inactive"}
+                                                            </span>
+                                                            <button
+                                                                onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
+                                                                className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
+                                                            >
+                                                                🔄 Update Status
+                                                            </button>
+                                                        </td>
+                                                        <td className="border p-3">
+                                                            <div className="flex flex-wrap gap-2 mb-2">
+                                                                {subscriber.tags?.map((tag: string, index: number) => (
+                                                                    <span
+                                                                        key={`tag-${index}`}
+                                                                        className="bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
                                                                     >
-                                                                        ➕  Add Tag
+                                                                        #{tag}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+
+                                                            {selectedSubscriberId === subscriber.id ? (
+                                                                <div className="flex gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Enter tag"
+                                                                        value={tagInput}
+                                                                        onChange={(e) => setTagInput(e.target.value)}
+                                                                        className="border rounded p-1 text-sm"
+                                                                    />
+                                                                    <button
+                                                                        onClick={handleAddTag}
+                                                                        className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
+                                                                    >
+                                                                        Add
                                                                     </button>
-                                                                )}
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => setSelectedSubscriberId(subscriber.id)}
+                                                                    className="text-green-600 hover:text-green-800 text-sm"
+                                                                >
+                                                                    ➕ Add Tag
+                                                                </button>
+                                                            )}
                                                             </td>
                                                             <td className="border p-3">
                                                                 <button
@@ -1069,12 +1008,12 @@ const SubscriptionManagement = () => {
                                                                     Delete
                                                                 </button>
 
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                            <div className="flex justify-center items-center space-x-4 mt-6">
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        <div className="flex justify-center items-center space-x-4 mt-6">
                                             <button
                                                 onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
                                                 disabled={page === 1}
@@ -1095,11 +1034,8 @@ const SubscriptionManagement = () => {
                                                 Next
                                             </button>
                                         </div>
-                                        </div>
 
                                     </div>
-
-
                                 </div>
                             </>
                         )}
@@ -1110,3 +1046,4 @@ const SubscriptionManagement = () => {
 };
 
 export default SubscriptionManagement;
+
