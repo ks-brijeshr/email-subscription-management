@@ -537,20 +537,19 @@ const SubscriptionManagement = () => {
 
 
                         {showAddForm && (
-                            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
-                                <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
-                                    <h2 className="text-xl font-semibold mb-4">Add Subscription List</h2>
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                                <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-6">
+                                    <h2 className="text-2xl font-semibold text-gray-800">Add Subscription List</h2>
 
                                     <div className="space-y-4">
-                                        <div>
-                                            <label className="block font-medium mb-1">Name</label>
+                                        <div className="flex flex-col">
+                                            <label className="text-sm font-medium text-gray-700 mb-1">Name</label>
                                             <input
                                                 type="text"
                                                 value={newList.name}
-                                                onChange={(e) =>
-                                                    setNewList({ ...newList, name: e.target.value })
-                                                }
-                                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                                                onChange={(e) => setNewList({ ...newList, name: e.target.value })}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Enter list name"
                                             />
                                         </div>
 
@@ -561,33 +560,30 @@ const SubscriptionManagement = () => {
                                             { label: "Check Domain Existence", key: "check_domain_existence" },
                                             { label: "Verify DNS Records", key: "verify_dns_records" },
                                         ].map((field) => (
-                                            <div key={field.key} className="flex items-center space-x-3">
+                                            <label key={field.key} className="flex items-center space-x-3 cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={(newList as any)[field.key]}
                                                     onChange={(e) =>
-                                                        setNewList({
-                                                            ...newList,
-                                                            [field.key]: e.target.checked,
-                                                        })
+                                                        setNewList({ ...newList, [field.key]: e.target.checked })
                                                     }
-                                                    className="w-5 h-5"
+                                                    className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                                                 />
-                                                <label className="text-gray-700">{field.label}</label>
-                                            </div>
+                                                <span className="text-gray-700 text-sm">{field.label}</span>
+                                            </label>
                                         ))}
                                     </div>
 
-                                    <div className="mt-6 flex justify-end space-x-4">
+                                    <div className="pt-4 flex justify-end space-x-3">
                                         <button
                                             onClick={() => setShowAddForm(false)}
-                                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             onClick={handleAddSubmitList}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
                                         >
                                             Add
                                         </button>
@@ -596,99 +592,110 @@ const SubscriptionManagement = () => {
                             </div>
                         )}
 
+
                     </div>
 
                     {!selectedListId ? (
-                        <div className="w-full shadow-lg rounded-lg border border-gray-200 bg-white">
-                            <div className="flex justify-end px-6 pt-6">
+                        <div className="w-full shadow-lg rounded-lg border border-gray-200 bg-white p-6">
+                            {/* Top Button */}
+                            <div className="flex justify-end mb-5">
                                 <button
                                     onClick={() => setShowAddForm(true)}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                    className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg text-ml font-medium transition-all duration-200 ease-in-out"
                                 >
                                     + Add Subscription List
                                 </button>
                             </div>
-                            <div className="pt-4 px-4">
-                                <table className="min-w-full table-auto">
-                                    <thead className="bg-gray-300 text-white">
-                                        <tr>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Name</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Business Email Only</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Block Temp Email</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Email Verification</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Check Domain</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Verify DNS</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Created At</th>
-                                            <th className="px-8 py-4 text-left text-m font-semibold text-black">Actions</th>
+
+                            {/* Table */}
+                            <div className="overflow-x-auto rounded-xl shadow border border-gray-200">
+                                <table className="min-w-full text-sm text-gray-800">
+                                    <thead>
+                                        <tr className="bg-gray-200 text-ml text-gray-600 uppercase tracking-wider">
+                                            <th className="px-6 py-4 text-left">Name</th>
+                                            <th className="px-6 py-4 text-center">Business Email</th>
+                                            <th className="px-6 py-4 text-center">Temp Email</th>
+                                            <th className="px-6 py-4 text-center">Email Verified</th>
+                                            <th className="px-6 py-4 text-center">Domain Check</th>
+                                            <th className="px-6 py-4 text-center">DNS Verify</th>
+                                            <th className="px-6 py-4">Created At</th>
+                                            <th className="px-6 py-4 text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {subscriptionLists.map((list: SubscriptionList) => (
                                             <tr
                                                 key={list.id}
-                                                className="transition-all duration-200 ease-in-out hover:bg-blue-50 cursor-default"
-                                            ><td
-                                                onClick={() => {
-                                                    if (list.id) {
-                                                        fetchSubscribers(list.id, list.name);
-                                                    } else {
-                                                        alert("Invalid subscription list ID.");
-                                                    }
-                                                }}
-                                                className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 cursor-pointer hover:underline"
+                                                className="hover:bg-gray-100 transition duration-200 ease-in-out border-t border-gray-300"
                                             >
+                                                <td
+                                                    onClick={() =>
+                                                        list.id
+                                                            ? fetchSubscribers(list.id, list.name)
+                                                            : alert("Invalid ID")
+                                                    }
+                                                    className="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer"
+                                                >
                                                     {list.name}
                                                 </td>
-
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     {list.allow_business_email_only ? "✔" : "✘"}
                                                 </td>
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     {list.block_temporary_email ? "✔" : "✘"}
                                                 </td>
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     {list.require_email_verification ? "✔" : "✘"}
                                                 </td>
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     {list.check_domain_existence ? "✔" : "✘"}
                                                 </td>
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     {list.verify_dns_records ? "✔" : "✘"}
                                                 </td>
-                                                <td className="px-8 py-4 border-t border-b border-gray-300">{new Date(list.created_at).toLocaleString()}</td>
+                                                <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                                    {new Date(list.created_at).toLocaleString()}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex justify-center items-center gap-3">
+                                                        {/* Edit */}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleEditClick(list);
+                                                            }}
+                                                            className="px-3 py-1 text-blue-600 border border-blue-500 rounded-lg hover:bg-blue-100 hover:scale-105 hover:border-blue-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">✏️</span> Edit
+                                                        </button>
 
-                                                <td className="px-8 py-6 border-t border-b border-gray-300 text-m font-medium text-gray-800 text-center space-x-2">
-                                                    <button
-                                                        className="px-3 py-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleEditClick(list);
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        className="px-3 py-1 text-green-600 bg-green-50 hover:bg-green-100 rounded"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation(); // prevent row click
-                                                            handleCopyList(list);
-                                                        }}
-                                                    >
-                                                        Copy
-                                                    </button>
+                                                        {/* Copy */}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleCopyList(list);
+                                                            }}
+                                                            className="px-3 py-1 text-green-600 border border-green-500 rounded-lg hover:bg-green-100 hover:scale-105 hover:border-green-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">💾</span> Copy
+                                                        </button>
 
-                                                    <button
-                                                        className="px-3 py-1 text-red-600 bg-red-50 hover:bg-red-100 rounded"
-                                                        onClick={() => handleDelete(list.id)}
-                                                    >
-                                                        Delete
-                                                    </button>
+                                                        {/* Delete */}
+                                                        <button
+                                                            onClick={() => handleDelete(list.id)}
+                                                            className="px-3 py-1 text-red-600 border border-red-500 rounded-lg hover:bg-red-100 hover:scale-105 hover:border-red-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">🗑️</span> Delete
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
+
+                            {/* Edit Modal */}
                             {editSubscriptionList && (
                                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
                                     <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
@@ -701,17 +708,29 @@ const SubscriptionManagement = () => {
                                                     type="text"
                                                     value={editSubscriptionList.name}
                                                     onChange={(e) =>
-                                                        setEditSubscriptionList({ ...editSubscriptionList, name: e.target.value })
+                                                        setEditSubscriptionList({
+                                                            ...editSubscriptionList,
+                                                            name: e.target.value,
+                                                        })
                                                     }
                                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
                                                 />
                                             </div>
 
                                             {[
-                                                { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                                                {
+                                                    label: "Allow Business Email Only",
+                                                    key: "allow_business_email_only",
+                                                },
                                                 { label: "Block Temporary Email", key: "block_temporary_email" },
-                                                { label: "Require Email Verification", key: "require_email_verification" },
-                                                { label: "Check Domain Existence", key: "check_domain_existence" },
+                                                {
+                                                    label: "Require Email Verification",
+                                                    key: "require_email_verification",
+                                                },
+                                                {
+                                                    label: "Check Domain Existence",
+                                                    key: "check_domain_existence",
+                                                },
                                                 { label: "Verify DNS Records", key: "verify_dns_records" },
                                             ].map((field) => (
                                                 <div key={field.key} className="flex items-center space-x-3">
@@ -749,9 +768,11 @@ const SubscriptionManagement = () => {
                                 </div>
                             )}
                         </div>
+
                     )
                         : (
                             <>
+
                                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                                     <input
                                         type="text"
@@ -794,22 +815,26 @@ const SubscriptionManagement = () => {
                                         <p className="text-3xl font-bold">
                                         {totalStats.inactive}
                                         </p>
+
+                                    </div>
+
+
+
+                                    {/* Header + Add Button */}
+                                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                                        <h1 className="text-2xl font-bold text-gray-800">Subscriber Management</h1>
+                                        <button
+                                            onClick={handleAddSubscriberClick}
+                                            className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 mb-5 rounded-lg text-ml font-medium transition"
+                                        >
+
+                                            ✚ Add Subscriber
+                                        </button>
+
+
                                     </div>
                                 </div>
-                                <div className="flex justify-between items-center mb-4">
-                                    <h1 className="text-2xl font-semibold text-gray-800">Subscriber Management</h1>
 
-
-
-
-                                    {/* Add Subscription List Button */}
-                                    <button
-                                        onClick={handleAddSubscriberClick}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-9 mr-8"
-                                    >
-                                        + Add Subscriber
-                                    </button>
-                                </div>
 
                                 {/* Add Subscriber Modal */}
                                 {showAddSubscriberModal && selectedListId && (
@@ -881,129 +906,116 @@ const SubscriptionManagement = () => {
                                     </div>
                                 )}
 
+                                <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200">
+                                    {/* Title */}
+                                    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Subscribers</h3>
 
-                                <div className="bg-white p-6 rounded-xl shadow-lg border">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Subscribers</h3>
-                                    <div className="flex gap-4 mb-6">
+                                    {/* Export Buttons */}
+                                    <div className="flex flex-wrap gap-3 mt-4 mb-5">
                                         <button
                                             onClick={() => exportSubscribers("csv")}
-                                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                                            className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-4 py-2 rounded-lg text-sm font-medium transition"
                                         >
-                                            Export as CSV
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Export CSV
                                         </button>
+
                                         <button
                                             onClick={() => exportSubscribers("json")}
-                                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
+                                            className="inline-flex items-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 px-4 py-2 rounded-lg text-sm font-medium transition"
                                         >
-                                            Export as JSON
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Export JSON
                                         </button>
                                     </div>
 
 
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full border-collapse border border-gray-500">
-                                            <thead>
-                                                <tr className="bg-gray-300 text-gray-900 text-left">
-                                                    <th className="border p-3">Name</th>
-                                                    <th className="border p-3">Email</th>
-                                                    <th className="border p-3">Status</th>
-                                                    <th className="border p-3">Tags</th>
-                                                    <th className="border p-3">Actions</th>
+
+                                    {/* Table */}
+                                    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+                                        <table className="min-w-full text-left border-collapse shadow-sm rounded-lg overflow-hidden bg-white">
+                                            {/* Table Header */}
+                                            <thead className="bg-gray-200 text-gray-600 text-sm font-medium">
+                                                <tr>
+                                                    {['Name', 'Email', 'Status', 'Tags', 'Actions'].map((heading, idx) => (
+                                                        <th
+                                                            key={idx}
+                                                            className="px-6 py-3 text-xs uppercase tracking-wide"
+                                                        >
+                                                            {heading}
+                                                        </th>
+                                                    ))}
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                {filteredSubscribers.map((subscriber) => (
-                                                    <tr key={subscriber.id} className="border border-gray-300 text-gray-900 hover:bg-gray-100">
 
+                                            {/* Table Body */}
+                                            <tbody className="divide-y divide-gray-200">
+                                                {filteredSubscribers.map((subscriber) => (
+                                                    <tr
+                                                        key={subscriber.id}
+                                                        className="hover:bg-gray-50 transition duration-200 ease-in-out"
+                                                    >
+                                                        {/* Name */}
                                                         <td
-                                                            className="p-2 border text-blue-600 cursor-pointer hover:underline"
+                                                            className="px-6 py-4 text-blue-600 font-medium cursor-pointer hover:underline"
                                                             onClick={() => handleNameClick(Number(subscriber.id))}
                                                         >
                                                             {subscriber.name || "N/A"}
-                                                            {isModalOpen && selectedSubscriberDetails && (
-                                                                <div
-                                                                    className="fixed inset-0 z-50 flex items-center justify-center bg-white/1 backdrop-blur  -sm"
-                                                                    onClick={() => setIsModalOpen(false)}
-                                                                >
-                                                                    <div
-                                                                        className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 transition-all duration-300"
-                                                                        onClick={(e) => e.stopPropagation()}
-                                                                    >
-                                                                        {/* Close Button */}
-                                                                        <button
-                                                                            onClick={() => setIsModalOpen(false)}
-                                                                            className="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold"
-                                                                        >
-                                                                            &times;
-                                                                        </button>
-
-                                                                        {/* Header */}
-                                                                        <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Subscriber Details</h2>
-
-                                                                        {/* Content */}
-                                                                        <div className="space-y-3 text-sm text-gray-700">
-                                                                            <p><span className="font-medium">ID:</span> {selectedSubscriberDetails.id}</p>
-                                                                            <p><span className="font-medium">Name:</span> {selectedSubscriberDetails.name || "N/A"}</p>
-                                                                            <p><span className="font-medium">Email:</span> {selectedSubscriberDetails.email}</p>
-                                                                            <p><span className="font-medium">Status:</span> {selectedSubscriberDetails.status}</p>
-                                                                            <p>
-                                                                                <span className="font-medium">Tags:</span>{" "}
-                                                                                {selectedSubscriberDetails.tags?.length > 0
-                                                                                    ? selectedSubscriberDetails.tags.map((tag: string, index: number) => (
-                                                                                        <span
-                                                                                            key={index}
-                                                                                            className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                                                                        >
-                                                                                            {tag}
-                                                                                        </span>
-                                                                                    ))
-                                                                                    : "No tags"}
-                                                                            </p>
-                                                                            <p><span className="font-medium">Created At:</span> {selectedSubscriberDetails.created_at}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-
-
                                                         </td>
 
-                                                        <td className="border p-3">{subscriber.email}</td>
-                                                        <td className="border p-3">
-                                                            <span className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active" ? "bg-green-500" : "bg-red-500"}`}>
-                                                                {subscriber.status === "active" ? "✓ Active" : "✗ Inactive"}
-                                                            </span>
+                                                        {/* Email */}
+                                                        <td className="px-6 py-4 text-gray-800">{subscriber.email}</td>
+
+                                                        {/* Status */}
+                                                        <td className="px-6 py-4">
+                                                            <div
+                                                                className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-2 ${subscriber.status === "active"
+                                                                    ? "bg-green-50 text-green-600"
+                                                                    : "bg-red-50 text-red-600"
+                                                                    }`}
+                                                            >
+                                                                <span
+                                                                    className={`w-2.5 h-2.5 rounded-full ${subscriber.status === "active" ? "bg-green-600" : "bg-red-600"
+                                                                        }`}
+                                                                ></span>
+                                                                {subscriber.status === "active" ? "Active" : "Inactive"}
+                                                            </div>
                                                             <button
                                                                 onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
-                                                                className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
+                                                                className="ml-3 text-blue-600 hover:text-blue-700 text-xs font-medium transition-all duration-150"
                                                             >
-                                                                🔄 Update Status
+                                                                Update
                                                             </button>
                                                         </td>
-                                                        <td className="border p-3">
-                                                            <div className="flex flex-wrap gap-2 mb-2">
-                                                                {subscriber.tags?.map((tag: string, index: number) => (
+
+                                                        {/* Tags */}
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {subscriber.tags?.map((tag, index) => (
                                                                     <span
-                                                                        key={`tag-${index}`}
-                                                                        className="bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
+                                                                        key={index}
+                                                                        className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs"
                                                                     >
                                                                         #{tag}
                                                                     </span>
                                                                 ))}
                                                             </div>
-
                                                             {selectedSubscriberId === subscriber.id ? (
-                                                                <div className="flex gap-2">
+                                                                <div className="mt-2 flex gap-2">
                                                                     <input
                                                                         type="text"
                                                                         placeholder="Enter tag"
                                                                         value={tagInput}
                                                                         onChange={(e) => setTagInput(e.target.value)}
-                                                                        className="border rounded p-1 text-sm"
+                                                                        className="border border-gray-300 rounded-md px-3 py-1 text-sm"
                                                                     />
                                                                     <button
                                                                         onClick={handleAddTag}
-                                                                        className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
+                                                                        className="bg-blue-600 text-white text-xs rounded-md px-4 py-2 hover:bg-blue-700 transition"
                                                                     >
                                                                         Add
                                                                     </button>
@@ -1011,30 +1023,32 @@ const SubscriptionManagement = () => {
                                                             ) : (
                                                                 <button
                                                                     onClick={() => setSelectedSubscriberId(subscriber.id)}
-                                                                    className="text-green-600 hover:text-green-800 text-sm"
+                                                                    className="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white text-sm px-3 py-1.5 rounded-full transition duration-200"
                                                                 >
-                                                                    ➕ Add Tag
+                                                                    + Add Tag
                                                                 </button>
                                                             )}
-                                                            </td>
-                                                            <td className="border p-3">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        const confirmed = window.confirm("Are you sure you want to delete this subscriber?");
-                                                                        if (confirmed) {
-                                                                            handleDeleteSubscriber(Number(subscriber.id));
-                                                                        }
-                                                                    }}
-                                                                    className="text-red-600 hover:text-red-800"
-                                                                >
-                                                                    Delete
-                                                                </button>
+                                                        </td>
 
+                                                        {/* Actions */}
+                                                        <td className="px-6 py-4">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const confirmed = window.confirm("Are you sure you want to delete this subscriber?");
+                                                                    if (confirmed) {
+                                                                        handleDeleteSubscriber(Number(subscriber.id));
+                                                                    }
+                                                                }}
+                                                                className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white text-sm px-3 py-1.5 rounded-full transition duration-200"
+                                                            >
+                                                                Delete
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+
                                         <div className="flex justify-center items-center space-x-4 mt-6">
                                             <button
                                                 onClick={() =>
@@ -1052,9 +1066,9 @@ const SubscriptionManagement = () => {
                                                 Previous
                                             </button>
 
-                                            <span className="font-semibold">
-                                                Page {page} of {totalPages}
-                                            </span>
+
+
+
 
                                             <button
                                                 onClick={() =>
@@ -1073,8 +1087,45 @@ const SubscriptionManagement = () => {
                                             </button>
                                         </div>
 
+
                                     </div>
+
+
+
+
+                                    {/* Pagination */}
+                                    <div className="flex justify-center items-center gap-6 mt-8">
+                                        <button
+                                            onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+                                            disabled={page === 1}
+                                            className={`px-4 py-2 rounded-full text-xs font-medium transition-colors duration-200 border ${page === 1
+                                                ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
+                                                : 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                                                }`}
+                                        >
+                                            Previous
+                                        </button>
+
+                                        <span className="font-medium text-sm text-gray-600">
+                                            Page {page} of {totalPages}
+                                        </span>
+
+                                        <button
+                                            onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+                                            disabled={page === totalPages}
+                                            className={`px-4 py-2 rounded-full text-xs font-medium transition-colors duration-200 border ${page === totalPages
+                                                ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
+                                                : 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                                                }`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+
                                 </div>
+
+
+
                             </>
                         )}
                 </div>
