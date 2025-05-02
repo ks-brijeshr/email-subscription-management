@@ -1179,6 +1179,65 @@ const SubscriptionManagement = () => {
                                       {selectedSubscriberDetails.created_at}
                                     </p>
                                   </div>
+
+                                </button>
+                            </div>
+                        )}
+
+
+                        {showAddForm && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                                <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md space-y-6">
+                                    <h2 className="text-2xl font-semibold text-gray-800">Add Subscription List</h2>
+
+                                    <div className="space-y-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-sm font-medium text-gray-700 mb-1">Name</label>
+                                            <input
+                                                type="text"
+                                                value={newList.name}
+                                                onChange={(e) => setNewList({ ...newList, name: e.target.value })}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Enter list name"
+                                            />
+                                        </div>
+
+                                        {[
+                                            { label: "Allow Business Email Only", key: "allow_business_email_only" },
+                                            { label: "Block Temporary Email", key: "block_temporary_email" },
+                                            { label: "Require Email Verification", key: "require_email_verification" },
+                                            { label: "Check Domain Existence", key: "check_domain_existence" },
+                                            { label: "Verify DNS Records", key: "verify_dns_records" },
+                                        ].map((field) => (
+                                            <label key={field.key} className="flex items-center space-x-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={(newList as any)[field.key]}
+                                                    onChange={(e) =>
+                                                        setNewList({ ...newList, [field.key]: e.target.checked })
+                                                    }
+                                                    className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                                                />
+                                                <span className="text-gray-700 text-sm">{field.label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+
+                                    <div className="pt-4 flex justify-end space-x-3">
+                                        <button
+                                            onClick={() => setShowAddForm(false)}
+                                            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleAddSubmitList}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+
                                 </div>
                               </div>
                             )}
@@ -1235,9 +1294,22 @@ const SubscriptionManagement = () => {
                                 <button
                                   onClick={handleAddTag}
                                   className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
+
+
+                    </div>
+
+                    {!selectedListId ? (
+                        <div className="w-full shadow-lg rounded-lg border border-gray-200 bg-white p-6">
+                            {/* Top Button */}
+                            <div className="flex justify-end mb-5">
+                                <button
+                                    onClick={() => setShowAddForm(true)}
+                                    className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg text-ml font-medium transition-all duration-200 ease-in-out"
+
                                 >
                                   Add
                                 </button>
+
                               </div>
                             ) : (
                               <button
@@ -1322,6 +1394,531 @@ const SubscriptionManagement = () => {
                       Next
                     </button>
                   </div>
+=======
+                            </div>
+
+                            {/* Table */}
+                            <div className="overflow-x-auto rounded-xl shadow border border-gray-200">
+                                <table className="min-w-full text-sm text-gray-800">
+                                    <thead>
+                                        <tr className="bg-gray-200 text-ml text-gray-600 uppercase tracking-wider">
+                                            <th className="px-6 py-4 text-left">Name</th>
+                                            <th className="px-6 py-4 text-center">Business Email</th>
+                                            <th className="px-6 py-4 text-center">Temp Email</th>
+                                            <th className="px-6 py-4 text-center">Email Verified</th>
+                                            <th className="px-6 py-4 text-center">Domain Check</th>
+                                            <th className="px-6 py-4 text-center">DNS Verify</th>
+                                            <th className="px-6 py-4">Created At</th>
+                                            <th className="px-6 py-4 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {subscriptionLists.map((list: SubscriptionList) => (
+                                            <tr
+                                                key={list.id}
+                                                className="hover:bg-gray-100 transition duration-200 ease-in-out border-t border-gray-300"
+                                            >
+                                                <td
+                                                    onClick={() =>
+                                                        list.id
+                                                            ? fetchSubscribers(list.id, list.name)
+                                                            : alert("Invalid ID")
+                                                    }
+                                                    className="px-6 py-4 font-medium text-blue-600 hover:underline cursor-pointer"
+                                                >
+                                                    {list.name}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    {list.allow_business_email_only ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    {list.block_temporary_email ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    {list.require_email_verification ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    {list.check_domain_existence ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    {list.verify_dns_records ? "✔" : "✘"}
+                                                </td>
+                                                <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                                                    {new Date(list.created_at).toLocaleString()}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex justify-center items-center gap-3">
+                                                        {/* Edit */}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleEditClick(list);
+                                                            }}
+                                                            className="px-3 py-1 text-blue-600 border border-blue-500 rounded-lg hover:bg-blue-100 hover:scale-105 hover:border-blue-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">✏️</span> Edit
+                                                        </button>
+
+                                                        {/* Copy */}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleCopyList(list);
+                                                            }}
+                                                            className="px-3 py-1 text-green-600 border border-green-500 rounded-lg hover:bg-green-100 hover:scale-105 hover:border-green-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">💾</span> Copy
+                                                        </button>
+
+                                                        {/* Delete */}
+                                                        <button
+                                                            onClick={() => handleDelete(list.id)}
+                                                            className="px-3 py-1 text-red-600 border border-red-500 rounded-lg hover:bg-red-100 hover:scale-105 hover:border-red-600 transition-all duration-300 ease-in-out text-sm"
+                                                        >
+                                                            <span className="material-icons">🗑️</span> Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Edit Modal */}
+                            {editSubscriptionList && (
+                                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
+                                    <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
+                                        <h2 className="text-xl font-semibold mb-4">Edit Subscription List</h2>
+
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block font-medium mb-1">Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={editSubscriptionList.name}
+                                                    onChange={(e) =>
+                                                        setEditSubscriptionList({
+                                                            ...editSubscriptionList,
+                                                            name: e.target.value,
+                                                        })
+                                                    }
+                                                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring"
+                                                />
+                                            </div>
+
+                                            {[
+                                                {
+                                                    label: "Allow Business Email Only",
+                                                    key: "allow_business_email_only",
+                                                },
+                                                { label: "Block Temporary Email", key: "block_temporary_email" },
+                                                {
+                                                    label: "Require Email Verification",
+                                                    key: "require_email_verification",
+                                                },
+                                                {
+                                                    label: "Check Domain Existence",
+                                                    key: "check_domain_existence",
+                                                },
+                                                { label: "Verify DNS Records", key: "verify_dns_records" },
+                                            ].map((field) => (
+                                                <div key={field.key} className="flex items-center space-x-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={(editSubscriptionList as any)[field.key]}
+                                                        onChange={(e) =>
+                                                            setEditSubscriptionList({
+                                                                ...editSubscriptionList,
+                                                                [field.key]: e.target.checked,
+                                                            })
+                                                        }
+                                                        className="w-5 h-5"
+                                                    />
+                                                    <label className="text-gray-700">{field.label}</label>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="mt-6 flex justify-end space-x-4">
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleEditSubmit}
+                                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            >
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                    )
+                        : (
+                            <>
+
+                                <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Search by Email"
+                                        value={emailSearch}
+                                        onChange={(e) => setEmailSearch(e.target.value)}
+                                        className="border p-2 rounded w-full md:w-1/3"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Search by tags (e.g. 2025 2024)"
+                                        value={tagSearch}
+                                        onChange={(e) => setTagSearch(e.target.value)}
+                                        className="border p-2 rounded w-full md:w-1/3"
+                                    />
+                                    <select
+                                        value={statusFilter}
+                                        onChange={(e) => setStatusFilter(e.target.value)}
+                                        className="border p-2 rounded w-full md:w-1/3"
+                                    >
+                                        <option value="all">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-blue-900">Total Subscribers</h3>
+                                        <p className="text-3xl font-bold">{totalStats.total}</p>
+                                    </div>
+                                    <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-green-900">Active</h3>
+                                        <p className="text-3xl font-bold">
+                                        {totalStats.active}
+                                        </p>
+                                    </div>
+                                    <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
+                                        <h3 className="text-xl font-semibold text-red-900">Inactive</h3>
+                                        <p className="text-3xl font-bold">
+                                        {totalStats.inactive}
+                                        </p>
+
+                                    </div>
+
+
+
+                                    {/* Header + Add Button */}
+                                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                                        <h1 className="text-2xl font-bold text-gray-800">Subscriber Management</h1>
+                                        <button
+                                            onClick={handleAddSubscriberClick}
+                                            className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 mb-5 rounded-lg text-ml font-medium transition"
+                                        >
+
+                                            ✚ Add Subscriber
+                                        </button>
+
+
+                                    </div>
+                                </div>
+
+
+                                {/* Add Subscriber Modal */}
+                                {showAddSubscriberModal && selectedListId && (
+                                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+                                        <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+                                            <form onSubmit={handleSubmit} className="space-y-5 relative">
+                                                <div>
+                                                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Add Subscriber</h2>
+                                                    {/* Close Button */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleCloseModal}
+                                                        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                                                    >
+                                                        <span className="text-2xl">&times;</span>
+                                                    </button>
+                                                </div>
+
+                                                {/* Hidden List ID Field */}
+                                                <input type="hidden" value={selectedListId} />
+
+                                                {/* Name Input */}
+                                                <div>
+                                                    <label className="block text-gray-700 font-semibold mb-1">Name</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Name (Optional)"
+                                                        value={name}
+                                                        onChange={(e) => setName(e.target.value)}
+                                                        className="w-full p-3 border rounded bg-gray-50"
+                                                    />
+                                                </div>
+
+                                                {/* Email Input */}
+                                                <div>
+                                                    <label className="block text-gray-700 font-semibold mb-1">Email</label>
+                                                    <input
+                                                        type="email"
+                                                        placeholder="Enter Email"
+                                                        value={email}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                        className="w-full p-3 border rounded bg-gray-50"
+                                                        required
+                                                    />
+                                                </div>
+
+                                                {/* Metadata Input */}
+                                                <div>
+                                                    <label className="block text-gray-700 font-semibold mb-1">Metadata</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter metadata (e.g. city: Surat, role: Admin)"
+                                                        value={metadata}
+                                                        onChange={(e) => setMetadata(e.target.value)}
+                                                        className="w-full p-3 border rounded bg-gray-50"
+                                                    />
+                                                    <small className="text-gray-500">Use format: <i>key: value, key: value</i></small>
+                                                </div>
+
+                                                {/* Submit Button */}
+                                                <button
+                                                    type="submit"
+                                                    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition"
+                                                >
+                                                    Add Subscriber
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200">
+                                    {/* Title */}
+                                    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Subscribers</h3>
+
+                                    {/* Export Buttons */}
+                                    <div className="flex flex-wrap gap-3 mt-4 mb-5">
+                                        <button
+                                            onClick={() => exportSubscribers("csv")}
+                                            className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-4 py-2 rounded-lg text-sm font-medium transition"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Export CSV
+                                        </button>
+
+                                        <button
+                                            onClick={() => exportSubscribers("json")}
+                                            className="inline-flex items-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 px-4 py-2 rounded-lg text-sm font-medium transition"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Export JSON
+                                        </button>
+                                    </div>
+
+
+
+                                    {/* Table */}
+                                    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+                                        <table className="min-w-full text-left border-collapse shadow-sm rounded-lg overflow-hidden bg-white">
+                                            {/* Table Header */}
+                                            <thead className="bg-gray-200 text-gray-600 text-sm font-medium">
+                                                <tr>
+                                                    {['Name', 'Email', 'Status', 'Tags', 'Actions'].map((heading, idx) => (
+                                                        <th
+                                                            key={idx}
+                                                            className="px-6 py-3 text-xs uppercase tracking-wide"
+                                                        >
+                                                            {heading}
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+
+                                            {/* Table Body */}
+                                            <tbody className="divide-y divide-gray-200">
+                                                {filteredSubscribers.map((subscriber) => (
+                                                    <tr
+                                                        key={subscriber.id}
+                                                        className="hover:bg-gray-50 transition duration-200 ease-in-out"
+                                                    >
+                                                        {/* Name */}
+                                                        <td
+                                                            className="px-6 py-4 text-blue-600 font-medium cursor-pointer hover:underline"
+                                                            onClick={() => handleNameClick(Number(subscriber.id))}
+                                                        >
+                                                            {subscriber.name || "N/A"}
+                                                        </td>
+
+                                                        {/* Email */}
+                                                        <td className="px-6 py-4 text-gray-800">{subscriber.email}</td>
+
+                                                        {/* Status */}
+                                                        <td className="px-6 py-4">
+                                                            <div
+                                                                className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-2 ${subscriber.status === "active"
+                                                                    ? "bg-green-50 text-green-600"
+                                                                    : "bg-red-50 text-red-600"
+                                                                    }`}
+                                                            >
+                                                                <span
+                                                                    className={`w-2.5 h-2.5 rounded-full ${subscriber.status === "active" ? "bg-green-600" : "bg-red-600"
+                                                                        }`}
+                                                                ></span>
+                                                                {subscriber.status === "active" ? "Active" : "Inactive"}
+                                                            </div>
+                                                            <button
+                                                                onClick={() => updateSubscriberStatus(subscriber.id, subscriber.status)}
+                                                                className="ml-3 text-blue-600 hover:text-blue-700 text-xs font-medium transition-all duration-150"
+                                                            >
+                                                                Update
+                                                            </button>
+                                                        </td>
+
+                                                        {/* Tags */}
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {subscriber.tags?.map((tag, index) => (
+                                                                    <span
+                                                                        key={index}
+                                                                        className="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs"
+                                                                    >
+                                                                        #{tag}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                            {selectedSubscriberId === subscriber.id ? (
+                                                                <div className="mt-2 flex gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Enter tag"
+                                                                        value={tagInput}
+                                                                        onChange={(e) => setTagInput(e.target.value)}
+                                                                        className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                                                                    />
+                                                                    <button
+                                                                        onClick={handleAddTag}
+                                                                        className="bg-blue-600 text-white text-xs rounded-md px-4 py-2 hover:bg-blue-700 transition"
+                                                                    >
+                                                                        Add
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => setSelectedSubscriberId(subscriber.id)}
+                                                                    className="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white text-sm px-3 py-1.5 rounded-full transition duration-200"
+                                                                >
+                                                                    + Add Tag
+                                                                </button>
+                                                            )}
+                                                        </td>
+
+                                                        {/* Actions */}
+                                                        <td className="px-6 py-4">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const confirmed = window.confirm("Are you sure you want to delete this subscriber?");
+                                                                    if (confirmed) {
+                                                                        handleDeleteSubscriber(Number(subscriber.id));
+                                                                    }
+                                                                }}
+                                                                className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white text-sm px-3 py-1.5 rounded-full transition duration-200"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+
+                                        <div className="flex justify-center items-center space-x-4 mt-6">
+                                            <button
+                                                onClick={() =>
+                                                            page > 1 &&
+                                                            fetchSubscribers(selectedListId!, selectedListName!, page - 1, {
+                                                                email: emailSearch,
+                                                                tag: tagSearch,
+                                                                status: statusFilter,
+                                                            })
+                                                        }
+
+                                                disabled={page === 1}
+                                                className={`px-4 py-2 rounded ${page === 1 ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                                            >
+                                                Previous
+                                            </button>
+
+
+
+
+
+                                            <button
+                                                onClick={() =>
+                                                    page < totalPages &&
+                                                    fetchSubscribers(selectedListId!, selectedListName!, page + 1, {
+                                                        email: emailSearch,
+                                                        tag: tagSearch,
+                                                        status: statusFilter,
+                                                    })
+                                                }
+                                                
+                                                disabled={page === totalPages}
+                                                className={`px-4 py-2 rounded ${page === totalPages ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                    {/* Pagination */}
+                                    <div className="flex justify-center items-center gap-6 mt-8">
+                                        <button
+                                            onClick={() => page > 1 && fetchSubscribers(selectedListId!, selectedListName!, page - 1)}
+                                            disabled={page === 1}
+                                            className={`px-4 py-2 rounded-full text-xs font-medium transition-colors duration-200 border ${page === 1
+                                                ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
+                                                : 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                                                }`}
+                                        >
+                                            Previous
+                                        </button>
+
+                                        <span className="font-medium text-sm text-gray-600">
+                                            Page {page} of {totalPages}
+                                        </span>
+
+                                        <button
+                                            onClick={() => page < totalPages && fetchSubscribers(selectedListId!, selectedListName!, page + 1)}
+                                            disabled={page === totalPages}
+                                            className={`px-4 py-2 rounded-full text-xs font-medium transition-colors duration-200 border ${page === totalPages
+                                                ? 'border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed'
+                                                : 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                                                }`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+
+                                </div>
+
+
+
+                            </>
+                        )}
+
                 </div>
               </div>
             </>
