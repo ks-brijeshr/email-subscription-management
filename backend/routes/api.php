@@ -201,3 +201,4 @@ Route::delete('/subscribers/{id}', [SubscriberController::class, 'destroy']);
 
 // New route for deleting multiple subscribers
 // Route::delete('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDeleteSubscribers']);
+Route::post('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDelete']);
