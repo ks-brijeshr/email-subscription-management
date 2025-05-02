@@ -32,7 +32,7 @@ const Dashboard = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [logs, setLogs] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,13 +122,13 @@ const Dashboard = () => {
               <p className="font-medium">{getGreetingMessage()}</p>
               <p className="text-sm">{new Date().toLocaleTimeString()}</p>
             </div>
-            <button
+            {/* <button
               onClick={() => navigate("/")}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg text-sm font-medium"
               title="Go to Home"
             >
               🏠 Home
-            </button>
+            </button> */}
           </div>
         </nav>
 
