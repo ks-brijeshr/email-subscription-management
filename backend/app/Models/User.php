@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -38,7 +36,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
-
     ];
 
     /**
@@ -51,15 +48,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_owner' => 'boolean'
+            'is_owner' => 'boolean',
         ];
     }
 
-
+    /**
+     * Send the password reset notification (queued).
+     */
     public function sendPasswordResetNotification($token)
     {
         $url = env('FRONTEND_URL', 'http://localhost:5173') . "/password-reset?token=" . $token . "&email=" . urlencode($this->email);
 
+        // This notification is queued
         $this->notify(new ResetPasswordNotification($url));
     }
 
@@ -68,6 +68,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(ApiToken::class);
     }
+
+    /**
+     * Send the email verification notification.
+     */
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail); // This will use the built-in Laravel email verification notification
