@@ -135,4 +135,17 @@ class SubscriberController extends Controller
     //         return response()->json(['error' => 'Failed to delete subscribers: ' . $e->getMessage()], 500);
     //     }
     // }
+
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json(['message' => 'Invalid request.'], 400);
+        }
+
+        Subscriber::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Subscribers deleted successfully.']);
+    }
 }
