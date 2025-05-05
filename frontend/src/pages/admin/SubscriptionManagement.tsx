@@ -909,8 +909,8 @@ const SubscriptionManagement = () => {
                   className="border p-2 rounded w-full md:w-1/3"
                 >
                   <option value="all">All Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
+                  <option value="active">Subscribers</option>
+                  <option value="inactive">Unsubscribers</option>
                 </select>
               </div>
 
@@ -923,13 +923,13 @@ const SubscriptionManagement = () => {
                 </div>
                 <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
                   <h3 className="text-xl font-semibold text-green-900">
-                    Active
+                  Subscribers
                   </h3>
                   <p className="text-3xl font-bold">{totalStats.active}</p>
                 </div>
                 <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
                   <h3 className="text-xl font-semibold text-red-900">
-                    Inactive
+                  Unsubscribers
                   </h3>
                   <p className="text-3xl font-bold">{totalStats.inactive}</p>
                 </div>
@@ -1194,8 +1194,8 @@ const SubscriptionManagement = () => {
                               }`}
                             >
                               {subscriber.status === "active"
-                                ? "✓ Active"
-                                : "✗ Inactive"}
+                                ? "✓ Subscribe"
+                                : "✗ Unsubscribe"}
                             </span>
                             <button
                               onClick={() =>
