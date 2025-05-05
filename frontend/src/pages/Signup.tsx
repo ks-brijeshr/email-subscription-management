@@ -18,7 +18,8 @@ const Signup = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -70,22 +71,41 @@ const Signup = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-600"
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              name="password_confirmation"
-              placeholder="Confirm Password"
-              className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-600"
-              onChange={handleChange}
-              required
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-600"
+                onChange={handleChange}
+                required
+              />
+              <span
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm"
+                onClick={() => setShowPassword((prev) => !prev)}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </span>
+            </div>
+
+            <div className="relative w-full mt-4">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="password_confirmation"
+                placeholder="Confirm Password"
+                className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-600"
+                onChange={handleChange}
+                required
+              />
+              <span
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                title={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </span>
+            </div>
 
             {/* Register form checkbox for register as a website owner after comment this i change the default true all are the owners and 
             remove from the registration form */}
