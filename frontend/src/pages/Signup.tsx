@@ -81,11 +81,11 @@ const Signup = () => {
                 required
               />
               <span
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-lg"
                 onClick={() => setShowPassword((prev) => !prev)}
                 title={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? "👁‍🗨" : "👁️"}
               </span>
             </div>
 
@@ -99,13 +99,15 @@ const Signup = () => {
                 required
               />
               <span
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-lg"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 title={showConfirmPassword ? "Hide password" : "Show password"}
               >
-                {showConfirmPassword ? "Hide" : "Show"}
+                {showConfirmPassword ? "👁‍🗨" : "👁️"}
               </span>
             </div>
+
+
 
             {/* Register form checkbox for register as a website owner after comment this i change the default true all are the owners and 
             remove from the registration form */}
