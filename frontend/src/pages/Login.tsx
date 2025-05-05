@@ -76,7 +76,9 @@ const Login = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -88,38 +90,39 @@ const Login = () => {
                   required
                 />
                 <span
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-lg"
                   onClick={() => setShowPassword((prev) => !prev)}
                   title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? "Hide" : "Show"}
+                  {showPassword ? "👁‍🗨" : "👁️"}
                 </span>
               </div>
             </div>
 
 
-            <button
-              type="submit"
-              className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition duration-300"
-              disabled={loading}
-            >
-              {loading ? "Signing In..." : "Sign In"}
-            </button>
 
-            <div className="text-center text-sm text-gray-600">
-              Don’t have an account?{" "}
-              <Link to="/signup" className="text-blue-600 hover:underline">Sign Up</Link>
-            </div>
+        <button
+          type="submit"
+          className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition duration-300"
+          disabled={loading}
+        >
+          {loading ? "Signing In..." : "Sign In"}
+        </button>
 
-            <div className="text-center text-sm mt-2">
-              <Link to="/forgot-password" className="text-blue-600 hover:underline">Forgot Password?</Link>
-            </div>
-          </form>
+        <div className="text-center text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-blue-600 hover:underline">Sign Up</Link>
         </div>
-      </div>
 
-
+        <div className="text-center text-sm mt-2">
+          <Link to="/forgot-password" className="text-blue-600 hover:underline">Forgot Password?</Link>
+        </div>
+      </form>
     </div>
+      </div >
+
+
+    </div >
   );
 };
 
