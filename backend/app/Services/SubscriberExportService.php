@@ -13,13 +13,16 @@ class SubscriberExportService
      */
     public function exportAsCSV($list_id)
     {
-        $subscribers = Subscriber::where('list_id', $list_id)->get();
+        // Fetch only active subscribers
+        $subscribers = Subscriber::where('list_id', $list_id)
+            ->where('status', 'active')  // Only active subscribers
+            ->get();
 
         if ($subscribers->isEmpty()) {
-            return response()->json(['error' => 'No subscribers found for this list.'], 404);
+            return response()->json(['error' => 'No active subscribers found for this list.'], 404);
         }
 
-        $filename = "subscribers_list_{$list_id}.csv";
+        $filename = "active_subscribers_list_{$list_id}.csv";
         $filePath = storage_path("app/public/" . $filename);
 
         // Open file and write headers
@@ -47,15 +50,19 @@ class SubscriberExportService
      */
     public function exportAsJSON($list_id)
     {
-        $subscribers = Subscriber::where('list_id', $list_id)->get();
+        // Fetch only active subscribers
+        $subscribers = Subscriber::where('list_id', $list_id)
+            ->where('status', 'active')  // Only active subscribers
+            ->get();
 
         if ($subscribers->isEmpty()) {
-            return response()->json(['error' => 'No subscribers found for this list.'], 404);
+            return response()->json(['error' => 'No active subscribers found for this list.'], 404);
         }
 
-        $filename = "subscribers_list_{$list_id}.json";
+        $filename = "active_subscribers_list_{$list_id}.json";
         $filePath = storage_path("app/public/" . $filename);
 
+        // Save the JSON file
         Storage::disk('public')->put($filename, $subscribers->toJson(JSON_PRETTY_PRINT));
 
         return response()->download($filePath)->deleteFileAfterSend(true);
