@@ -51,6 +51,32 @@ class PasswordResetController extends Controller
         ]);
     }
 
+    // Controller Method for Checking Token
+public function checkResetToken(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+        'token' => 'required',
+    ]);
+
+    $entry = DB::table('password_reset_tokens')
+        ->where('email', $request->email)
+        ->where('token', $request->token)
+        ->first();
+
+    if (!$entry || $entry->used) {
+        return response()->json(['error' => 'Invalid or expired link.'], 400);
+    }
+
+    if (Carbon::parse($entry->created_at)->addMinutes(60)->isPast()) {
+        return response()->json(['error' => 'This link has expired.'], 400);
+    }
+
+    return response()->json(['message' => 'Valid token']);
+}
+
+// You can use this method in your frontend to validate the token.
+
     /**
      * Handle password reset confirmation.
      */

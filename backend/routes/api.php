@@ -57,6 +57,9 @@ Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail'])
 
 //Send reset password link via email
 Route::post('/password-reset', [PasswordResetController::class, 'sendResetLink']);
+// routes/api.php
+
+Route::post('/password-reset/check-token', [PasswordResetController::class, 'checkResetToken']);
 
 //Reset password
 // Route::post('/password-reset/confirm', [PasswordResetController::class, 'resetPassword'])->middleware('recaptcha');;
