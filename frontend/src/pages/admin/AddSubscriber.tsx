@@ -46,11 +46,11 @@ const AddSubscriber = () => {
       return;
     }
     setLoading(true); // Show loading state
-
+  
     try {
       const token = localStorage.getItem("token");
-
-      //  Convert metadata from "key: value" format to JSON
+  
+      // Convert metadata from "key: value" format to JSON
       let formattedMetadata: Record<string, string> = {};
       if (metadata) {
         metadata.split(",").forEach((item) => {
@@ -60,15 +60,22 @@ const AddSubscriber = () => {
           }
         });
       }
-
+  
       console.log("Submitting Data:", { name, email, metadata: formattedMetadata, list_id: selectedList });
-
+  
       const response = await axios.post(
         `http://localhost:8000/api/subscriptions/${selectedList}/subscribers`,
-        { name, email, metadata: formattedMetadata },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          name,
+          email,
+          metadata: formattedMetadata,
+          subscription_list_id: selectedList 
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
-
+  
       console.log("Subscriber Added Successfully:", response.data);
       alert("Subscriber added successfully!");
       navigate("/admin/dashboard");
@@ -79,10 +86,10 @@ const AddSubscriber = () => {
       setLoading(false); // Hide loading state
     }
   };
-
+  
   return (
     <div className="flex">
-      <Sidebar setIsSidebarOpen={() => { }} />
+      {/* <Sidebar setIsSidebarOpen={() => { }} /> */}
 
       <main className="w-full transition-all duration-300 ml-64">
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">

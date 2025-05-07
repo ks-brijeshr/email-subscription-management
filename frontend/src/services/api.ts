@@ -71,13 +71,12 @@ export const sendCustomEmail = async (data: {
 };
 
 
-export const getBlacklistedEmails = async (page = 1, perPage = 5) => {
+export const getBlacklistedEmails = async (page = 1, perPage = 5, subscription_list_id = "") => {
   const response = await api.get("/admin/blacklisted-emails", {
-    params: { page, perPage },
+    params: { page, perPage, subscription_list_id },
   });
   return response.data;
 };
-
 
 // export const fetchSubscriptionLists = async () => {
 //   const token = localStorage.getItem("token");
