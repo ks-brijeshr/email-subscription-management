@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscriber;
+use App\Models\SubscriberTag;
 use App\Services\SubscriberExportService;
 use App\Services\SubscriberService;
 use Illuminate\Http\Request;
@@ -70,6 +71,27 @@ class SubscriberController extends Controller
         $response = $this->subscriberService->addTags($subscriber_id, $data['tags']);
 
         return response()->json($response, $response['code'] ?? 200);
+    }
+    public function deleteSubscriberTag(Request $request)
+    {
+
+        $subscriberId = $request->input('subscriber_id');
+        $tag = $request->input('tag');
+
+        // Find the subscriber and delete the tag
+        $subscriber = Subscriber::find($subscriberId);
+
+        if (!$subscriber) {
+            return response()->json(['error' => 'Subscriber not found'], 404);
+        }
+
+        $tagDeleted = $subscriber->tags()->where('tag', $tag)->delete();
+
+        if ($tagDeleted) {
+            return response()->json(['message' => 'Tag deleted successfully']);
+        }
+
+        return response()->json(['error' => 'Tag not found'], 404);
     }
 
     public function updateMetadata(Request $request, $subscriber_id)
