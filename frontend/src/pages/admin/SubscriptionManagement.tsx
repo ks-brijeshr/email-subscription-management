@@ -11,6 +11,15 @@ interface Subscriber {
   status: "active" | "inactive";
   tags?: string[];
 }
+interface SubscriberTag {
+  id: number;
+  tag: string;
+}
+interface TagProps {
+  tag: SubscriberTag;
+  subscriberId: number;
+  onDelete: (tag: string) => void;
+}
 
 interface SubscriptionList {
   id: string | null;
@@ -471,8 +480,7 @@ const SubscriptionManagement = () => {
         error.response?.data || error.message
       );
       alert(
-        `Failed to add subscriber: ${
-          error.response?.data?.message || error.message
+        `Failed to add subscriber: ${error.response?.data?.message || error.message
         }`
       );
     }
@@ -544,13 +552,42 @@ const SubscriptionManagement = () => {
     }
   };
 
+  const handleDeleteTag = async (
+    subscriberId: number,
+    tag: string // Change tag type from 'number' to 'string'
+  ) => {
+    try {
+      await axios.delete('http://localhost:8000/api/subscriber-tags', {
+        data: {
+          subscriber_id: subscriberId,
+          tag: tag,
+        },
+      });
+
+      // Remove tag from frontend state
+      setSubscribers((prev) =>
+        prev.map((s) =>
+          Number(s.id) === Number(subscriberId)
+            ? {
+              ...s,
+              tags: (s.tags || []).filter((t) => t !== tag),
+            }
+            : s
+        )
+      );
+    } catch (error) {
+      console.error('Failed to delete tag:', error);
+      
+    }
+  };
+
+
   return (
     <div className="flex">
       <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       <main
-        className={`w-full transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`w-full transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
           {!isSidebarOpen && (
@@ -923,13 +960,13 @@ const SubscriptionManagement = () => {
                 </div>
                 <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
                   <h3 className="text-xl font-semibold text-green-900">
-                  Subscribers
+                    Subscribers
                   </h3>
                   <p className="text-3xl font-bold">{totalStats.active}</p>
                 </div>
                 <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
                   <h3 className="text-xl font-semibold text-red-900">
-                  Unsubscribers
+                    Unsubscribers
                   </h3>
                   <p className="text-3xl font-bold">{totalStats.inactive}</p>
                 </div>
@@ -1159,17 +1196,17 @@ const SubscriptionManagement = () => {
                                     <p>
                                       <span className="font-medium">Tags:</span>{" "}
                                       {selectedSubscriberDetails.tags?.length >
-                                      0
+                                        0
                                         ? selectedSubscriberDetails.tags.map(
-                                            (tag: string, index: number) => (
-                                              <span
-                                                key={index}
-                                                className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                              >
-                                                {tag}
-                                              </span>
-                                            )
+                                          (tag: string, index: number) => (
+                                            <span
+                                              key={index}
+                                              className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                                            >
+                                              {tag}
+                                            </span>
                                           )
+                                        )
                                         : "No tags"}
                                     </p>
                                     <p>
@@ -1187,11 +1224,10 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">{subscriber.email}</td>
                           <td className="border p-3">
                             <span
-                              className={`px-2 py-1 text-white text-sm rounded-lg ${
-                                subscriber.status === "active"
-                                  ? "bg-green-500"
-                                  : "bg-red-500"
-                              }`}
+                              className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                                }`}
                             >
                               {subscriber.status === "active"
                                 ? "✓ Subscribe"
@@ -1210,19 +1246,35 @@ const SubscriptionManagement = () => {
                             </button>
                           </td>
                           <td className="border p-3">
+                            {/* Tags Display */}
                             <div className="flex flex-wrap gap-2 mb-2">
-                              {subscriber.tags?.map(
-                                (tag: string, index: number) => (
+                              {subscriber.tags?.map((tag: string, index: number) => (
+                                <div
+                                  key={`tag-${index}`}
+                                  className="relative group bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
+                                >
+                                  #{tag}
+                                  {/* Delete Icon on Hover */}
                                   <span
-                                    key={`tag-${index}`}
-                                    className="bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
+                                    className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
+                                    onClick={async () => {
+                                      try {
+                                        // Call the handleDeleteTag function and wait for it to complete
+                                        await handleDeleteTag(Number(subscriber.id), tag);
+                                        alert('Tag deleted successfully'); // Show an alert after deletion
+                                      } catch (error) {
+                                        console.error('Failed to delete tag:', error);
+                                        alert('Failed to delete tag'); // Show an alert in case of failure
+                                      }
+                                    }}
                                   >
-                                    #{tag}
+                                    ×
                                   </span>
-                                )
-                              )}
+                                </div>
+                              ))}
                             </div>
 
+                            {/* Add Tag Input */}
                             {selectedSubscriberId === subscriber.id ? (
                               <div className="flex gap-2">
                                 <input
@@ -1233,7 +1285,7 @@ const SubscriptionManagement = () => {
                                   className="border rounded p-1 text-sm"
                                 />
                                 <button
-                                  onClick={handleAddTag}
+                                  onClick={handleAddTag} // Call function to add a new tag
                                   className="bg-blue-500 text-white px-2 rounded hover:bg-blue-600 text-sm"
                                 >
                                   Add
@@ -1241,15 +1293,16 @@ const SubscriptionManagement = () => {
                               </div>
                             ) : (
                               <button
-                                onClick={() =>
-                                  setSelectedSubscriberId(subscriber.id)
-                                }
+                                onClick={() => setSelectedSubscriberId(subscriber.id)}
                                 className="text-green-600 hover:text-green-800 text-sm"
                               >
                                 ➕ Add Tag
                               </button>
                             )}
                           </td>
+
+
+
                           <td className="border p-3">
                             <button
                               onClick={() => {
@@ -1285,11 +1338,10 @@ const SubscriptionManagement = () => {
                         )
                       }
                       disabled={page === 1}
-                      className={`px-4 py-2 rounded ${
-                        page === 1
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                      } text-white`}
+                      className={`px-4 py-2 rounded ${page === 1
+                        ? "bg-gray-400"
+                        : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                     >
                       Previous
                     </button>
@@ -1313,11 +1365,10 @@ const SubscriptionManagement = () => {
                         )
                       }
                       disabled={page === totalPages}
-                      className={`px-4 py-2 rounded ${
-                        page === totalPages
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                      } text-white`}
+                      className={`px-4 py-2 rounded ${page === totalPages
+                        ? "bg-gray-400"
+                        : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                     >
                       Next
                     </button>

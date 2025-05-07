@@ -163,6 +163,11 @@ Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
 //Add subscriber tags
 Route::post('/subscribers/{subscriber_id}/tags', [SubscriberController::class, 'addSubscriberTags']);
 
+
+//Remove subscriber tag
+Route::delete('/subscriber-tags', [SubscriberController::class, 'deleteSubscriberTag']);
+
+
 //Export subscribers(csv, json)
 Route::get('/subscriptions/{list_id}/export/{format}', [SubscriberController::class, 'exportSubscribers']);
 
