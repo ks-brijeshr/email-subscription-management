@@ -25,7 +25,6 @@ class SubscriptionList extends Model
     {
         return $this->belongsTo(User::class);
     }
-    // app/Models/SubscriptionList.php
 
     public function subscribers()
     {
@@ -37,4 +36,9 @@ class SubscriptionList extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Relationship with EmailBlacklist
+    public function blacklistedEmails(): HasMany
+    {
+        return $this->hasMany(\App\Models\EmailBlacklist::class, 'subscription_list_id');
+    }
 }

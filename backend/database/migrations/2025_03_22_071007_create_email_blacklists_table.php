@@ -12,12 +12,18 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->text('reason')->nullable();
             $table->foreignId('blacklisted_by')->constrained('users')->onDelete('cascade'); // Who blacklisted the email
+
+            // Subscription List Foreign Key (Correctly referenced)
+            $table->foreignId('subscription_list_id')
+                  ->constrained('subscription_lists')  // Linking with subscription_lists table
+                  ->onDelete('cascade');
+
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('email_blacklist');
+        Schema::dropIfExists('email_blacklists');
     }
 };
