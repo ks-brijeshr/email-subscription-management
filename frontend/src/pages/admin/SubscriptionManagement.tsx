@@ -409,9 +409,30 @@ const SubscriptionManagement = () => {
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
+          validateStatus: (status) => status < 500 // allow custom handling of 400-level errors
         }
       );
 
+      if (response.status === 204) {
+        alert("There are no subscribers to export.");
+        return;
+      }
+
+      if (response.status !== 200) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const error = JSON.parse(reader.result as string);
+            alert(error.message || "Failed to export subscribers.");
+          } catch {
+            alert("Failed to export subscribers.");
+          }
+        };
+        reader.readAsText(response.data);
+        return;
+      }
+
+      // proceed with download
       const blob = new Blob([response.data], {
         type: format === "csv" ? "text/csv" : "application/json",
       });
@@ -424,7 +445,7 @@ const SubscriptionManagement = () => {
       link.remove();
     } catch (error) {
       console.error("Error exporting subscribers:", error);
-      alert("Failed to export subscribers.");
+      alert("Something went wrong while exporting.");
     }
   };
 
@@ -577,7 +598,7 @@ const SubscriptionManagement = () => {
       );
     } catch (error) {
       console.error('Failed to delete tag:', error);
-      
+
     }
   };
 
