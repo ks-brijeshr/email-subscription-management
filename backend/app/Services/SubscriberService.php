@@ -48,13 +48,12 @@ class SubscriberService
             $errors[] = 'Invalid DNS records.';
         }
 
-        // If there are validation errors, blacklist the email with the subscription_list_id
         if (!empty($errors)) {
             EmailBlacklist::create([
                 'email' => $data['email'],
                 'reason' => implode(', ', $errors),
                 'blacklisted_by' => $user->id,
-                'subscription_list_id' => $list_id // ✅ Add subscription list ID here
+                'subscription_list_id' => $list_id
             ]);
 
             return [
@@ -78,7 +77,9 @@ class SubscriberService
 
         if ($subscriptionList->require_email_verification) {
             try {
-                Mail::to($subscriber->email)->send(new SubscriberVerificationMail($subscriber, $verificationToken));
+                // Queue the email
+                Mail::to($subscriber->email)
+                    ->queue(new SubscriberVerificationMail($subscriber, $verificationToken));
             } catch (\Exception $e) {
                 Log::error("Failed to send verification email: " . $e->getMessage());
                 return [
@@ -96,6 +97,7 @@ class SubscriberService
             'verification_required' => $subscriptionList->require_email_verification
         ];
     }
+
 
 
     public function verifyEmail($token)
