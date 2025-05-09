@@ -25,91 +25,73 @@ class SubscriberService
             return ['error' => 'Subscription list not found.', 'code' => 404];
         }
 
-        try {
-            $existing = Subscriber::where('list_id', $list_id)
-                ->where('email', $data['email'])
-                ->first();
-
-            if ($existing) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Subscriber already exists in this list.',
-                    'code' => 409
-                ];
-            }
-
-            $errors = [];
-
-            if ($subscriptionList->allow_business_email_only && $this->isPersonalEmail($data['email'])) {
-                $errors[] = 'Personal emails are not allowed.';
-            }
-
-            if ($subscriptionList->block_temporary_email && $this->isTemporaryEmail($data['email'])) {
-                $errors[] = 'Temporary emails are blocked.';
-            }
-
-            if ($subscriptionList->check_domain_existence && !$this->domainExists($data['email'])) {
-                $errors[] = 'Email domain does not exist.';
-            }
-
-            if ($subscriptionList->verify_dns_records && !$this->hasValidDnsRecords($data['email'])) {
-                $errors[] = 'Invalid DNS records.';
-            }
-
-            if (!empty($errors)) {
-                EmailBlacklist::create([
-                    'email' => $data['email'],
-                    'reason' => implode(', ', $errors),
-                    'blacklisted_by' => $user->id,
-                    'subscription_list_id' => $list_id
-                ]);
-
-                return [
-                    'status' => 'error',
-                    'message' => 'Email failed validation and has been blacklisted.',
-                    'errors' => $errors,
-                    'code' => 422
-                ];
-            }
-
-            $verificationToken = $subscriptionList->require_email_verification ? Str::uuid()->toString() : null;
-
-            $subscriber = Subscriber::create([
-                'list_id' => $list_id,
-                'email' => $data['email'],
-                'name' => $data['name'] ?? null,
-                'metadata' => json_encode($data['metadata'] ?? []),
-                'status' => $subscriptionList->require_email_verification ? 'inactive' : 'active',
-                'verification_token' => $verificationToken
-            ]);
-
-            if ($subscriptionList->require_email_verification) {
-                Mail::to($subscriber->email)
-                    ->queue(new SubscriberVerificationMail($subscriber, $verificationToken)); // Using Queue for Email
-            }
-
+        if (Subscriber::where('list_id', $list_id)->where('email', $data['email'])->exists()) {
             return [
-                'success' => true,
-                'message' => 'Subscriber added successfully!',
-                'verification_required' => $subscriptionList->require_email_verification
+                'status' => 'error',
+                'message' => 'The email address is already subscribed to this list.',
+                'code' => 409
             ];
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->errorInfo[1] == 1062) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Subscriber already exists in this list.',
-                    'code' => 409
-                ];
-            }
+        }
+
+        $errors = [];
+
+        if ($subscriptionList->allow_business_email_only && $this->isPersonalEmail($data['email'])) {
+            $errors[] = 'Personal emails are not allowed.';
+        }
+
+        if ($subscriptionList->block_temporary_email && $this->isTemporaryEmail($data['email'])) {
+            $errors[] = 'Temporary emails are blocked.';
+        }
+
+        if ($subscriptionList->check_domain_existence && !$this->domainExists($data['email'])) {
+            $errors[] = 'Email domain does not exist.';
+        }
+
+        if ($subscriptionList->verify_dns_records && !$this->hasValidDnsRecords($data['email'])) {
+            $errors[] = 'Invalid DNS records.';
+        }
+
+        if (!empty($errors)) {
+            EmailBlacklist::firstOrCreate([
+                'email' => $data['email'],
+                'subscription_list_id' => $list_id,
+            ], [
+                'reason' => implode(', ', $errors),
+                'blacklisted_by' => $user->id
+            ]);
 
             return [
                 'status' => 'error',
-                'message' => 'An unexpected error occurred. Please try again.',
-                'error' => $e->getMessage(),
-                'code' => 500
+                'message' => 'Email failed validation and has been blacklisted.',
+                'errors' => $errors,
+                'code' => 422
             ];
         }
+
+        $verificationToken = $subscriptionList->require_email_verification ? Str::uuid()->toString() : null;
+
+        $subscriber = Subscriber::create([
+            'list_id' => $list_id,
+            'email' => $data['email'],
+            'name' => $data['name'] ?? null,
+            'metadata' => json_encode($data['metadata'] ?? []),
+            'status' => $subscriptionList->require_email_verification ? 'inactive' : 'active',
+            'verification_token' => $verificationToken
+        ]);
+
+        if ($subscriptionList->require_email_verification) {
+            Mail::to($subscriber->email)
+                ->queue(new SubscriberVerificationMail($subscriber));
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Subscriber added successfully!',
+            'verification_required' => $subscriptionList->require_email_verification
+        ];
     }
+
+
 
 
 
