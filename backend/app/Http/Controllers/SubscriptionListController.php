@@ -34,13 +34,19 @@ class SubscriptionListController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $subscriptionLists = $this->subscriptionListService->getAllSubscriptionListsWithCounts();
+        $perPage = $request->query('per_page', 10);
+
+        $subscriptionLists = $this->subscriptionListService
+            ->getAllSubscriptionListsWithCounts()
+            ->paginate($perPage);
 
         return response()->json([
             'message' => 'Subscription lists retrieved successfully.',
             'subscription_lists' => $subscriptionLists
         ], 200);
     }
+
+
     /**
      * Store a new subscription list with restrictions
      */
