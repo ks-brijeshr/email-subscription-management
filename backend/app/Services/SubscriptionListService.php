@@ -13,8 +13,8 @@ class SubscriptionListService
     public function getAllSubscriptionListsWithCounts()
     {
         return SubscriptionList::where('user_id', Auth::id())
-            ->withCount('subscribers') // Get total subscribers count
-            ->get();
+            ->withCount('subscribers'); // Get total subscribers count
+
     }
 
 
