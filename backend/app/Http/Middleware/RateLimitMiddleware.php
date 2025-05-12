@@ -18,7 +18,7 @@ class RateLimitMiddleware
     {
         $key = $this->getRateLimitKey($request);
 
-        if (RateLimiter::tooManyAttempts($key, 10)) {
+        if (RateLimiter::tooManyAttempts($key, 15)) {
             RateLimitLog::create([
                 'user_id' => Auth::id(),
                 'ip_address' => $request->ip(),
