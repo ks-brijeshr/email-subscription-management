@@ -32,9 +32,11 @@ interface SubscriptionList {
 }
 
 const SubscriptionManagement = () => {
-  const [subscriptionLists, setSubscriptionLists] = useState<
-    SubscriptionList[]
-  >([]);
+  const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
+  const [listPage, setListPage] = useState<number>(1);
+  const [listTotal, setListTotal] = useState<number>(0);
+  const [listTotalPages, setListTotalPages] = useState<number>(1);
+
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const [selectedListName, setSelectedListName] = useState<string | null>(null);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
@@ -98,28 +100,34 @@ const SubscriptionManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSubscriptionLists = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+    fetchSubscriptionLists(listPage);
+  }, [listPage]);
 
-        const response = await axios.get(
-          "http://localhost:8000/api/subscription-lists",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (response.data.subscription_lists) {
-          setSubscriptionLists(response.data.subscription_lists);
+  const fetchSubscriptionLists = async (currentPage = 1) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+  
+      const response = await axios.get(
+        "http://localhost:8000/api/subscription-lists", 
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { page: currentPage, per_page: 5 },
         }
-      } catch (error) {
-        console.error("Error fetching subscription lists:", error);
+      );
+  
+      if (response.data.subscription_lists) {
+        setSubscriptionLists(response.data.subscription_lists.data);
+        setListPage(response.data.subscription_lists.current_page);
+        setListTotalPages(response.data.subscription_lists.last_page);
+        setListTotal(response.data.subscription_lists.total);
       }
-    };
-
-    fetchSubscriptionLists();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching subscription lists:", error);
+    }
+  };
+  
+  
 
   const handleCopyList = async (list: SubscriptionList) => {
     const token = localStorage.getItem("token");
@@ -866,6 +874,31 @@ const SubscriptionManagement = () => {
                   </tbody>
                 </table>
               </div>
+
+              {listTotal > 5 && (
+                <div className="flex justify-center items-center mt-4 mb-4 space-x-4">
+                  {listPage > 1 && (
+                    <button
+                      onClick={() => listPage > 1 && setListPage(listPage - 1)}
+                      className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Previous
+                    </button>
+                  )}
+                  <span className="text-gray-700">
+                    Page {listPage} of {listTotalPages}
+                  </span>
+                  {listPage < listTotalPages && (
+                    <button
+                      onClick={() => listPage < listTotalPages && setListPage(listPage + 1)}
+                      className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              )}
+
               {editSubscriptionList && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
                   <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
