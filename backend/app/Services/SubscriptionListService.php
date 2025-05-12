@@ -10,11 +10,11 @@ class SubscriptionListService
     /**
      * Get all subscription lists for the authenticated user with total subscribers count
      */
-    public function getAllSubscriptionListsWithCounts()
+    public function getAllSubscriptionListsWithCounts($perPage = 10)
     {
         return SubscriptionList::where('user_id', Auth::id())
-            ->withCount('subscribers') // Get total subscribers count
-            ->get();
+            ->withCount('subscribers')
+            ->paginate($perPage);
     }
 
 
