@@ -37,8 +37,7 @@ class SubscriptionListController extends Controller
         $perPage = $request->query('per_page', 10);
 
         $subscriptionLists = $this->subscriptionListService
-            ->getAllSubscriptionListsWithCounts()
-            ->paginate($perPage);
+            ->getAllSubscriptionListsWithCounts($perPage);
 
         return response()->json([
             'message' => 'Subscription lists retrieved successfully.',
