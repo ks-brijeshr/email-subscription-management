@@ -25,9 +25,12 @@ class SubscriberService
             return ['error' => 'Subscription list not found.', 'code' => 404];
         }
 
-        $existing = Subscriber::where('list_id', $list_id)->where('email', $data['email'])->first();
-        if ($existing) {
-            return ['error' => 'Subscriber already exists.', 'code' => 409];
+        if (Subscriber::where('list_id', $list_id)->where('email', $data['email'])->exists()) {
+            return [
+                'status' => 'error',
+                'message' => 'The email address is already subscribed to this list.',
+                'code' => 409
+            ];
         }
 
         $errors = [];
@@ -49,11 +52,12 @@ class SubscriberService
         }
 
         if (!empty($errors)) {
-            EmailBlacklist::create([
+            EmailBlacklist::firstOrCreate([
                 'email' => $data['email'],
+                'subscription_list_id' => $list_id,
+            ], [
                 'reason' => implode(', ', $errors),
-                'blacklisted_by' => $user->id,
-                'subscription_list_id' => $list_id
+                'blacklisted_by' => $user->id
             ]);
 
             return [
@@ -76,19 +80,8 @@ class SubscriberService
         ]);
 
         if ($subscriptionList->require_email_verification) {
-            try {
-                // Queue the email
-                Mail::to($subscriber->email)
-                    ->queue(new SubscriberVerificationMail($subscriber, $verificationToken));
-            } catch (\Exception $e) {
-                Log::error("Failed to send verification email: " . $e->getMessage());
-                return [
-                    'status' => 'error',
-                    'message' => 'Subscriber added but failed to send verification email.',
-                    'error' => $e->getMessage(),
-                    'code' => 500
-                ];
-            }
+            Mail::to($subscriber->email)
+                ->queue(new SubscriberVerificationMail($subscriber));
         }
 
         return [
@@ -97,6 +90,8 @@ class SubscriberService
             'verification_required' => $subscriptionList->require_email_verification
         ];
     }
+
+
 
 
 

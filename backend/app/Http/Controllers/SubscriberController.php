@@ -25,11 +25,18 @@ class SubscriberController extends Controller
             'metadata' => 'nullable|array',
         ]);
 
-        $response = $this->subscriberService->addSubscriber($list_id, $data);
+        try {
+            $response = $this->subscriberService->addSubscriber($list_id, $data);
 
-        return response()->json($response, $response['code'] ?? 200);
+            return response()->json($response, $response['code'] ?? 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An unexpected error occurred. Please try again later.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-
     public function verifyEmail($token)
     {
         $response = $this->subscriberService->verifyEmail($token);

@@ -67,6 +67,8 @@ const SubscriptionManagement = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false); 
+
   const [totalStats, setTotalStats] = useState({
     total: 0,
     active: 0,
@@ -464,20 +466,21 @@ const SubscriptionManagement = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     if (!selectedListId || !email) {
-      alert("Please select a subscription list and enter an email.");
+      alert("❗ Please select a subscription list and enter an email.");
       return;
     }
-
+  
+    setLoading(true);
+  
     try {
       const token = localStorage.getItem("token");
-
       if (!token) {
-        alert("Token is missing. Please log in again.");
+        alert("Authentication error. Please log in again.");
         return;
       }
-
+  
       // Format metadata
       let formattedMetadata: Record<string, string> = {};
       if (metadata) {
@@ -488,37 +491,50 @@ const SubscriptionManagement = () => {
           }
         });
       }
-
+  
       const response = await axios.post(
         `http://localhost:8000/api/subscriptions/${selectedListId}/subscribers`,
         { name, email, metadata: formattedMetadata },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      console.log("Subscriber Added Successfully:", response.data);
-
-      alert("Subscriber added successfully!");
-
-      // Form reset
+  
+      alert("✅ Subscriber Added Successfully!");
+  
+      // Clear form
       setName("");
       setEmail("");
       setMetadata("");
-
-      // Close modal
-      handleCloseModal();
-
-      await fetchSubscribers(selectedListId, selectedListName || "");
+  
     } catch (error: any) {
-      console.error(
-        "Error adding subscriber:",
-        error.response?.data || error.message
-      );
-      alert(
-        `Failed to add subscriber: ${error.response?.data?.message || error.message
-        }`
-      );
+      console.error("Error adding subscriber:", error.response?.data || error.message);
+  
+      if (error.response?.status === 409) {
+        alert(`⚠️ The email "${email}" is already subscribed to this list.`);
+      } else if (error.response?.status === 422) {
+        const errorData = error.response.data;
+        if (errorData.message === "Email failed validation and has been blacklisted.") {
+          alert(
+            `🚫 Email failed validation and has been blacklisted.\nReasons:\n- ${errorData.errors?.join("\n- ")}`
+          );
+        } else {
+          alert(
+            `❌ Validation Error: ${errorData.message || "Invalid input data."}`
+          );
+        }
+      } else if (error.response?.status === 403) {
+        alert("❌ Unauthorized: You do not have permission to perform this action.");
+      } else if (error.response?.status === 404) {
+        alert("❌ Subscription list not found. Please try again.");
+      } else {
+        alert(
+          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message}`
+        );
+      }
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const filteredSubscribers = subscribers.filter((s) => {
     const emailMatch = s.email
@@ -1118,9 +1134,10 @@ const SubscriptionManagement = () => {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition"
+                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={loading}
                       >
-                        Add Subscriber
+                        {loading ? 'Adding...' : 'Add Subscriber'}
                       </button>
                     </form>
                   </div>
