@@ -8,14 +8,15 @@ use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CustomEmailController;
 use App\Http\Controllers\UnsubscribeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SubscriberListController;
 use App\Http\Controllers\SignupAnalyticsController;
 use App\Http\Controllers\SubscriptionListController;
-use App\Http\Controllers\CustomEmailController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
 
@@ -211,3 +212,7 @@ Route::delete('/subscribers/{id}', [SubscriberController::class, 'destroy']);
 // New route for deleting multiple subscribers
 // Route::delete('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDeleteSubscribers']);
 Route::post('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDelete']);
+
+
+//userside subscriber add
+Route::post('/subscribe', [NewsletterController::class, 'subscribe']);
