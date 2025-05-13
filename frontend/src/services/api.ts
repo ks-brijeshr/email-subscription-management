@@ -79,6 +79,16 @@ export const getBlacklistedEmails = async (page = 1, perPage = 5, subscription_l
   return response.data;
 };
 
+
+export const subscribeUser = async (name: string, email: string) => {
+  const response = await axios.post("http://localhost:8000/api/subscribe", {
+    name,
+    email,
+  });
+
+  return response.data;
+};
+
 // export const fetchSubscriptionLists = async () => {
 //   const token = localStorage.getItem("token");
 //   const res = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
