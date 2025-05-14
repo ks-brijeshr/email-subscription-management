@@ -3,6 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/Sidebar";
 import { deleteSubscriber } from "../../services/api";
+
+type Props = {
+  listId: string;
+};
+
 interface Subscriber {
   id: string;
   name: string;
@@ -70,6 +75,21 @@ const SubscriptionManagement = () => {
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [importStatus, setImportStatus] = useState<null | {
+    message: string;
+    imported: number;
+    failed: number;
+    errors: any[];
+  }>(null);
+  const [currentListId, setCurrentListId] = useState<string | null>(null);
+  const [currentListName, setCurrentListName] = useState("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
 
   const [totalStats, setTotalStats] = useState({
     total: 0,
@@ -511,6 +531,7 @@ const SubscriptionManagement = () => {
       setName("");
       setEmail("");
       setMetadata("");
+
     } catch (error: any) {
       console.error(
         "Error adding subscriber:",
@@ -645,6 +666,54 @@ const SubscriptionManagement = () => {
       console.error("Failed to delete tag:", error);
     }
   };
+
+  const handleImport = async () => {
+    if (!selectedFile) return alert("Please select a file.");
+    if (!currentListId) return alert("No subscription list selected.");
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://localhost:8000/api/subscriptions/${currentListId}/import`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { message, imported, failed, errors } = response.data;
+
+      let alertMessage = `✅ ${message}\nImported: ${imported}\nFailed: ${failed}`;
+
+      if (errors && errors.length > 0) {
+        alertMessage += `\n\n❌ Errors:\n`;
+        alertMessage += errors
+          .map((err: any) => `${err.email || "Unknown email"} - ${err.reason}`)
+          .join("\n");
+      }
+
+      alert(alertMessage);
+      setSelectedFile(null);
+      fetchSubscribers(currentListId, currentListName); 
+    } catch (error: any) {
+      console.error("Import failed", error);
+      alert(`❌ Import failed: ${error.response?.data?.error || "Unknown error"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
 
   return (
     <div className="flex">
@@ -845,6 +914,8 @@ const SubscriptionManagement = () => {
                           onClick={() => {
                             if (list.id) {
                               fetchSubscribers(list.id, list.name);
+                              setCurrentListId(list.id);
+                              setCurrentListName(list.name);
                             } else {
                               alert("Invalid subscription list ID.");
                             }
@@ -1189,6 +1260,23 @@ const SubscriptionManagement = () => {
                   >
                     Export as JSON
                   </button>
+                  <div className="p-4 rounded shadow bg-white max-w-md mx-auto">
+                    <h2 className="text-xl font-semibold mb-4">Import Subscribers</h2>
+                    <input
+                      type="file"
+                      accept=".csv,.json,.txt"
+                      onChange={handleFileChange}
+                      className="mb-4"
+                    />
+                    <button
+                      onClick={handleImport}
+                      disabled={!selectedFile || loading}
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {loading ? "Importing..." : "Import"}
+                    </button>
+
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto">

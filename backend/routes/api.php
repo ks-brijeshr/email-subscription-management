@@ -213,6 +213,9 @@ Route::delete('/subscribers/{id}', [SubscriberController::class, 'destroy']);
 // Route::delete('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDeleteSubscribers']);
 Route::post('/subscribers/bulk-delete', [SubscriberController::class, 'bulkDelete']);
 
+// Route for importing subscribers
+Route::post('/subscriptions/{list_id}/import', [SubscriberController::class, 'importSubscribers']);
+
 
 //userside subscriber add
 Route::post('/subscribe', [NewsletterController::class, 'subscribe']);
