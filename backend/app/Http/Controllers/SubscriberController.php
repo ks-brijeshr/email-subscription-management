@@ -144,27 +144,6 @@ class SubscriberController extends Controller
         return response()->json(['message' => 'Subscriber deleted successfully']);
     }
 
-    // public function bulkDeleteSubscribers(Request $request)
-    // {
-    //     try {
-    //         // Validate that the 'ids' field is an array and contains numbers
-    //         $request->validate([
-    //             'ids' => 'required|array',
-    //             'ids.*' => 'integer',  // Each ID in the array must be an integer
-    //         ]);
-
-    //         // Retrieve the IDs from the request
-    //         $ids = $request->input('ids');
-
-    //         // Delete subscribers by the given IDs
-    //         Subscriber::whereIn('id', $ids)->delete();
-
-    //         return response()->json(['message' => 'Subscribers deleted successfully'], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Failed to delete subscribers: ' . $e->getMessage()], 500);
-    //     }
-    // }
-
 
     public function bulkDelete(Request $request)
     {
@@ -176,5 +155,27 @@ class SubscriberController extends Controller
         Subscriber::whereIn('id', $ids)->delete();
 
         return response()->json(['message' => 'Subscribers deleted successfully.']);
+    }
+
+    public function importSubscribers(Request $request, $list_id)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,json,txt',
+        ]);
+
+        $file = $request->file('file');
+        $service = new SubscriberService();
+
+        try {
+            $result = $service->importSubscribers($file, $list_id);
+            return response()->json([
+                'message' => 'Import completed',
+                'imported' => $result['imported'],
+                'failed' => $result['failed'],
+                'errors' => $result['errors'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Import failed', 'error' => $e->getMessage()], 500);
+        }
     }
 }

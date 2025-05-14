@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriberVerificationMail;
+use Illuminate\Support\Facades\Validator;
 
 class SubscriberService
 {
@@ -375,9 +376,149 @@ class SubscriberService
         $subscriber->delete();
     }
 
-    // Delete multiple subscribers
-    // public function deleteSubscribers(array $ids)
-    // {
-    //     Subscriber::whereIn('id', $ids)->delete();
-    // }
+ 
+
+    public function importSubscribers($file, $listId)
+    {
+        $subscriptionList = SubscriptionList::findOrFail($listId);
+
+        $extension = strtolower($file->getClientOriginalExtension());
+        $subscribers = [];
+
+        if ($extension === 'json') {
+            $data = json_decode(file_get_contents($file), true);
+            $subscribers = is_array($data) ? $data : [];
+        } elseif ($extension === 'csv') {
+            $csv = array_map('str_getcsv', file($file));
+            if (count($csv) < 2) {
+                return [
+                    'imported' => 0,
+                    'failed' => 0,
+                    'errors' => [['reason' => 'CSV has no data']]
+                ];
+            }
+
+            $headers = array_map('trim', $csv[0]);
+            foreach (array_slice($csv, 1) as $row) {
+                if (count($row) !== count($headers)) continue;
+
+                $rowAssoc = array_combine($headers, $row);
+
+                $subscriber = [
+                    'name' => trim($rowAssoc['name'] ?? ''),
+                    'email' => trim($rowAssoc['email'] ?? ''),
+                    'status' => trim($rowAssoc['status'] ?? ''),
+                ];
+
+                if (empty($subscriber['email'])) continue;
+
+                $subscribers[] = $subscriber;
+            }
+        } else {
+            return [
+                'imported' => 0,
+                'failed' => 0,
+                'errors' => [['reason' => 'Unsupported file type']]
+            ];
+        }
+
+        $imported = 0;
+        $failed = 0;
+        $errors = [];
+
+        $validStatuses = ['active', 'inactive', 'blacklisted'];
+
+        foreach ($subscribers as $index => $subscriber) {
+            $validator = Validator::make($subscriber, [
+                'email' => 'required|email',
+                'name' => 'nullable|string|max:255',
+                'status' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                $failed++;
+                $errors[] = [
+                    'index' => $index,
+                    'email' => $subscriber['email'] ?? '',
+                    'reason' => $validator->errors()->first(),
+                ];
+                continue;
+            }
+
+            // Check if email already exists in this list
+            $exists = Subscriber::where('email', $subscriber['email'])
+                ->where('list_id', $listId)
+                ->exists();
+
+            if ($exists) {
+                $failed++;
+                $errors[] = [
+                    'index' => $index,
+                    'email' => $subscriber['email'],
+                    'reason' => 'Duplicate: Email already exists in this list',
+                ];
+                continue;
+            }
+
+            if (!$this->passesListRules($subscriptionList, $subscriber['email'])) {
+                $failed++;
+                $errors[] = [
+                    'index' => $index,
+                    'email' => $subscriber['email'],
+                    'reason' => 'Email failed list validation rules',
+                ];
+                continue;
+            }
+
+            $status = in_array($subscriber['status'], $validStatuses)
+                ? $subscriber['status']
+                : 'inactive';
+
+            try {
+                Subscriber::create([
+                    'list_id' => $listId,
+                    'name' => $subscriber['name'] ?: null,
+                    'email' => $subscriber['email'],
+                    'status' => $status,
+                    'unsubscribe_token' => Str::random(32),
+                ]);
+                $imported++;
+            } catch (\Exception $e) {
+                $failed++;
+                $errors[] = [
+                    'index' => $index,
+                    'email' => $subscriber['email'],
+                    'reason' => 'Database error: ' . $e->getMessage(),
+                ];
+            }
+        }
+        return compact('imported', 'failed', 'errors');
+    }
+
+    private function passesListRules($list, $email)
+    {
+        $domain = substr(strrchr($email, "@"), 1);
+
+        // Business email check
+        if ($list->allow_business_email_only && preg_match('/(gmail\.com|yahoo\.com|hotmail\.com)/i', $domain)) {
+            return false;
+        }
+
+        // Temporary email check
+        if ($list->block_temporary_email && preg_match('/(tempmail|10minutemail|mailinator)/i', $domain)) {
+            return false;
+        }
+
+        // Domain existence check
+        if ($list->check_domain_existence && !checkdnsrr($domain)) {
+            return false;
+        }
+
+        // DNS record check
+        if ($list->verify_dns_records && !checkdnsrr($domain, 'MX')) {
+            return false;
+        }
+
+        return true;
+    }
 }
