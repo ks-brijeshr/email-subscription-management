@@ -49,10 +49,11 @@ export const getAdminActivityLogs = async ({ listId, page, perPage }: ActivityLo
   return response.data;
 };
 
-export const getSubscriptionLists = async () => {
+export const getSubscriptionLists = async (page = 1, perPage = 5) => {
   const token = localStorage.getItem("token");
   const response = await axios.get("http://localhost:8000/api/admin/subscription-lists", {
     headers: { Authorization: `Bearer ${token}` },
+    params: { page, per_page: perPage },
   });
   return response.data;
 };
@@ -75,6 +76,16 @@ export const getBlacklistedEmails = async (page = 1, perPage = 5, subscription_l
   const response = await api.get("/admin/blacklisted-emails", {
     params: { page, perPage, subscription_list_id },
   });
+  return response.data;
+};
+
+
+export const subscribeUser = async (name: string, email: string) => {
+  const response = await axios.post("http://localhost:8000/api/subscribe", {
+    name,
+    email,
+  });
+
   return response.data;
 };
 

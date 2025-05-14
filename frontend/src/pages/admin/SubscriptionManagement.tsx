@@ -40,6 +40,10 @@ const SubscriptionManagement = () => {
   const [subscriptionLists, setSubscriptionLists] = useState<
     SubscriptionList[]
   >([]);
+  const [listPage, setListPage] = useState<number>(1);
+  const [listTotal, setListTotal] = useState<number>(0);
+  const [listTotalPages, setListTotalPages] = useState<number>(1);
+
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const [selectedListName, setSelectedListName] = useState<string | null>(null);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
@@ -86,6 +90,7 @@ const SubscriptionManagement = () => {
       setSelectedFile(e.target.files[0]);
     }
   };
+
   const [totalStats, setTotalStats] = useState({
     total: 0,
     active: 0,
@@ -119,28 +124,32 @@ const SubscriptionManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSubscriptionLists = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+    fetchSubscriptionLists(listPage);
+  }, [listPage]);
 
-        const response = await axios.get(
-          "http://localhost:8000/api/subscription-lists",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+  const fetchSubscriptionLists = async (currentPage = 1) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-        if (response.data.subscription_lists) {
-          setSubscriptionLists(response.data.subscription_lists);
+      const response = await axios.get(
+        "http://localhost:8000/api/subscription-lists",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { page: currentPage, per_page: 5 },
         }
-      } catch (error) {
-        console.error("Error fetching subscription lists:", error);
-      }
-    };
+      );
 
-    fetchSubscriptionLists();
-  }, []);
+      if (response.data.subscription_lists) {
+        setSubscriptionLists(response.data.subscription_lists.data);
+        setListPage(response.data.subscription_lists.current_page);
+        setListTotalPages(response.data.subscription_lists.last_page);
+        setListTotal(response.data.subscription_lists.total);
+      }
+    } catch (error) {
+      console.error("Error fetching subscription lists:", error);
+    }
+  };
 
   const handleCopyList = async (list: SubscriptionList) => {
     const token = localStorage.getItem("token");
@@ -197,6 +206,14 @@ const SubscriptionManagement = () => {
       });
 
       setSubscriptionLists((prev) => prev.filter((list) => list.id !== id));
+      setListTotal((prevTotal) => prevTotal - 1);
+
+      if (subscriptionLists.length === 1 && listPage > 1) {
+        setListPage((prev) => prev - 1);
+        fetchSubscriptionLists(listPage - 1);
+      } else {
+        fetchSubscriptionLists(listPage);
+      }
     } catch (error) {
       console.error("Error deleting subscription list:", error);
       alert("Failed to delete subscription list.");
@@ -264,7 +281,6 @@ const SubscriptionManagement = () => {
       console.error("Error fetching subscribers:", error);
     }
   };
-
 
   const handleEditClick = (list: SubscriptionList) => {
     setEditingListId(list.id);
@@ -435,7 +451,7 @@ const SubscriptionManagement = () => {
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
-          validateStatus: (status) => status < 500
+          validateStatus: (status) => status < 500,
         }
       );
 
@@ -517,15 +533,23 @@ const SubscriptionManagement = () => {
       setMetadata("");
 
     } catch (error: any) {
-      console.error("Error adding subscriber:", error.response?.data || error.message);
+      console.error(
+        "Error adding subscriber:",
+        error.response?.data || error.message
+      );
 
       if (error.response?.status === 409) {
         alert(`⚠️ The email "${email}" is already subscribed to this list.`);
       } else if (error.response?.status === 422) {
         const errorData = error.response.data;
-        if (errorData.message === "Email failed validation and has been blacklisted.") {
+        if (
+          errorData.message ===
+          "Email failed validation and has been blacklisted."
+        ) {
           alert(
-            `🚫 Email failed validation and has been blacklisted.\nReasons:\n- ${errorData.errors?.join("\n- ")}`
+            `🚫 Email failed validation and has been blacklisted.\nReasons:\n- ${errorData.errors?.join(
+              "\n- "
+            )}`
           );
         } else {
           alert(
@@ -533,19 +557,22 @@ const SubscriptionManagement = () => {
           );
         }
       } else if (error.response?.status === 403) {
-        alert("❌ Unauthorized: You do not have permission to perform this action.");
+        alert(
+          "❌ Unauthorized: You do not have permission to perform this action."
+        );
       } else if (error.response?.status === 404) {
         alert("❌ Subscription list not found. Please try again.");
       } else {
         alert(
-          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message}`
+          `❌ Failed to add subscriber. Please try again later.\nError: ${
+            error.response?.data?.message || error.message
+          }`
         );
       }
     } finally {
       setLoading(false);
     }
   };
-
 
   const filteredSubscribers = subscribers.filter((s) => {
     const emailMatch = s.email
@@ -571,11 +598,10 @@ const SubscriptionManagement = () => {
   const handleDeleteSubscriber = async (id: number) => {
     try {
       await deleteSubscriber(id);
-      setSubscribers(
-        (prevSubscribers) =>
-          prevSubscribers.filter(
-            (subscriber) => subscriber.id.toString() !== id.toString()
-          )
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter(
+          (subscriber) => subscriber.id.toString() !== id.toString()
+        )
       );
     } catch (error) {
       console.error("Failed to delete subscriber", error);
@@ -618,7 +644,7 @@ const SubscriptionManagement = () => {
     tag: string // Change tag type from 'number' to 'string'
   ) => {
     try {
-      await axios.delete('http://localhost:8000/api/subscriber-tags', {
+      await axios.delete("http://localhost:8000/api/subscriber-tags", {
         data: {
           subscriber_id: subscriberId,
           tag: tag,
@@ -630,15 +656,14 @@ const SubscriptionManagement = () => {
         prev.map((s) =>
           Number(s.id) === Number(subscriberId)
             ? {
-              ...s,
-              tags: (s.tags || []).filter((t) => t !== tag),
-            }
+                ...s,
+                tags: (s.tags || []).filter((t) => t !== tag),
+              }
             : s
         )
       );
     } catch (error) {
-      console.error('Failed to delete tag:', error);
-
+      console.error("Failed to delete tag:", error);
     }
   };
 
@@ -689,12 +714,14 @@ const SubscriptionManagement = () => {
 
 
 
+
   return (
     <div className="flex">
       <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       <main
-        className={`w-full transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`w-full transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
           {!isSidebarOpen && (
@@ -949,6 +976,33 @@ const SubscriptionManagement = () => {
                   </tbody>
                 </table>
               </div>
+
+              {listTotal > 5 && (
+                <div className="flex justify-center items-center mt-4 mb-4 space-x-4">
+                  {listPage > 1 && (
+                    <button
+                      onClick={() => listPage > 1 && setListPage(listPage - 1)}
+                      className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Previous
+                    </button>
+                  )}
+                  <span className="text-gray-700">
+                    Page {listPage} of {listTotalPages}
+                  </span>
+                  {listPage < listTotalPages && (
+                    <button
+                      onClick={() =>
+                        listPage < listTotalPages && setListPage(listPage + 1)
+                      }
+                      className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
+              )}
+
               {editSubscriptionList && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40 z-50">
                   <div className="bg-white rounded-xl p-8 shadow-lg w-[500px] max-w-full">
@@ -1168,10 +1222,12 @@ const SubscriptionManagement = () => {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${
+                          loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                         disabled={loading}
                       >
-                        {loading ? 'Adding...' : 'Add Subscriber'}
+                        {loading ? "Adding..." : "Add Subscriber"}
                       </button>
                     </form>
                   </div>
@@ -1236,7 +1292,9 @@ const SubscriptionManagement = () => {
                             }
                             onChange={(e) =>
                               setSelectedSubscribers(
-                                e.target.checked ? subscribers.map((s) => s.id) : []
+                                e.target.checked
+                                  ? subscribers.map((s) => s.id)
+                                  : []
                               )
                             }
                           />
@@ -1258,14 +1316,20 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">
                             <input
                               type="checkbox"
-                              checked={selectedSubscribers.includes(subscriber.id)}
-                              onChange={() => handleCheckboxToggle(subscriber.id)}
+                              checked={selectedSubscribers.includes(
+                                subscriber.id
+                              )}
+                              onChange={() =>
+                                handleCheckboxToggle(subscriber.id)
+                              }
                             />
                           </td>
 
                           <td
                             className="p-2 border text-blue-600 cursor-pointer hover:underline"
-                            onClick={() => handleNameClick(Number(subscriber.id))}
+                            onClick={() =>
+                              handleNameClick(Number(subscriber.id))
+                            }
                           >
                             {subscriber.name || "N/A"}
                             {isModalOpen && selectedSubscriberDetails && (
@@ -1311,17 +1375,17 @@ const SubscriptionManagement = () => {
                                     <p>
                                       <span className="font-medium">Tags:</span>{" "}
                                       {selectedSubscriberDetails.tags?.length >
-                                        0
+                                      0
                                         ? selectedSubscriberDetails.tags.map(
-                                          (tag: string, index: number) => (
-                                            <span
-                                              key={index}
-                                              className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                            >
-                                              {tag}
-                                            </span>
+                                            (tag: string, index: number) => (
+                                              <span
+                                                key={index}
+                                                className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                                              >
+                                                {tag}
+                                              </span>
+                                            )
                                           )
-                                        )
                                         : "No tags"}
                                     </p>
                                     <p>
@@ -1339,16 +1403,22 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">{subscriber.email}</td>
                           <td className="border p-3">
                             <span
-                              className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active"
-                                ? "bg-green-500"
-                                : "bg-red-500"
-                                }`}
+                              className={`px-2 py-1 text-white text-sm rounded-lg ${
+                                subscriber.status === "active"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              }`}
                             >
-                              {subscriber.status === "active" ? "✓ Subscribe" : "✗ Unsubscribe"}
+                              {subscriber.status === "active"
+                                ? "✓ Subscribe"
+                                : "✗ Unsubscribe"}
                             </span>
                             <button
                               onClick={() =>
-                                updateSubscriberStatus(subscriber.id, subscriber.status)
+                                updateSubscriberStatus(
+                                  subscriber.id,
+                                  subscriber.status
+                                )
                               }
                               className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
                             >
@@ -1359,30 +1429,38 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">
                             {/* Tags Display */}
                             <div className="flex flex-wrap gap-2 mb-2">
-                              {subscriber.tags?.map((tag: string, index: number) => (
-                                <div
-                                  key={`tag-${index}`}
-                                  className="relative group bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
-                                >
-                                  #{tag}
-                                  {/* Delete Icon on Hover */}
-                                  <span
-                                    className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
-                                    onClick={async () => {
-                                      try {
-                                        // Call the handleDeleteTag function and wait for it to complete
-                                        await handleDeleteTag(Number(subscriber.id), tag);
-                                        alert('Tag deleted successfully');
-                                      } catch (error) {
-                                        console.error('Failed to delete tag:', error);
-                                        alert('Failed to delete tag');
-                                      }
-                                    }}
+                              {subscriber.tags?.map(
+                                (tag: string, index: number) => (
+                                  <div
+                                    key={`tag-${index}`}
+                                    className="relative group bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
                                   >
-                                    ×
-                                  </span>
-                                </div>
-                              ))}
+                                    #{tag}
+                                    {/* Delete Icon on Hover */}
+                                    <span
+                                      className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
+                                      onClick={async () => {
+                                        try {
+                                          // Call the handleDeleteTag function and wait for it to complete
+                                          await handleDeleteTag(
+                                            Number(subscriber.id),
+                                            tag
+                                          );
+                                          alert("Tag deleted successfully");
+                                        } catch (error) {
+                                          console.error(
+                                            "Failed to delete tag:",
+                                            error
+                                          );
+                                          alert("Failed to delete tag");
+                                        }
+                                      }}
+                                    >
+                                      ×
+                                    </span>
+                                  </div>
+                                )
+                              )}
                             </div>
 
                             {/* Add Tag Input */}
@@ -1404,7 +1482,9 @@ const SubscriptionManagement = () => {
                               </div>
                             ) : (
                               <button
-                                onClick={() => setSelectedSubscriberId(subscriber.id)}
+                                onClick={() =>
+                                  setSelectedSubscriberId(subscriber.id)
+                                }
                                 className="text-green-600 hover:text-green-800 text-sm"
                               >
                                 ➕ Add Tag
@@ -1449,10 +1529,11 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === 1}
-                        className={`px-4 py-2 rounded ${page === 1
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                          } text-white`}
+                        className={`px-4 py-2 rounded ${
+                          page === 1
+                            ? "bg-gray-400"
+                            : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                       >
                         Previous
                       </button>
@@ -1476,18 +1557,17 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === totalPages}
-                        className={`px-4 py-2 rounded ${page === totalPages
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                          } text-white`}
+                        className={`px-4 py-2 rounded ${
+                          page === totalPages
+                            ? "bg-gray-400"
+                            : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                       >
                         Next
                       </button>
                     </div>
                   )}
-
                 </div>
-
               </div>
             </>
           )}
