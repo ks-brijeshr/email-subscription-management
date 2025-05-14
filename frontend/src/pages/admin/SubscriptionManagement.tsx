@@ -119,7 +119,11 @@ const SubscriptionManagement = () => {
 
   const handleCloseModal = () => {
     setShowAddSubscriberModal(false);
+    setName("");
+    setEmail("");
+    setMetadata("");
   };
+
 
   const navigate = useNavigate();
 
@@ -559,10 +563,14 @@ const SubscriptionManagement = () => {
 
       alert("✅ Subscriber Added Successfully!");
 
-      // Clear form
       setName("");
       setEmail("");
       setMetadata("");
+
+      handleCloseModal();
+
+      fetchSubscribers(selectedListId, "List Name"); // Pass correct list name if required
+
 
     } catch (error: any) {
       console.error(
@@ -855,10 +863,7 @@ const SubscriptionManagement = () => {
                         key: "verify_dns_records",
                       },
                     ].map((field) => (
-                      <div
-                        key={field.key}
-                        className="flex items-center space-x-3"
-                      >
+                      <div key={field.key} className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={(newList as any)[field.key]}
@@ -868,11 +873,12 @@ const SubscriptionManagement = () => {
                               [field.key]: e.target.checked,
                             })
                           }
-                          className="w-5 h-5"
+                          className="w-5 h-5 cursor-pointer"
                         />
-                        <label className="text-gray-700">{field.label}</label>
+                        <label className="text-gray-700 cursor-pointer">{field.label}</label>
                       </div>
                     ))}
+
                   </div>
 
                   <div className="mt-6 flex justify-end space-x-4">
@@ -1314,10 +1320,6 @@ const SubscriptionManagement = () => {
                     </button>
                   </div>
                 </div>
-
-
-
-
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-500">
                     <thead>
