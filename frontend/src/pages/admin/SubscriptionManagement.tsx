@@ -616,9 +616,9 @@ const SubscriptionManagement = () => {
 
   const handleBulkDelete = async () => {
     const confirmed = confirm(
-      "Are you sure you want to delete selected subscribers?"
+      "Are you sure you want to delete all selected subscribers across the entire list?"
     );
-    if (!confirmed || selectedSubscribers.length === 0) return;
+    if (!confirmed) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -1287,16 +1287,33 @@ const SubscriptionManagement = () => {
                           <input
                             type="checkbox"
                             checked={
-                              subscribers.length > 0 &&
-                              selectedSubscribers.length === subscribers.length
+                              selectedSubscribers.length > 0 &&
+                              selectedSubscribers.length === totalSubscribers
                             }
-                            onChange={(e) =>
-                              setSelectedSubscribers(
-                                e.target.checked
-                                  ? subscribers.map((s) => s.id)
-                                  : []
-                              )
-                            }
+                            onChange={async (e) => {
+                              if (e.target.checked) {
+                                // Fetch all subscribers for the selected list
+                                const token = localStorage.getItem("token");
+                                const response = await axios.get(
+                                  `http://localhost:8000/api/subscription-lists/${selectedListId}/subscribers`,
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  }
+                                );
+
+                                const allSubscriberIds =
+                                  response.data.subscribers.map(
+                                    (sub: { id: number }) => sub.id
+                                  );
+
+                                // Only set selectedSubscribers for the current list
+                                setSelectedSubscribers(allSubscriberIds);
+                              } else {
+                                setSelectedSubscribers([]);
+                              }
+                            }}
                           />
                         </th>
 
