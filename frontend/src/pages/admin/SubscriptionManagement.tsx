@@ -158,7 +158,12 @@ const SubscriptionManagement = () => {
       return;
     }
 
-    const newList = {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const newListData = {
       name: `${list.name} (Copy)`,
       allow_business_email_only: list.allow_business_email_only,
       block_temporary_email: list.block_temporary_email,
@@ -168,18 +173,45 @@ const SubscriptionManagement = () => {
     };
 
     try {
-      const response = await axios.post(
+      const createListResponse = await axios.post(
         "http://localhost:8000/api/subscription-list/create",
-        newList,
-        { headers: { Authorization: `Bearer ${token}` } }
+        newListData,
+        { headers }
       );
 
-      const createdList = response.data.subscription_list;
-      setSubscriptionLists((prev) => [...prev, createdList]);
-      alert("Subscription list copied successfully!");
+      const newList = createListResponse.data.subscription_list;
+
+      const subscribersResponse = await axios.get(
+        `http://localhost:8000/api/subscriptions/${list.id}/subscribers`,
+        { headers }
+      );
+
+      const subscribers = subscribersResponse.data.subscribers || [];
+
+      for (const subscriber of subscribers) {
+        const payload = {
+          name: subscriber.name,
+          email: subscriber.email,
+          metadata: subscriber.metadata,
+          status: subscriber.status,
+        };
+
+        try {
+          await axios.post(
+            `http://localhost:8000/api/subscriptions/${newList.id}/subscribers`,
+            payload,
+            { headers }
+          );
+        } catch (error) {
+          console.error(`Failed to copy subscriber: ${subscriber.email}`, error);
+        }
+      }
+
+      setSubscriptionLists((prev) => [...prev, newList]);
+      alert(`✅ Subscription list and ${subscribers.length} subscribers copied successfully!`);
     } catch (error) {
-      console.error("Error copying subscription list:", error);
-      alert("Failed to copy subscription list.");
+      console.error("Error copying subscription list or subscribers:", error);
+      alert("❌ Failed to copy subscription list or its subscribers.");
     }
   };
 
@@ -564,8 +596,7 @@ const SubscriptionManagement = () => {
         alert("❌ Subscription list not found. Please try again.");
       } else {
         alert(
-          `❌ Failed to add subscriber. Please try again later.\nError: ${
-            error.response?.data?.message || error.message
+          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message
           }`
         );
       }
@@ -656,9 +687,9 @@ const SubscriptionManagement = () => {
         prev.map((s) =>
           Number(s.id) === Number(subscriberId)
             ? {
-                ...s,
-                tags: (s.tags || []).filter((t) => t !== tag),
-              }
+              ...s,
+              tags: (s.tags || []).filter((t) => t !== tag),
+            }
             : s
         )
       );
@@ -703,7 +734,7 @@ const SubscriptionManagement = () => {
 
       alert(alertMessage);
       setSelectedFile(null);
-      fetchSubscribers(currentListId, currentListName); 
+      fetchSubscribers(currentListId, currentListName);
     } catch (error: any) {
       console.error("Import failed", error);
       alert(`❌ Import failed: ${error.response?.data?.error || "Unknown error"}`);
@@ -719,9 +750,8 @@ const SubscriptionManagement = () => {
     <div className="flex">
       <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       <main
-        className={`w-full transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        className={`w-full transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
+          }`}
       >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
           {!isSidebarOpen && (
@@ -1139,6 +1169,7 @@ const SubscriptionManagement = () => {
                   Subscriber Management
                 </h1>
 
+
                 {/* Add Subscription List Button */}
                 <button
                   onClick={handleAddSubscriberClick}
@@ -1222,9 +1253,8 @@ const SubscriptionManagement = () => {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${
-                          loading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                         disabled={loading}
                       >
                         {loading ? "Adding..." : "Add Subscriber"}
@@ -1235,49 +1265,58 @@ const SubscriptionManagement = () => {
               )}
 
               <div className="bg-white p-6 rounded-xl shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   Subscribers
                 </h3>
+
                 {selectedSubscribers.length > 0 && (
                   <button
                     onClick={handleBulkDelete}
-                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-4"
+                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-2"
                   >
                     Delete Selected ({selectedSubscribers.length})
                   </button>
                 )}
 
-                <div className="flex gap-4 mb-6">
-                  <button
-                    onClick={() => exportSubscribers("csv")}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
-                  >
-                    Export as CSV
-                  </button>
-                  <button
-                    onClick={() => exportSubscribers("json")}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
-                  >
-                    Export as JSON
-                  </button>
-                  <div className="p-4 rounded shadow bg-white max-w-md mx-auto">
-                    <h2 className="text-xl font-semibold mb-4">Import Subscribers</h2>
+                {/* Export Buttons */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                  {/* Export Buttons */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => exportSubscribers("csv")}
+                      className="bg-blue-500 text-white text-ml px-3 py-1.5 rounded-md hover:bg-blue-600 transition duration-200"
+                    >
+                      Export CSV
+                    </button>
+                    <button
+                      onClick={() => exportSubscribers("json")}
+                      className="bg-green-500 text-white text-ml px-3 py-1.5 rounded-md hover:bg-green-600 transition duration-200"
+                    >
+                      Export JSON
+                    </button>
+                  </div>
+
+                  {/* Import Section */}
+                  <div className="bg-white p-3 rounded-md shadow-sm">
+                    <h2 className="text-ml font-medium mb-1">Import Subscribers</h2>
                     <input
                       type="file"
                       accept=".csv,.json,.txt"
                       onChange={handleFileChange}
-                      className="mb-4"
+                      className="mb-2 block text-sm"
                     />
                     <button
                       onClick={handleImport}
                       disabled={!selectedFile || loading}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                      className="bg-blue-600 text-white text-ml px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-50"
                     >
                       {loading ? "Importing..." : "Import"}
                     </button>
-
                   </div>
                 </div>
+
+
+
 
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-500">
@@ -1375,17 +1414,17 @@ const SubscriptionManagement = () => {
                                     <p>
                                       <span className="font-medium">Tags:</span>{" "}
                                       {selectedSubscriberDetails.tags?.length >
-                                      0
+                                        0
                                         ? selectedSubscriberDetails.tags.map(
-                                            (tag: string, index: number) => (
-                                              <span
-                                                key={index}
-                                                className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                              >
-                                                {tag}
-                                              </span>
-                                            )
+                                          (tag: string, index: number) => (
+                                            <span
+                                              key={index}
+                                              className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                                            >
+                                              {tag}
+                                            </span>
                                           )
+                                        )
                                         : "No tags"}
                                     </p>
                                     <p>
@@ -1403,11 +1442,10 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">{subscriber.email}</td>
                           <td className="border p-3">
                             <span
-                              className={`px-2 py-1 text-white text-sm rounded-lg ${
-                                subscriber.status === "active"
-                                  ? "bg-green-500"
-                                  : "bg-red-500"
-                              }`}
+                              className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                                }`}
                             >
                               {subscriber.status === "active"
                                 ? "✓ Subscribe"
@@ -1441,7 +1479,6 @@ const SubscriptionManagement = () => {
                                       className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
                                       onClick={async () => {
                                         try {
-                                          // Call the handleDeleteTag function and wait for it to complete
                                           await handleDeleteTag(
                                             Number(subscriber.id),
                                             tag
@@ -1529,11 +1566,10 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === 1}
-                        className={`px-4 py-2 rounded ${
-                          page === 1
-                            ? "bg-gray-400"
-                            : "bg-blue-500 hover:bg-blue-600"
-                        } text-white`}
+                        className={`px-4 py-2 rounded ${page === 1
+                          ? "bg-gray-400"
+                          : "bg-blue-500 hover:bg-blue-600"
+                          } text-white`}
                       >
                         Previous
                       </button>
@@ -1557,11 +1593,10 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === totalPages}
-                        className={`px-4 py-2 rounded ${
-                          page === totalPages
-                            ? "bg-gray-400"
-                            : "bg-blue-500 hover:bg-blue-600"
-                        } text-white`}
+                        className={`px-4 py-2 rounded ${page === totalPages
+                          ? "bg-gray-400"
+                          : "bg-blue-500 hover:bg-blue-600"
+                          } text-white`}
                       >
                         Next
                       </button>
