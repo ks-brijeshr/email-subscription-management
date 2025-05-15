@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SubscriptionList extends Model
 {
@@ -30,6 +30,12 @@ class SubscriptionList extends Model
     {
         return $this->hasMany(\App\Models\Subscriber::class, 'list_id');
     }
+
+    public function allSubscribers()
+    {
+        return $this->belongsToMany(\App\Models\Subscriber::class, 'subscribers', 'id', 'list_id', 'id', 'email');
+    }
+
 
     public function owner()
     {

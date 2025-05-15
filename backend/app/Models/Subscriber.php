@@ -10,6 +10,8 @@ class Subscriber extends Model
 {
     use HasFactory;
 
+    protected $table = 'subscribers';
+
     protected $fillable = [
         'list_id',
         'name',
@@ -31,6 +33,12 @@ class Subscriber extends Model
     protected $casts = [
         'metadata' => 'array',
     ];
+
+
+    public function subscriptionLists()
+    {
+        return $this->belongsToMany(SubscriptionList::class, 'subscribers', 'email', 'list_id', 'email', 'id');
+    }
 
     /**
      * Relationship: Each subscriber belongs to a subscription list

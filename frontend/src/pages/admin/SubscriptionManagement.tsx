@@ -3,6 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/Sidebar";
 import { deleteSubscriber } from "../../services/api";
+type Props = {
+  listId: string;
+};
+
 interface Subscriber {
   id: string;
   name: string;
@@ -32,7 +36,9 @@ interface SubscriptionList {
 }
 
 const SubscriptionManagement = () => {
-  const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
+  const [subscriptionLists, setSubscriptionLists] = useState<
+    SubscriptionList[]
+  >([]);
   const [listPage, setListPage] = useState<number>(1);
   const [listTotal, setListTotal] = useState<number>(0);
   const [listTotalPages, setListTotalPages] = useState<number>(1);
@@ -67,13 +73,36 @@ const SubscriptionManagement = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState<boolean>(false); 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [importStatus, setImportStatus] = useState<null | {
+    message: string;
+    imported: number;
+    failed: number;
+    errors: any[];
+  }>(null);
+  const [currentListId, setCurrentListId] = useState<string | null>(null);
+  const [currentListName, setCurrentListName] = useState("");
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
   const [totalStats, setTotalStats] = useState({
     total: 0,
     active: 0,
     inactive: 0,
   });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedListId && selectedListName) {
+        fetchSubscribers(selectedListId, selectedListName, page);
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [selectedListId, selectedListName, page]);
 
   const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
     name: "",
@@ -97,7 +126,11 @@ const SubscriptionManagement = () => {
 
   const handleCloseModal = () => {
     setShowAddSubscriberModal(false);
+    setName("");
+    setEmail("");
+    setMetadata("");
   };
+
 
   const navigate = useNavigate();
 
@@ -109,15 +142,15 @@ const SubscriptionManagement = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-  
+
       const response = await axios.get(
-        "http://localhost:8000/api/subscription-lists", 
+        "http://localhost:8000/api/subscription-lists",
         {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: currentPage, per_page: 5 },
         }
       );
-  
+
       if (response.data.subscription_lists) {
         setSubscriptionLists(response.data.subscription_lists.data);
         setListPage(response.data.subscription_lists.current_page);
@@ -128,8 +161,6 @@ const SubscriptionManagement = () => {
       console.error("Error fetching subscription lists:", error);
     }
   };
-  
-  
 
   const handleCopyList = async (list: SubscriptionList) => {
     const token = localStorage.getItem("token");
@@ -138,7 +169,12 @@ const SubscriptionManagement = () => {
       return;
     }
 
-    const newList = {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const newListData = {
       name: `${list.name} (Copy)`,
       allow_business_email_only: list.allow_business_email_only,
       block_temporary_email: list.block_temporary_email,
@@ -148,18 +184,45 @@ const SubscriptionManagement = () => {
     };
 
     try {
-      const response = await axios.post(
+      const createListResponse = await axios.post(
         "http://localhost:8000/api/subscription-list/create",
-        newList,
-        { headers: { Authorization: `Bearer ${token}` } }
+        newListData,
+        { headers }
       );
 
-      const createdList = response.data.subscription_list;
-      setSubscriptionLists((prev) => [...prev, createdList]);
-      alert("Subscription list copied successfully!");
+      const newList = createListResponse.data.subscription_list;
+
+      const subscribersResponse = await axios.get(
+        `http://localhost:8000/api/subscriptions/${list.id}/subscribers`,
+        { headers }
+      );
+
+      const subscribers = subscribersResponse.data.subscribers || [];
+
+      for (const subscriber of subscribers) {
+        const payload = {
+          name: subscriber.name,
+          email: subscriber.email,
+          metadata: subscriber.metadata,
+          status: subscriber.status,
+        };
+
+        try {
+          await axios.post(
+            `http://localhost:8000/api/subscriptions/${newList.id}/subscribers`,
+            payload,
+            { headers }
+          );
+        } catch (error) {
+          console.error(`Failed to copy subscriber: ${subscriber.email}`, error);
+        }
+      }
+
+      setSubscriptionLists((prev) => [...prev, newList]);
+      alert(`✅ Subscription list and ${subscribers.length} subscribers copied successfully!`);
     } catch (error) {
-      console.error("Error copying subscription list:", error);
-      alert("Failed to copy subscription list.");
+      console.error("Error copying subscription list or subscribers:", error);
+      alert("❌ Failed to copy subscription list or its subscribers.");
     }
   };
 
@@ -186,6 +249,14 @@ const SubscriptionManagement = () => {
       });
 
       setSubscriptionLists((prev) => prev.filter((list) => list.id !== id));
+      setListTotal((prevTotal) => prevTotal - 1);
+
+      if (subscriptionLists.length === 1 && listPage > 1) {
+        setListPage((prev) => prev - 1);
+        fetchSubscriptionLists(listPage - 1);
+      } else {
+        fetchSubscriptionLists(listPage);
+      }
     } catch (error) {
       console.error("Error deleting subscription list:", error);
       alert("Failed to delete subscription list.");
@@ -253,7 +324,6 @@ const SubscriptionManagement = () => {
       console.error("Error fetching subscribers:", error);
     }
   };
-
 
   const handleEditClick = (list: SubscriptionList) => {
     setEditingListId(list.id);
@@ -424,7 +494,7 @@ const SubscriptionManagement = () => {
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
-          validateStatus: (status) => status < 500
+          validateStatus: (status) => status < 500,
         }
       );
 
@@ -466,21 +536,21 @@ const SubscriptionManagement = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     if (!selectedListId || !email) {
       alert("❗ Please select a subscription list and enter an email.");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Authentication error. Please log in again.");
         return;
       }
-  
+
       // Format metadata
       let formattedMetadata: Record<string, string> = {};
       if (metadata) {
@@ -491,30 +561,42 @@ const SubscriptionManagement = () => {
           }
         });
       }
-  
+
       const response = await axios.post(
         `http://localhost:8000/api/subscriptions/${selectedListId}/subscribers`,
         { name, email, metadata: formattedMetadata },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       alert("✅ Subscriber Added Successfully!");
-  
-      // Clear form
+
       setName("");
       setEmail("");
       setMetadata("");
-  
+
+      handleCloseModal();
+
+      fetchSubscribers(selectedListId, "List Name"); // Pass correct list name if required
+
+
     } catch (error: any) {
-      console.error("Error adding subscriber:", error.response?.data || error.message);
-  
+      console.error(
+        "Error adding subscriber:",
+        error.response?.data || error.message
+      );
+
       if (error.response?.status === 409) {
         alert(`⚠️ The email "${email}" is already subscribed to this list.`);
       } else if (error.response?.status === 422) {
         const errorData = error.response.data;
-        if (errorData.message === "Email failed validation and has been blacklisted.") {
+        if (
+          errorData.message ===
+          "Email failed validation and has been blacklisted."
+        ) {
           alert(
-            `🚫 Email failed validation and has been blacklisted.\nReasons:\n- ${errorData.errors?.join("\n- ")}`
+            `🚫 Email failed validation and has been blacklisted.\nReasons:\n- ${errorData.errors?.join(
+              "\n- "
+            )}`
           );
         } else {
           alert(
@@ -522,19 +604,21 @@ const SubscriptionManagement = () => {
           );
         }
       } else if (error.response?.status === 403) {
-        alert("❌ Unauthorized: You do not have permission to perform this action.");
+        alert(
+          "❌ Unauthorized: You do not have permission to perform this action."
+        );
       } else if (error.response?.status === 404) {
         alert("❌ Subscription list not found. Please try again.");
       } else {
         alert(
-          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message}`
+          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message
+          }`
         );
       }
     } finally {
       setLoading(false);
     }
   };
-  
 
   const filteredSubscribers = subscribers.filter((s) => {
     const emailMatch = s.email
@@ -559,17 +643,44 @@ const SubscriptionManagement = () => {
 
   const handleDeleteSubscriber = async (id: number) => {
     try {
+
+      const subscriberToDelete = subscribers.find(sub => Number(sub.id) === Number(id));
+      const isActive = subscriberToDelete?.status === 'active';
+
+      //Call delete API from api.ts
       await deleteSubscriber(id);
-      setSubscribers(
-        (prevSubscribers) =>
-          prevSubscribers.filter(
-            (subscriber) => subscriber.id.toString() !== id.toString()
-          )
-      );
+
+      //Update total stats locally
+      setTotalStats(prev => ({
+        total: prev.total - 1,
+        active: isActive ? prev.active - 1 : prev.active,
+        inactive: !isActive ? prev.inactive - 1 : prev.inactive,
+      }));
+
+      // Update total subscribers
+      setTotalSubscribers(prev => prev - 1);
+
+      //Handle pagination logic
+      if (subscribers.length === 1 && page > 1) {
+        fetchSubscribers(selectedListId!, selectedListName!, page - 1, {
+          email: emailSearch,
+          tag: tagSearch,
+          status: statusFilter,
+        });
+      } else {
+        fetchSubscribers(selectedListId!, selectedListName!, page, {
+          email: emailSearch,
+          tag: tagSearch,
+          status: statusFilter,
+        });
+      }
+
     } catch (error) {
       console.error("Failed to delete subscriber", error);
     }
   };
+
+
 
   const handleCheckboxToggle = (id: string) => {
     setSelectedSubscribers((prev) =>
@@ -579,9 +690,9 @@ const SubscriptionManagement = () => {
 
   const handleBulkDelete = async () => {
     const confirmed = confirm(
-      "Are you sure you want to delete selected subscribers?"
+      "Are you sure you want to delete all selected subscribers across the entire list?"
     );
-    if (!confirmed || selectedSubscribers.length === 0) return;
+    if (!confirmed) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -604,10 +715,10 @@ const SubscriptionManagement = () => {
 
   const handleDeleteTag = async (
     subscriberId: number,
-    tag: string // Change tag type from 'number' to 'string'
+    tag: string
   ) => {
     try {
-      await axios.delete('http://localhost:8000/api/subscriber-tags', {
+      await axios.delete("http://localhost:8000/api/subscriber-tags", {
         data: {
           subscriber_id: subscriberId,
           tag: tag,
@@ -626,10 +737,56 @@ const SubscriptionManagement = () => {
         )
       );
     } catch (error) {
-      console.error('Failed to delete tag:', error);
-
+      console.error("Failed to delete tag:", error);
     }
   };
+
+  const handleImport = async () => {
+    if (!selectedFile) return alert("Please select a file.");
+    if (!currentListId) return alert("No subscription list selected.");
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://localhost:8000/api/subscriptions/${currentListId}/import`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { message, imported, failed, errors } = response.data;
+
+      let alertMessage = `✅ ${message}\nImported: ${imported}\nFailed: ${failed}`;
+
+      if (errors && errors.length > 0) {
+        alertMessage += `\n\n❌ Errors:\n`;
+        alertMessage += errors
+          .map((err: any) => `${err.email || "Unknown email"} - ${err.reason}`)
+          .join("\n");
+      }
+
+      alert(alertMessage);
+      setSelectedFile(null);
+      fetchSubscribers(currentListId, currentListName);
+    } catch (error: any) {
+      console.error("Import failed", error);
+      alert(`❌ Import failed: ${error.response?.data?.error || "Unknown error"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
 
   return (
@@ -741,10 +898,7 @@ const SubscriptionManagement = () => {
                         key: "verify_dns_records",
                       },
                     ].map((field) => (
-                      <div
-                        key={field.key}
-                        className="flex items-center space-x-3"
-                      >
+                      <div key={field.key} className="flex items-center space-x-3">
                         <input
                           type="checkbox"
                           checked={(newList as any)[field.key]}
@@ -754,11 +908,12 @@ const SubscriptionManagement = () => {
                               [field.key]: e.target.checked,
                             })
                           }
-                          className="w-5 h-5"
+                          className="w-5 h-5 cursor-pointer"
                         />
-                        <label className="text-gray-700">{field.label}</label>
+                        <label className="text-gray-700 cursor-pointer">{field.label}</label>
                       </div>
                     ))}
+
                   </div>
 
                   <div className="mt-6 flex justify-end space-x-4">
@@ -830,6 +985,8 @@ const SubscriptionManagement = () => {
                           onClick={() => {
                             if (list.id) {
                               fetchSubscribers(list.id, list.name);
+                              setCurrentListId(list.id);
+                              setCurrentListName(list.name);
                             } else {
                               alert("Invalid subscription list ID.");
                             }
@@ -906,7 +1063,9 @@ const SubscriptionManagement = () => {
                   </span>
                   {listPage < listTotalPages && (
                     <button
-                      onClick={() => listPage < listTotalPages && setListPage(listPage + 1)}
+                      onClick={() =>
+                        listPage < listTotalPages && setListPage(listPage + 1)
+                      }
                       className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       Next
@@ -1051,6 +1210,7 @@ const SubscriptionManagement = () => {
                   Subscriber Management
                 </h1>
 
+
                 {/* Add Subscription List Button */}
                 <button
                   onClick={handleAddSubscriberClick}
@@ -1134,10 +1294,11 @@ const SubscriptionManagement = () => {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                         disabled={loading}
                       >
-                        {loading ? 'Adding...' : 'Add Subscriber'}
+                        {loading ? "Adding..." : "Add Subscriber"}
                       </button>
                     </form>
                   </div>
@@ -1145,33 +1306,55 @@ const SubscriptionManagement = () => {
               )}
 
               <div className="bg-white p-6 rounded-xl shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   Subscribers
                 </h3>
+
                 {selectedSubscribers.length > 0 && (
                   <button
                     onClick={handleBulkDelete}
-                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-4"
+                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mb-2"
                   >
                     Delete Selected ({selectedSubscribers.length})
                   </button>
                 )}
 
-                <div className="flex gap-4 mb-6">
-                  <button
-                    onClick={() => exportSubscribers("csv")}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
-                  >
-                    Export as CSV
-                  </button>
-                  <button
-                    onClick={() => exportSubscribers("json")}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
-                  >
-                    Export as JSON
-                  </button>
-                </div>
+                {/* Export Buttons */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                  {/* Export Buttons */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => exportSubscribers("csv")}
+                      className="bg-blue-500 text-white text-ml px-3 py-1.5 rounded-md hover:bg-blue-600 transition duration-200"
+                    >
+                      Export CSV
+                    </button>
+                    <button
+                      onClick={() => exportSubscribers("json")}
+                      className="bg-green-500 text-white text-ml px-3 py-1.5 rounded-md hover:bg-green-600 transition duration-200"
+                    >
+                      Export JSON
+                    </button>
+                  </div>
 
+                  {/* Import Section */}
+                  <div className="bg-white p-3 rounded-md shadow-sm">
+                    <h2 className="text-ml font-medium mb-1">Import Subscribers</h2>
+                    <input
+                      type="file"
+                      accept=".csv,.json,.txt"
+                      onChange={handleFileChange}
+                      className="mb-2 block text-sm"
+                    />
+                    <button
+                      onClick={handleImport}
+                      disabled={!selectedFile || loading}
+                      className="bg-blue-600 text-white text-ml px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {loading ? "Importing..." : "Import"}
+                    </button>
+                  </div>
+                </div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-500">
                     <thead>
@@ -1180,14 +1363,33 @@ const SubscriptionManagement = () => {
                           <input
                             type="checkbox"
                             checked={
-                              subscribers.length > 0 &&
-                              selectedSubscribers.length === subscribers.length
+                              selectedSubscribers.length > 0 &&
+                              selectedSubscribers.length === totalSubscribers
                             }
-                            onChange={(e) =>
-                              setSelectedSubscribers(
-                                e.target.checked ? subscribers.map((s) => s.id) : []
-                              )
-                            }
+                            onChange={async (e) => {
+                              if (e.target.checked) {
+                                // Fetch all subscribers for the selected list
+                                const token = localStorage.getItem("token");
+                                const response = await axios.get(
+                                  `http://localhost:8000/api/subscription-lists/${selectedListId}/subscribers`,
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  }
+                                );
+
+                                const allSubscriberIds =
+                                  response.data.subscribers.map(
+                                    (sub: { id: number }) => sub.id
+                                  );
+
+                                // Only set selectedSubscribers for the current list
+                                setSelectedSubscribers(allSubscriberIds);
+                              } else {
+                                setSelectedSubscribers([]);
+                              }
+                            }}
                           />
                         </th>
 
@@ -1207,14 +1409,20 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">
                             <input
                               type="checkbox"
-                              checked={selectedSubscribers.includes(subscriber.id)}
-                              onChange={() => handleCheckboxToggle(subscriber.id)}
+                              checked={selectedSubscribers.includes(
+                                subscriber.id
+                              )}
+                              onChange={() =>
+                                handleCheckboxToggle(subscriber.id)
+                              }
                             />
                           </td>
 
                           <td
                             className="p-2 border text-blue-600 cursor-pointer hover:underline"
-                            onClick={() => handleNameClick(Number(subscriber.id))}
+                            onClick={() =>
+                              handleNameClick(Number(subscriber.id))
+                            }
                           >
                             {subscriber.name || "N/A"}
                             {isModalOpen && selectedSubscriberDetails && (
@@ -1293,11 +1501,16 @@ const SubscriptionManagement = () => {
                                 : "bg-red-500"
                                 }`}
                             >
-                              {subscriber.status === "active" ? "✓ Subscribe" : "✗ Unsubscribe"}
+                              {subscriber.status === "active"
+                                ? "✓ Subscribe"
+                                : "✗ Unsubscribe"}
                             </span>
                             <button
                               onClick={() =>
-                                updateSubscriberStatus(subscriber.id, subscriber.status)
+                                updateSubscriberStatus(
+                                  subscriber.id,
+                                  subscriber.status
+                                )
                               }
                               className="ml-2 text-yellow-600 hover:text-yellow-800 text-sm"
                             >
@@ -1308,30 +1521,37 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">
                             {/* Tags Display */}
                             <div className="flex flex-wrap gap-2 mb-2">
-                              {subscriber.tags?.map((tag: string, index: number) => (
-                                <div
-                                  key={`tag-${index}`}
-                                  className="relative group bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
-                                >
-                                  #{tag}
-                                  {/* Delete Icon on Hover */}
-                                  <span
-                                    className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
-                                    onClick={async () => {
-                                      try {
-                                        // Call the handleDeleteTag function and wait for it to complete
-                                        await handleDeleteTag(Number(subscriber.id), tag);
-                                        alert('Tag deleted successfully');
-                                      } catch (error) {
-                                        console.error('Failed to delete tag:', error);
-                                        alert('Failed to delete tag');
-                                      }
-                                    }}
+                              {subscriber.tags?.map(
+                                (tag: string, index: number) => (
+                                  <div
+                                    key={`tag-${index}`}
+                                    className="relative group bg-gray-200 px-2 py-1 rounded-full text-sm text-gray-700"
                                   >
-                                    ×
-                                  </span>
-                                </div>
-                              ))}
+                                    #{tag}
+                                    {/* Delete Icon on Hover */}
+                                    <span
+                                      className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full px-1 cursor-pointer hidden group-hover:inline"
+                                      onClick={async () => {
+                                        try {
+                                          await handleDeleteTag(
+                                            Number(subscriber.id),
+                                            tag
+                                          );
+                                          alert("Tag deleted successfully");
+                                        } catch (error) {
+                                          console.error(
+                                            "Failed to delete tag:",
+                                            error
+                                          );
+                                          alert("Failed to delete tag");
+                                        }
+                                      }}
+                                    >
+                                      ×
+                                    </span>
+                                  </div>
+                                )
+                              )}
                             </div>
 
                             {/* Add Tag Input */}
@@ -1353,7 +1573,9 @@ const SubscriptionManagement = () => {
                               </div>
                             ) : (
                               <button
-                                onClick={() => setSelectedSubscriberId(subscriber.id)}
+                                onClick={() =>
+                                  setSelectedSubscriberId(subscriber.id)
+                                }
                                 className="text-green-600 hover:text-green-800 text-sm"
                               >
                                 ➕ Add Tag
@@ -1434,9 +1656,7 @@ const SubscriptionManagement = () => {
                       </button>
                     </div>
                   )}
-
                 </div>
-
               </div>
             </>
           )}
