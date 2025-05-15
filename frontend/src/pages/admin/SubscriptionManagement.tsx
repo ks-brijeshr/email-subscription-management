@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/Sidebar";
 import { deleteSubscriber } from "../../services/api";
-
 type Props = {
   listId: string;
 };
@@ -90,12 +89,20 @@ const SubscriptionManagement = () => {
       setSelectedFile(e.target.files[0]);
     }
   };
-
   const [totalStats, setTotalStats] = useState({
     total: 0,
     active: 0,
     inactive: 0,
   });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedListId && selectedListName) {
+        fetchSubscribers(selectedListId, selectedListName, page);
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [selectedListId, selectedListName, page]);
 
   const [newList, setNewList] = useState<Omit<SubscriptionList, "id">>({
     name: "",
@@ -636,16 +643,44 @@ const SubscriptionManagement = () => {
 
   const handleDeleteSubscriber = async (id: number) => {
     try {
+
+      const subscriberToDelete = subscribers.find(sub => Number(sub.id) === Number(id));
+      const isActive = subscriberToDelete?.status === 'active';
+
+      //Call delete API from api.ts
       await deleteSubscriber(id);
-      setSubscribers((prevSubscribers) =>
-        prevSubscribers.filter(
-          (subscriber) => subscriber.id.toString() !== id.toString()
-        )
-      );
+
+      //Update total stats locally
+      setTotalStats(prev => ({
+        total: prev.total - 1,
+        active: isActive ? prev.active - 1 : prev.active,
+        inactive: !isActive ? prev.inactive - 1 : prev.inactive,
+      }));
+
+      // Update total subscribers
+      setTotalSubscribers(prev => prev - 1);
+
+      //Handle pagination logic
+      if (subscribers.length === 1 && page > 1) {
+        fetchSubscribers(selectedListId!, selectedListName!, page - 1, {
+          email: emailSearch,
+          tag: tagSearch,
+          status: statusFilter,
+        });
+      } else {
+        fetchSubscribers(selectedListId!, selectedListName!, page, {
+          email: emailSearch,
+          tag: tagSearch,
+          status: statusFilter,
+        });
+      }
+
     } catch (error) {
       console.error("Failed to delete subscriber", error);
     }
   };
+
+
 
   const handleCheckboxToggle = (id: string) => {
     setSelectedSubscribers((prev) =>
@@ -680,7 +715,7 @@ const SubscriptionManagement = () => {
 
   const handleDeleteTag = async (
     subscriberId: number,
-    tag: string // Change tag type from 'number' to 'string'
+    tag: string
   ) => {
     try {
       await axios.delete("http://localhost:8000/api/subscriber-tags", {
