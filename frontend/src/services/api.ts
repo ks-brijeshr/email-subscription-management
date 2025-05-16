@@ -141,3 +141,20 @@ export const deleteSubscriber = async (id: number) => {
 //   }
 // };
 
+
+
+
+
+export const fetchAPITokens = async () => {
+  const response = await api.get("/api-tokens");
+  return response.data;
+};
+
+export const createAPIToken = async (name: string) => {
+  const response = await api.post("/api-tokens/create", { name });
+  return response.data;
+};
+
+export const revokeAPIToken = async (id: number) => {
+  await api.delete(`/api-tokens/${id}`);
+};
