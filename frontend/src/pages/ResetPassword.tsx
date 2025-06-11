@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import apiConfig from "../api-config";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -32,10 +33,13 @@ const ResetPassword = () => {
 
   const checkToken = async (token: string, email: string) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/password-reset/check-token", {
-        token,
-        email,
-      });
+      const response = await axios.post(
+        `${apiConfig.apiUrl}/password-reset/check-token`,
+        {
+          token,
+          email,
+        }
+      );
 
       if (response.status !== 200) {
         setError("Invalid or expired reset link.");
@@ -65,12 +69,15 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/password-reset/confirm", {
-        token,
-        email,
-        password,
-        password_confirmation: confirmPassword,
-      });
+      const response = await axios.post(
+        `${apiConfig.apiUrl}/password-reset/confirm`,
+        {
+          token,
+          email,
+          password,
+          password_confirmation: confirmPassword,
+        }
+      );
 
       if (response.status === 200) {
         setSuccess("Password reset successful! Redirecting to login...");

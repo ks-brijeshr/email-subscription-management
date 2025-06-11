@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/Sidebar";
 import { deleteSubscriber } from "../../services/api";
+import apiConfig from "../../api-config";
 type Props = {
   listId: string;
 };
@@ -144,7 +145,7 @@ const SubscriptionManagement = () => {
       if (!token) return;
 
       const response = await axios.get(
-        "http://localhost:8000/api/subscription-lists",
+        `${apiConfig.apiUrl}/subscription-lists`,
         {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: currentPage, per_page: 5 },
@@ -185,7 +186,7 @@ const SubscriptionManagement = () => {
 
     try {
       const createListResponse = await axios.post(
-        "http://localhost:8000/api/subscription-list/create",
+        `${apiConfig.apiUrl}/subscription-list/create`,
         newListData,
         { headers }
       );
@@ -193,7 +194,7 @@ const SubscriptionManagement = () => {
       const newList = createListResponse.data.subscription_list;
 
       const subscribersResponse = await axios.get(
-        `http://localhost:8000/api/subscriptions/${list.id}/subscribers`,
+        `${apiConfig.apiUrl}/subscriptions/${list.id}/subscribers`,
         { headers }
       );
 
@@ -209,17 +210,22 @@ const SubscriptionManagement = () => {
 
         try {
           await axios.post(
-            `http://localhost:8000/api/subscriptions/${newList.id}/subscribers`,
+            `${apiConfig.apiUrl}/subscriptions/${newList.id}/subscribers`,
             payload,
             { headers }
           );
         } catch (error) {
-          console.error(`Failed to copy subscriber: ${subscriber.email}`, error);
+          console.error(
+            `Failed to copy subscriber: ${subscriber.email}`,
+            error
+          );
         }
       }
 
       setSubscriptionLists((prev) => [...prev, newList]);
-      alert(`✅ Subscription list and ${subscribers.length} subscribers copied successfully!`);
+      alert(
+        `✅ Subscription list and ${subscribers.length} subscribers copied successfully!`
+      );
     } catch (error) {
       console.error("Error copying subscription list or subscribers:", error);
       alert("❌ Failed to copy subscription list or its subscribers.");
@@ -244,7 +250,7 @@ const SubscriptionManagement = () => {
         return;
       }
 
-      await axios.delete(`http://localhost:8000/api/subscription-lists/${id}`, {
+      await axios.delete(`${apiConfig.apiUrl}/subscription-lists/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -288,7 +294,7 @@ const SubscriptionManagement = () => {
       };
 
       const response = await axios.get(
-        `http://localhost:8000/api/subscribers/${listId}`,
+        `${apiConfig.apiUrl}/subscribers/${listId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           params,
@@ -351,7 +357,7 @@ const SubscriptionManagement = () => {
       if (!token) return alert("No token");
 
       await axios.put(
-        `http://localhost:8000/api/subscription-lists/${editingListId}`,
+        `${apiConfig.apiUrl}/subscription-lists/${editingListId}`,
         editSubscriptionList,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -378,7 +384,7 @@ const SubscriptionManagement = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:8000/api/subscriber/${subscriberId}`,
+        `${apiConfig.apiUrl}/subscriber/${subscriberId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -411,7 +417,7 @@ const SubscriptionManagement = () => {
       const newStatus = currentStatus === "active" ? "inactive" : "active";
 
       await axios.put(
-        `http://localhost:8000/api/subscribers/${subscriberId}/status`,
+        `${apiConfig.apiUrl}/subscribers/${subscriberId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -432,7 +438,7 @@ const SubscriptionManagement = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:8000/api/subscription-list/create",
+        `${apiConfig.apiUrl}/subscription-list/create`,
         newList,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -468,7 +474,7 @@ const SubscriptionManagement = () => {
       if (!token) return;
 
       await axios.post(
-        `http://localhost:8000/api/subscribers/${selectedSubscriberId}/tags`,
+        `${apiConfig.apiUrl}/subscribers/${selectedSubscriberId}/tags`,
         { tags: [tagInput] },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -490,7 +496,7 @@ const SubscriptionManagement = () => {
       if (!token || !selectedListId || !selectedListName) return;
 
       const response = await axios.get(
-        `http://localhost:8000/api/subscriptions/${selectedListId}/export/${format}`,
+        `${apiConfig.apiUrl}/subscriptions/${selectedListId}/export/${format}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
@@ -563,7 +569,7 @@ const SubscriptionManagement = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:8000/api/subscriptions/${selectedListId}/subscribers`,
+        `${apiConfig.apiUrl}/subscriptions/${selectedListId}/subscribers`,
         { name, email, metadata: formattedMetadata },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -577,8 +583,6 @@ const SubscriptionManagement = () => {
       handleCloseModal();
 
       fetchSubscribers(selectedListId, "List Name"); // Pass correct list name if required
-
-
     } catch (error: any) {
       console.error(
         "Error adding subscriber:",
@@ -611,7 +615,8 @@ const SubscriptionManagement = () => {
         alert("❌ Subscription list not found. Please try again.");
       } else {
         alert(
-          `❌ Failed to add subscriber. Please try again later.\nError: ${error.response?.data?.message || error.message
+          `❌ Failed to add subscriber. Please try again later.\nError: ${
+            error.response?.data?.message || error.message
           }`
         );
       }
@@ -643,22 +648,23 @@ const SubscriptionManagement = () => {
 
   const handleDeleteSubscriber = async (id: number) => {
     try {
-
-      const subscriberToDelete = subscribers.find(sub => Number(sub.id) === Number(id));
-      const isActive = subscriberToDelete?.status === 'active';
+      const subscriberToDelete = subscribers.find(
+        (sub) => Number(sub.id) === Number(id)
+      );
+      const isActive = subscriberToDelete?.status === "active";
 
       //Call delete API from api.ts
       await deleteSubscriber(id);
 
       //Update total stats locally
-      setTotalStats(prev => ({
+      setTotalStats((prev) => ({
         total: prev.total - 1,
         active: isActive ? prev.active - 1 : prev.active,
         inactive: !isActive ? prev.inactive - 1 : prev.inactive,
       }));
 
       // Update total subscribers
-      setTotalSubscribers(prev => prev - 1);
+      setTotalSubscribers((prev) => prev - 1);
 
       //Handle pagination logic
       if (subscribers.length === 1 && page > 1) {
@@ -674,13 +680,10 @@ const SubscriptionManagement = () => {
           status: statusFilter,
         });
       }
-
     } catch (error) {
       console.error("Failed to delete subscriber", error);
     }
   };
-
-
 
   const handleCheckboxToggle = (id: string) => {
     setSelectedSubscribers((prev) =>
@@ -697,7 +700,7 @@ const SubscriptionManagement = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:8000/api/subscribers/bulk-delete",
+        `${apiConfig.apiUrl}/subscribers/bulk-delete`,
         { ids: selectedSubscribers },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -713,12 +716,9 @@ const SubscriptionManagement = () => {
     }
   };
 
-  const handleDeleteTag = async (
-    subscriberId: number,
-    tag: string
-  ) => {
+  const handleDeleteTag = async (subscriberId: number, tag: string) => {
     try {
-      await axios.delete("http://localhost:8000/api/subscriber-tags", {
+      await axios.delete(`${apiConfig.apiUrl}/subscriber-tags`, {
         data: {
           subscriber_id: subscriberId,
           tag: tag,
@@ -730,9 +730,9 @@ const SubscriptionManagement = () => {
         prev.map((s) =>
           Number(s.id) === Number(subscriberId)
             ? {
-              ...s,
-              tags: (s.tags || []).filter((t) => t !== tag),
-            }
+                ...s,
+                tags: (s.tags || []).filter((t) => t !== tag),
+              }
             : s
         )
       );
@@ -754,7 +754,7 @@ const SubscriptionManagement = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `http://localhost:8000/api/subscriptions/${currentListId}/import`,
+        `${apiConfig.apiUrl}/subscriptions/${currentListId}/import`,
         formData,
         {
           headers: {
@@ -780,21 +780,21 @@ const SubscriptionManagement = () => {
       fetchSubscribers(currentListId, currentListName);
     } catch (error: any) {
       console.error("Import failed", error);
-      alert(`❌ Import failed: ${error.response?.data?.error || "Unknown error"}`);
+      alert(
+        `❌ Import failed: ${error.response?.data?.error || "Unknown error"}`
+      );
     } finally {
       setLoading(false);
     }
   };
 
-
-
-
   return (
     <div className="flex">
       <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       <main
-        className={`w-full transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
-          }`}
+        className={`w-full transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
         <nav className="bg-gray-900 border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
           {!isSidebarOpen && (
@@ -898,7 +898,10 @@ const SubscriptionManagement = () => {
                         key: "verify_dns_records",
                       },
                     ].map((field) => (
-                      <div key={field.key} className="flex items-center space-x-3">
+                      <div
+                        key={field.key}
+                        className="flex items-center space-x-3"
+                      >
                         <input
                           type="checkbox"
                           checked={(newList as any)[field.key]}
@@ -910,10 +913,11 @@ const SubscriptionManagement = () => {
                           }
                           className="w-5 h-5 cursor-pointer"
                         />
-                        <label className="text-gray-700 cursor-pointer">{field.label}</label>
+                        <label className="text-gray-700 cursor-pointer">
+                          {field.label}
+                        </label>
                       </div>
                     ))}
-
                   </div>
 
                   <div className="mt-6 flex justify-end space-x-4">
@@ -1210,7 +1214,6 @@ const SubscriptionManagement = () => {
                   Subscriber Management
                 </h1>
 
-
                 {/* Add Subscription List Button */}
                 <button
                   onClick={handleAddSubscriberClick}
@@ -1294,8 +1297,9 @@ const SubscriptionManagement = () => {
                       {/* Submit Button */}
                       <button
                         type="submit"
-                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${loading ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                        className={`w-full py-3 px-4 rounded-lg bg-gray-900 text-white font-medium ${
+                          loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                         disabled={loading}
                       >
                         {loading ? "Adding..." : "Add Subscriber"}
@@ -1339,7 +1343,9 @@ const SubscriptionManagement = () => {
 
                   {/* Import Section */}
                   <div className="bg-white p-3 rounded-md shadow-sm">
-                    <h2 className="text-ml font-medium mb-1">Import Subscribers</h2>
+                    <h2 className="text-ml font-medium mb-1">
+                      Import Subscribers
+                    </h2>
                     <input
                       type="file"
                       accept=".csv,.json,.txt"
@@ -1371,7 +1377,7 @@ const SubscriptionManagement = () => {
                                 // Fetch all subscribers for the selected list
                                 const token = localStorage.getItem("token");
                                 const response = await axios.get(
-                                  `http://localhost:8000/api/subscription-lists/${selectedListId}/subscribers`,
+                                  `${apiConfig.apiUrl}/subscription-lists/${selectedListId}/subscribers`,
                                   {
                                     headers: {
                                       Authorization: `Bearer ${token}`,
@@ -1468,17 +1474,17 @@ const SubscriptionManagement = () => {
                                     <p>
                                       <span className="font-medium">Tags:</span>{" "}
                                       {selectedSubscriberDetails.tags?.length >
-                                        0
+                                      0
                                         ? selectedSubscriberDetails.tags.map(
-                                          (tag: string, index: number) => (
-                                            <span
-                                              key={index}
-                                              className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
-                                            >
-                                              {tag}
-                                            </span>
+                                            (tag: string, index: number) => (
+                                              <span
+                                                key={index}
+                                                className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                                              >
+                                                {tag}
+                                              </span>
+                                            )
                                           )
-                                        )
                                         : "No tags"}
                                     </p>
                                     <p>
@@ -1496,10 +1502,11 @@ const SubscriptionManagement = () => {
                           <td className="border p-3">{subscriber.email}</td>
                           <td className="border p-3">
                             <span
-                              className={`px-2 py-1 text-white text-sm rounded-lg ${subscriber.status === "active"
-                                ? "bg-green-500"
-                                : "bg-red-500"
-                                }`}
+                              className={`px-2 py-1 text-white text-sm rounded-lg ${
+                                subscriber.status === "active"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              }`}
                             >
                               {subscriber.status === "active"
                                 ? "✓ Subscribe"
@@ -1620,10 +1627,11 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === 1}
-                        className={`px-4 py-2 rounded ${page === 1
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                          } text-white`}
+                        className={`px-4 py-2 rounded ${
+                          page === 1
+                            ? "bg-gray-400"
+                            : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                       >
                         Previous
                       </button>
@@ -1647,10 +1655,11 @@ const SubscriptionManagement = () => {
                           )
                         }
                         disabled={page === totalPages}
-                        className={`px-4 py-2 rounded ${page === totalPages
-                          ? "bg-gray-400"
-                          : "bg-blue-500 hover:bg-blue-600"
-                          } text-white`}
+                        className={`px-4 py-2 rounded ${
+                          page === totalPages
+                            ? "bg-gray-400"
+                            : "bg-blue-500 hover:bg-blue-600"
+                        } text-white`}
                       >
                         Next
                       </button>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import apiConfig from "../api-config";
 Navbar; // Import your Navbar component
 
 const Signup = () => {
@@ -35,7 +36,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:8000/api/register", formData);
+      await axios.post(`${apiConfig.apiUrl}/register`, formData);
       setSuccessMessage("Registration successful! Please check your email to verify your account.");
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong!");

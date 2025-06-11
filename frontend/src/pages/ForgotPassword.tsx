@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import apiConfig from "../api-config";
 
 
 const ForgotPassword = () => {
@@ -19,7 +20,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:8000/api/password-reset", { email });
+      await axios.post(`${apiConfig.apiUrl}/password-reset`, { email });
       setMessage("Password reset link sent! Please check your email.");
     } catch (err: any) {
       setMessage("Failed to send reset link. Try again later.");

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../../components/admin/Sidebar";
+import apiConfig from "../../api-config";
 
 interface UserProfile {
     id: number;
@@ -30,11 +31,14 @@ const Profile = () => {
                     return;
                 }
 
-                const response = await axios.get("http://localhost:8000/api/profile", {
+                const response = await axios.get(
+                  `${apiConfig.apiUrl}/profile`,
+                  {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                      Authorization: `Bearer ${token}`,
                     },
-                });
+                  }
+                );
 
                 if (response.data.user) {
                     setProfile(response.data.user);
@@ -57,16 +61,16 @@ const Profile = () => {
             const token = localStorage.getItem("token");
 
             await axios.put(
-                "http://localhost:8000/api/profile/update",
-                {
-                    name: editableProfile.name,
-                    email: editableProfile.email,
+              `${apiConfig.apiUrl}/profile/update`,
+              {
+                name: editableProfile.name,
+                email: editableProfile.email,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+              }
             );
             //Update localStorage so Sidebar reflects changes
             localStorage.setItem("user", JSON.stringify(editableProfile));
@@ -94,17 +98,17 @@ const Profile = () => {
             const token = localStorage.getItem("token");
 
             await axios.put(
-                "http://localhost:8000/api/profile/update-password",
-                {
-                    current_password: currentPassword,
-                    new_password: newPassword,
-                    new_password_confirmation: confirmPassword,
+              `${apiConfig.apiUrl}/profile/update-password`,
+              {
+                current_password: currentPassword,
+                new_password: newPassword,
+                new_password_confirmation: confirmPassword,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+              }
             );
 
 

@@ -8,6 +8,7 @@ import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
 import EmailVerificationStatus from "./EmailVerificationStatus";
 import { fetchDashboardStats, getAdminActivityLogs } from "../../services/api";
+import apiConfig from "../../api-config";
 
 interface SubscriptionList {
   id: number;
@@ -73,7 +74,7 @@ const Dashboard = () => {
       if (!token) return;
 
       const response = await axios.get(
-        "http://localhost:8000/api/admin/subscription-lists",
+        `${apiConfig.apiUrl}/admin/subscription-lists`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import Navbar from "../components/Navbar";
-
 import { useUser } from "../context/UserContext";
-
+import apiConfig from "../api-config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +24,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/login", formData);
+      const response = await axios.post(`${apiConfig.apiUrl}/login`, formData);
       const user = response.data.user;
 
       if (!user.email_verified_at) {
