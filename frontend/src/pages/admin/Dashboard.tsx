@@ -1,6 +1,5 @@
 // src/pages/admin/Dashboard.tsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
@@ -25,16 +24,10 @@ const getGreetingMessage = () => {
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [dashboardData, setDashboardData] = useState<any>(null);
-  const [subscriptionLists, setSubscriptionLists] = useState<
-    SubscriptionList[]
-  >([]);
-  const [selectedListId, setSelectedListId] = useState<string | undefined>(
-    undefined
-  );
+  const [subscriptionLists, setSubscriptionLists] = useState<SubscriptionList[]>([]);
+  const [selectedListId, setSelectedListId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // const navigate = useNavigate();
-
   const [logs, setLogs] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -43,7 +36,7 @@ const Dashboard = () => {
   const fetchStats = async (listId?: string) => {
     try {
       setLoading(true);
-      const data = await fetchDashboardStats(listId);
+      const data = await fetchDashboardStats(listId); // Pass listId to get list-specific stats
       setDashboardData(data);
     } catch (error) {
       setError("Failed to load dashboard data");
@@ -53,14 +46,8 @@ const Dashboard = () => {
   };
 
   const fetchActivityLogs = async (listId?: string, page = 1) => {
-    console.log("Fetching logs for:", { listId, page });
     try {
-      const response = await getAdminActivityLogs({
-        listId,
-        page,
-        perPage,
-      });
-      console.log("Fetched Logs:", response);
+      const response = await getAdminActivityLogs({ listId, page, perPage });
       setLogs(response.data);
       setTotalPages(response.last_page);
     } catch (error) {
@@ -123,13 +110,6 @@ const Dashboard = () => {
               <p className="font-medium">{getGreetingMessage()}</p>
               <p className="text-sm">{new Date().toLocaleTimeString()}</p>
             </div>
-            {/* <button
-              onClick={() => navigate("/")}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg text-sm font-medium"
-              title="Go to Home"
-            >
-              🏠 Home
-            </button> */}
           </div>
         </nav>
 
@@ -148,7 +128,7 @@ const Dashboard = () => {
                 value={selectedListId || ""}
                 onChange={(e) => {
                   setSelectedListId(e.target.value || undefined);
-                  setCurrentPage(1); // Reset to page 1 on filter change
+                  setCurrentPage(1);
                 }}
                 className="block w-full sm:w-72 px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
