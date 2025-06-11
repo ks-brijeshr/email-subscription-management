@@ -376,12 +376,11 @@ class SubscriberService
         $subscriber->delete();
     }
 
- 
+
 
     public function importSubscribers($file, $listId)
     {
         $subscriptionList = SubscriptionList::findOrFail($listId);
-
         $extension = strtolower($file->getClientOriginalExtension());
         $subscribers = [];
 
@@ -398,8 +397,9 @@ class SubscriberService
                 ];
             }
 
-            $headers = array_map('trim', $csv[0]);
-            foreach (array_slice($csv, 1) as $row) {
+            $headers = array_map(fn($h) => strtolower(trim($h)), $csv[0]);
+
+            foreach (array_slice($csv, 1) as $index => $row) {
                 if (count($row) !== count($headers)) continue;
 
                 $rowAssoc = array_combine($headers, $row);
@@ -425,7 +425,6 @@ class SubscriberService
         $imported = 0;
         $failed = 0;
         $errors = [];
-
         $validStatuses = ['active', 'inactive', 'blacklisted'];
 
         foreach ($subscribers as $index => $subscriber) {
@@ -445,7 +444,6 @@ class SubscriberService
                 continue;
             }
 
-            // Check if email already exists in this list
             $exists = Subscriber::where('email', $subscriber['email'])
                 ->where('list_id', $listId)
                 ->exists();
@@ -470,18 +468,23 @@ class SubscriberService
                 continue;
             }
 
-            $status = in_array($subscriber['status'], $validStatuses)
-                ? $subscriber['status']
-                : 'inactive';
+            $unsubscribeToken = Str::random(32);
 
             try {
-                Subscriber::create([
+                $subscriberRecord =  Subscriber::create([
                     'list_id' => $listId,
                     'name' => $subscriber['name'] ?: null,
                     'email' => $subscriber['email'],
-                    'status' => $status,
-                    'unsubscribe_token' => Str::random(32),
+                    'status' => 'inactive', //Mark as unsubscribed
+                    'unsubscribe_token' => $unsubscribeToken,
+                    'verification_token' => Str::random(32),
                 ]);
+
+                //Send unsubscribe email
+                Mail::to($subscriber['email'])->send(
+                    new SubscriberVerificationMail($subscriberRecord)
+                );
+
                 $imported++;
             } catch (\Exception $e) {
                 $failed++;
@@ -492,6 +495,7 @@ class SubscriberService
                 ];
             }
         }
+
         return compact('imported', 'failed', 'errors');
     }
 
