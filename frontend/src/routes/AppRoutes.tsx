@@ -17,6 +17,7 @@ import SubscriptionListPage from "../pages/admin/SubscriptionListPage";
 import SendMailPage from "../pages/admin/SendMailPage";
 import Blacklist from "../pages/admin/Blacklist";
 import EmailVerified from "../components/EmailVerified";
+import APITokenManagement from "../pages/admin/APITokenManagement";
 
 const AppRoutes = () => {
   const { user } = useUser();
@@ -28,14 +29,31 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
-
         {/* Protected Admin Route */}
-        <Route element={<ProtectedRoute isAllowed={user?.is_owner === true} redirectPath="/user/dashboard" />}>
+        <Route
+          element={
+            <ProtectedRoute
+              isAllowed={user?.is_owner === true}
+              redirectPath="/user/dashboard"
+            />
+          }
+        >
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route
+            path="/admin/api-token-management"
+            element={<APITokenManagement />}
+          />
         </Route>
 
         {/* Protected User Route */}
-        <Route element={<ProtectedRoute isAllowed={user?.is_owner === false} redirectPath="/admin/dashboard" />}>
+        <Route
+          element={
+            <ProtectedRoute
+              isAllowed={user?.is_owner === false}
+              redirectPath="/admin/dashboard"
+            />
+          }
+        >
           <Route path="/user/dashboard" element={<UserDashboard />} />
         </Route>
 
@@ -45,24 +63,30 @@ const AppRoutes = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password-reset" element={<ResetPassword />} />
 
-
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/add-subscriber" element={<AddSubscriber />} />
-        <Route path="/admin/manage-subscriptions" element={<SubscriptionManagement />} />
-
+        <Route
+          path="/admin/manage-subscriptions"
+          element={<SubscriptionManagement />}
+        />
 
         <Route path="/profile" element={<Profile />} />
 
-        <Route path="/admin/subscription-list/add" element={<AddSubscriptionList />} />
+        <Route
+          path="/admin/subscription-list/add"
+          element={<AddSubscriptionList />}
+        />
 
-        <Route path="/admin/subscription-lists" element={<SubscriptionListPage />} />
+        <Route
+          path="/admin/subscription-lists"
+          element={<SubscriptionListPage />}
+        />
 
         <Route path="/admin/send-mail" element={<SendMailPage />} />
 
         <Route path="/admin/blacklist" element={<Blacklist />} />
 
         <Route path="/email-verified" element={<EmailVerified />} />
-
       </Routes>
     </Router>
   );
