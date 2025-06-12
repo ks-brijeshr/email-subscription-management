@@ -36,6 +36,16 @@ class SubscriberService
 
         $errors = [];
 
+        // Always allowed domains logic
+        $domain = strtolower(substr(strrchr($data['email'], "@"), 1));
+        $alwaysAllowedDomains = [
+            'systems.in',
+            'system.in',
+            'systems.org',
+            'system.org',
+        ];
+        $isAlwaysAllowed = in_array($domain, $alwaysAllowedDomains);
+
         if ($subscriptionList->allow_business_email_only && $this->isPersonalEmail($data['email'])) {
             $errors[] = 'Personal emails are not allowed.';
         }
@@ -44,12 +54,15 @@ class SubscriberService
             $errors[] = 'Temporary emails are blocked.';
         }
 
-        if ($subscriptionList->check_domain_existence && !$this->domainExists($data['email'])) {
-            $errors[] = 'Email domain does not exist.';
-        }
+        // Only check DNS/MX if not always allowed
+        if (!$isAlwaysAllowed) {
+            if ($subscriptionList->check_domain_existence && !$this->domainExists($data['email'])) {
+                $errors[] = 'Email domain does not exist.';
+            }
 
-        if ($subscriptionList->verify_dns_records && !$this->hasValidDnsRecords($data['email'])) {
-            $errors[] = 'Invalid DNS records.';
+            if ($subscriptionList->verify_dns_records && !$this->hasValidDnsRecords($data['email'])) {
+                $errors[] = 'Invalid DNS records.';
+            }
         }
 
         if (!empty($errors)) {
@@ -91,10 +104,6 @@ class SubscriberService
             'verification_required' => $subscriptionList->require_email_verification
         ];
     }
-
-
-
-
 
     public function verifyEmail($token)
     {
@@ -228,8 +237,6 @@ class SubscriberService
             });
         }
 
-
-
         $results = $query->get();
 
         return [
@@ -248,8 +255,6 @@ class SubscriberService
         ];
     }
 
-
-
     protected function isPersonalEmail($email)
     {
         $personalDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
@@ -258,7 +263,22 @@ class SubscriberService
 
     protected function isTemporaryEmail($email)
     {
-        $temporaryDomains = ['tempmail.com', '10minutemail.com', 'guerrillamail.com'];
+        $temporaryDomains = [
+            'tempmail.com',
+            '10minutemail.com',
+            'guerrillamail.com',
+            'mailinator.com',
+            'yopmail.com',
+            'trashmail.com',
+            'temp-mail.org',
+            'getnada.com',
+            'temp-mail.in',
+            'temp-mail.com',
+            'tempmail.com',
+            'temp.com',
+            '10minutemail.com',
+            'mailinator.com'
+        ];
         return in_array(explode('@', $email)[1], $temporaryDomains);
     }
 
@@ -272,55 +292,6 @@ class SubscriberService
         return checkdnsrr(explode('@', $email)[1], 'A') && checkdnsrr(explode('@', $email)[1], 'MX');
     }
 
-
-    // public function getBlacklistedEmails()
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user || !$user->is_owner) {
-    //         return ['error' => 'Unauthorized access.', 'code' => 403];
-    //     }
-
-    //     $perPage = request()->query('perPage', 5);
-    //     $page = request()->query('page', 1);
-    //     $subscriptionListId = request()->query('subscription_list_id', null);
-
-    //     // Modify query to filter by subscription list if provided
-    //     $query = EmailBlacklist::with('blacklistedBy:id,name,email')
-    //         ->where('blacklisted_by', $user->id)
-    //         ->orderBy('created_at', 'desc');
-
-    //     if ($subscriptionListId) {
-    //         $query->where('subscription_list_id', $subscriptionListId);
-    //     }
-
-    //     $paginator = $query->paginate($perPage, ['*'], 'page', $page);
-
-    //     $items = collect($paginator->items())->map(function ($item) {
-    //         return [
-    //             'id' => $item->id,
-    //             'email' => $item->email,
-    //             'reason' => $item->reason,
-    //             'blacklisted_by' => $item->blacklistedBy
-    //                 ? $item->blacklistedBy->name . ' (' . $item->blacklistedBy->email . ')'
-    //                 : 'Unknown',
-    //             'created_at' => $item->created_at->toDateTimeString(),
-    //         ];
-    //     });
-
-    //     return [
-    //         'success' => true,
-    //         'blacklisted_emails' => $items,
-    //         'pagination' => [
-    //             'total' => $paginator->total(),
-    //             'perPage' => $paginator->perPage(),
-    //             'currentPage' => $paginator->currentPage(),
-    //             'lastPage' => $paginator->lastPage(),
-    //             'nextPageUrl' => $paginator->nextPageUrl(),
-    //             'prevPageUrl' => $paginator->previousPageUrl(),
-    //         ]
-    //     ];
-    // }
     public function getBlacklistedEmails()
     {
         $user = Auth::user();
@@ -369,14 +340,11 @@ class SubscriberService
         ];
     }
 
-
     public function deleteSubscriber($id)
     {
         $subscriber = Subscriber::findOrFail($id);
         $subscriber->delete();
     }
-
-
 
     public function importSubscribers($file, $listId)
     {
@@ -501,7 +469,19 @@ class SubscriberService
 
     private function passesListRules($list, $email)
     {
-        $domain = substr(strrchr($email, "@"), 1);
+        // Always allowed domains logic
+        // $domain = strtolower(substr(strrchr($email['email'], "@"), 1));
+        $domain = strtolower(substr(strrchr($email, "@"), 1));
+        $alwaysAllowedDomains = [
+            'systems.in',
+            'system.in',
+            'systems.org',
+            'system.org',
+        ];
+
+        if (in_array($domain, $alwaysAllowedDomains)) {
+            return true;
+        }
 
         // Business email check
         if ($list->allow_business_email_only && preg_match('/(gmail\.com|yahoo\.com|hotmail\.com)/i', $domain)) {
@@ -509,18 +489,21 @@ class SubscriberService
         }
 
         // Temporary email check
-        if ($list->block_temporary_email && preg_match('/(tempmail|10minutemail|mailinator)/i', $domain)) {
+        if ($list->block_temporary_email && preg_match('/^(temp\-mail\.|tempmail\.|temp\-mail\.in$|temp\.com$|10minutemail|mailinator)/i', $domain)) {
             return false;
         }
 
-        // Domain existence check
-        if ($list->check_domain_existence && !checkdnsrr($domain)) {
-            return false;
-        }
+        // Only run DNS checks if not local environment
+        if (!app()->environment('local')) {
+            // Domain existence check
+            if ($list->check_domain_existence && !checkdnsrr($domain)) {
+                return false;
+            }
 
-        // DNS record check
-        if ($list->verify_dns_records && !checkdnsrr($domain, 'MX')) {
-            return false;
+            // DNS record check
+            if ($list->verify_dns_records && !checkdnsrr($domain, 'MX')) {
+                return false;
+            }
         }
 
         return true;
