@@ -121,4 +121,29 @@ class OrganizationController extends Controller
 
         return response()->json(['message' => 'Member removed successfully.']);
     }
+
+
+    public function updateUserRole(Request $request, Organization $org, User $user)
+    {
+        $request->validate([
+            'role' => 'required|in:admin,member,viewer',
+        ]);
+
+        // Make sure the user belongs to the organization
+        if (!$org->users()->where('user_id', $user->id)->exists()) {
+            return response()->json(['status' => 'error', 'message' => 'User does not belong to this organization.'], 403);
+        }
+
+        // Prevent changing role of the owner
+        if ($user->id === $org->user_id) {
+            return response()->json(['status' => 'error', 'message' => 'Cannot change role of organization owner.'], 403);
+        }
+
+        // Update the role in the pivot table
+        $org->users()->updateExistingPivot($user->id, [
+            'role' => $request->role
+        ]);
+
+        return response()->json(['status' => 'success', 'message' => 'Role updated successfully.']);
+    }
 }

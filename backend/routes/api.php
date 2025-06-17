@@ -233,3 +233,7 @@ Route::get('/invitation/accept/{token}', [InvitationController::class, 'accept']
 
 //Remove member
 Route::delete('/organizations/{organization}/remove-user/{user}', [OrganizationController::class, 'removeUser']);
+
+
+//Edir member role
+Route::put('/organizations/{org}/update-role/{user}', [OrganizationController::class, 'updateUserRole']);

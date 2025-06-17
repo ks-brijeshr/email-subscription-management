@@ -22,6 +22,8 @@ const TeamManagement: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loadingUserId, setLoadingUserId] = useState<number | null>(null);
+  const [editingRoleUserId, setEditingRoleUserId] = useState<number | null>(null);
+  const [editingRole, setEditingRole] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -105,6 +107,26 @@ const TeamManagement: React.FC = () => {
     }
   };
 
+  const updateMemberRole = async (userId: number) => {
+    if (!organizationId) return;
+
+    try {
+      await axios.put(`${apiConfig.apiUrl}/organizations/${organizationId}/update-role/${userId}`, {
+        role: editingRole,
+      });
+      setMessage({ type: "success", text: "Role updated successfully." });
+      fetchTeam(organizationId);
+    } catch (error: any) {
+      setMessage({
+        type: "error",
+        text: error?.response?.data?.message || "Failed to update role.",
+      });
+    } finally {
+      setEditingRoleUserId(null);
+      setTimeout(() => setMessage(null), 4000);
+    }
+  };
+
   useEffect(() => {
     if (organizationId) {
       fetchTeam(organizationId);
@@ -179,12 +201,50 @@ const TeamManagement: React.FC = () => {
                           {isYou && <span className="text-sm text-blue-600 ml-2">(you)</span>}
                         </div>
                         <div className="text-sm text-gray-600">{member.email}</div>
-                        <div className="text-sm text-gray-500">
-                          Role: {member.role || member.pivot?.role || "Unknown"}
+                        <div className="text-sm text-gray-500 flex items-center gap-2">
+                          Role: {editingRoleUserId === member.id ? (
+                            <>
+                              <select
+                                value={editingRole}
+                                onChange={(e) => setEditingRole(e.target.value)}
+                                className="px-2 py-1 border rounded"
+                              >
+                                <option value="admin">Admin</option>
+                                <option value="member">Member</option>
+                                <option value="viewer">Viewer</option>
+                              </select>
+                              <button
+                                className="text-sm bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+                                onClick={() => updateMemberRole(member.id)}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="text-sm bg-gray-300 text-gray-800 px-2 py-1 rounded hover:bg-gray-400"
+                                onClick={() => setEditingRoleUserId(null)}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {member.role || member.pivot?.role || "Unknown"}
+                              {!isOwner && (
+                                <button
+                                  className="text-xs text-blue-600 ml-2 underline"
+                                  onClick={() => {
+                                    setEditingRoleUserId(member.id);
+                                    setEditingRole(member.role || member.pivot?.role || "member");
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              )}
+                            </>
+                          )}
                         </div>
                       </div>
 
-                      {/* Hide remove for owner */}
                       {!isOwner && (
                         <div>
                           <button
