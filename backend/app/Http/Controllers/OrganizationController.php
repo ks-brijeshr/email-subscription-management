@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InviteExistingUser;
+use App\Mail\InviteNewUser;
+use App\Models\OrganizationInvitation;
 
 class OrganizationController extends Controller
 {
@@ -18,30 +23,62 @@ class OrganizationController extends Controller
     public function addUser(Request $request, Organization $organization)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'role' => 'required|in:admin,viewer',
+            'email' => 'required|email',
+            'role' => 'required|in:admin,viewer,member',
         ]);
 
-        // Check if the user exists
-        $user = User::where('email', $request->email)->first();
+        $email = $request->email;
+        $role = $request->role;
+        $token = Str::random(40);
+        $organizationName = $organization->name;
 
-        // Check if user already in org
-        if ($organization->users()->where('user_id', $user->id)->exists()) {
+        // Check if user exists
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            // Check if already a member
+            if ($organization->users()->where('user_id', $user->id)->exists()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User is already a member of this organization.',
+                ], 400);
+            }
+
+            OrganizationInvitation::create([
+                'email' => $email,
+                'organization_id' => $organization->id,
+                'role' => $role,
+                'token' => $token,
+                'status' => 'pending',
+            ]);
+
+            // Send invite to existing user
+            Mail::to($email)->send(new InviteExistingUser($email, $role, $token, $organizationName));
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'User is already a member of this organization.',
-            ], 400);
+                'status' => 'success',
+                'message' => 'Invitation sent to existing user. They must accept the invite.',
+            ]);
+        } else {
+            // Save invitation for new user
+            OrganizationInvitation::create([
+                'email' => $email,
+                'organization_id' => $organization->id,
+                'role' => $role,
+                'token' => $token,
+                'status' => 'pending',
+            ]);
+
+            // Send signup invite to new user
+            Mail::to($email)->send(new InviteNewUser($email, $organization->id, $role, $token));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invitation sent to new user. They must sign up and join.',
+            ]);
         }
-
-        // Attach user with selected role
-        $organization->users()->attach($user->id, ['role' => $request->role]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User added to organization successfully.',
-            'user' => $user,
-        ]);
     }
+
 
 
 

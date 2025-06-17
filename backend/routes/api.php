@@ -19,6 +19,7 @@ use App\Http\Controllers\SignupAnalyticsController;
 use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\OrganizationController;
 
 Route::get('/test', function () {
@@ -224,3 +225,7 @@ Route::middleware('auth:sanctum')->post('/organizations/{organization}/add-user'
 
 //Fetch organization members
 Route::middleware('auth:sanctum')->get('/organizations/{organization}/users', [OrganizationController::class, 'getUsers']);
+
+
+
+Route::get('/invitation/accept/{token}', [InvitationController::class, 'accept']);

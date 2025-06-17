@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvitationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UnsubscribeController;
 
@@ -22,3 +23,5 @@ Route::get('/unsubscribe/success', [UnsubscribeController::class, 'unsubscribeSu
 
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
     ->name('verification.verify');
+
+Route::get('/invitation/accept/{token}', [InvitationController::class, 'accept']);
