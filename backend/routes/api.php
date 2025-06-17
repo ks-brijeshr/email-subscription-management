@@ -229,3 +229,7 @@ Route::middleware('auth:sanctum')->get('/organizations/{organization}/users', [O
 
 
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'accept']);
+
+
+//Remove member
+Route::delete('/organizations/{organization}/remove-user/{user}', [OrganizationController::class, 'removeUser']);

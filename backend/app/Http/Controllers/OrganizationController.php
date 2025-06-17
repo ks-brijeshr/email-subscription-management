@@ -100,4 +100,25 @@ class OrganizationController extends Controller
             'members' => $users
         ]);
     }
+
+
+    public function removeUser(Request $request, $organizationId, $userId)
+    {
+        $organization = Organization::findOrFail($organizationId);
+
+        // Optional: Check if the authenticated user is the owner/admin
+        if ($organization->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
+        // Don't allow removing the owner
+        if ($organization->user_id == $userId) {
+            return response()->json(['message' => 'You cannot remove the organization owner.'], 400);
+        }
+
+        // Detach user from organization
+        $organization->users()->detach($userId);
+
+        return response()->json(['message' => 'Member removed successfully.']);
+    }
 }
