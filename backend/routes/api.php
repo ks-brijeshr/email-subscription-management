@@ -219,5 +219,8 @@ Route::post('/subscriptions/{list_id}/import', [SubscriberController::class, 'im
 //userside subscriber add
 Route::post('/subscribe', [NewsletterController::class, 'subscribe']);
 
-
+//Add member
 Route::middleware('auth:sanctum')->post('/organizations/{organization}/add-user', [OrganizationController::class, 'addUser']);
+
+//Fetch organization members
+Route::middleware('auth:sanctum')->get('/organizations/{organization}/users', [OrganizationController::class, 'getUsers']);

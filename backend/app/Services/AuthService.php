@@ -134,39 +134,53 @@ class AuthService
     //         'is_owner' => $user->is_owner,
     //     ], 200);
     // }
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+   public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        $user = User::where('email', $credentials['email'])->first();
+    $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Invalid email or password',
-            ], 401);
-        }
-
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'status' => 403,
-                'message' => 'Email not verified',
-            ], 403);
-        }
-
-        $user->tokens()->delete();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // Pass user manually
-        $this->activityLogService->logActivity('logged in', $request, $user);
-
+    if (!$user || !Hash::check($credentials['password'], $user->password)) {
         return response()->json([
-            'status' => 200,
-            'message' => 'Login successful',
-            'user' => $user,
-            'token' => $token,
-        ]);
+            'status' => 401,
+            'message' => 'Invalid email or password',
+        ], 401);
     }
+
+    if (!$user->hasVerifiedEmail()) {
+        return response()->json([
+            'status' => 403,
+            'message' => 'Email not verified',
+        ], 403);
+    }
+
+    $user->tokens()->delete();
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    // Get organization ID from pivot (first associated organization)
+    $organizationId = $user->organizations()->first()?->id;
+
+    // Activity log
+    $this->activityLogService->logActivity('logged in', $request, $user);
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Login successful',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'organization_id' => $organizationId,
+            'is_owner' => $user->is_owner,
+            'email_verified_at' => $user->email_verified_at,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+        ],
+        'token' => $token,
+    ]);
+}
+
+
 
 
 

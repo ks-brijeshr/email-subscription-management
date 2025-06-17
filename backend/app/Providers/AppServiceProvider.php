@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    protected $policies = [
+        \App\Models\Organization::class => \App\Policies\OrganizationPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */

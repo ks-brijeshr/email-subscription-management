@@ -18,6 +18,7 @@ import SendMailPage from "../pages/admin/SendMailPage";
 import Blacklist from "../pages/admin/Blacklist";
 import EmailVerified from "../components/EmailVerified";
 import APITokenManagement from "../pages/admin/APITokenManagement";
+import TeamManagement from "../pages/admin/TeamManagement";
 
 const AppRoutes = () => {
   const { user } = useUser();
@@ -87,6 +88,9 @@ const AppRoutes = () => {
         <Route path="/admin/blacklist" element={<Blacklist />} />
 
         <Route path="/email-verified" element={<EmailVerified />} />
+
+        <Route path="/admin/team" element={<TeamManagement />} />
+
       </Routes>
     </Router>
   );
