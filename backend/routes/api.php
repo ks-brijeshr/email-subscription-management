@@ -19,7 +19,7 @@ use App\Http\Controllers\SignupAnalyticsController;
 use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
-
+use App\Http\Controllers\OrganizationController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -159,7 +159,6 @@ Route::middleware(['auth:sanctum', 'rate.limit'])->group(function () {
     Route::post('/subscriptions/{list_id}/subscribers', [SubscriberController::class, 'addSubscriber']);
     Route::put('/subscribers/{subscriber_id}/status', [SubscriberController::class, 'updateSubscriberStatus']);
     Route::get('/subscriber/{subscriber_id}', [SubscriberController::class, 'getSubscriberDetails']);
-
 });
 
 //Add subscriber tags
@@ -219,3 +218,6 @@ Route::post('/subscriptions/{list_id}/import', [SubscriberController::class, 'im
 
 //userside subscriber add
 Route::post('/subscribe', [NewsletterController::class, 'subscribe']);
+
+
+Route::middleware('auth:sanctum')->post('/organizations/{organization}/add-user', [OrganizationController::class, 'addUser']);

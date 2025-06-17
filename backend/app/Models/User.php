@@ -76,4 +76,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new VerifyEmail); // This will use the built-in Laravel email verification notification
     }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
 }

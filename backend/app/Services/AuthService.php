@@ -15,6 +15,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendVerificationEmailJob;
+use App\Models\Organization;
 use Illuminate\Auth\Events\Registered;
 
 
@@ -35,8 +36,11 @@ class AuthService
     /**
      * Handle user registration
      */
+
+
     public function register(array $data)
     {
+        // Create the user
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -44,6 +48,7 @@ class AuthService
             'is_owner' => filter_var($data['is_owner'], FILTER_VALIDATE_BOOLEAN),
         ]);
 
+        // Track signup per day
         $date = Carbon::today()->toDateString();
         $signup = DailySignup::where('date', $date)->first();
 
@@ -56,11 +61,19 @@ class AuthService
             ]);
         }
 
-        // event(new Registered($user));
+        // Create default organization for this user
+        $organization = Organization::create([
+            'name' => $user->name . "'s Organization",
+            'created_by' => $user->id,
+        ]);
 
-        // Dispatch queued verification email
+        // Attach user to organization as 'owner'
+        $organization->users()->attach($user->id, ['role' => 'owner']);
+
+        // Send verification email asynchronously
         SendVerificationEmailJob::dispatch($user);
 
+        //Log the email verification status
         EmailVerificationLog::create([
             'user_id' => $user->id,
             'status' => 'failed',
@@ -69,6 +82,7 @@ class AuthService
 
         return $user;
     }
+
 
 
 

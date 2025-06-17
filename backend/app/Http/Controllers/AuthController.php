@@ -36,7 +36,6 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-
         $data = $request->validated();
 
         $data['is_owner'] = filter_var($request->input('is_owner', false), FILTER_VALIDATE_BOOLEAN);
@@ -45,15 +44,17 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-
         $this->activityLogService->logActivity('User registered', $request);
 
-        // Return JSON response
+        // Get the organization where the user is owner
+        $organization = $user->organizations()->wherePivot('role', 'owner')->first();
+
         return response()->json([
             'status' => 'success',
             'message' => 'User registered successfully. Please verify your email.',
             'is_owner' => $user->is_owner,
-            'user' => $user
+            'user' => $user,
+            'organization' => $organization,
         ], 201);
     }
 
