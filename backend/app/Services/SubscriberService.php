@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriberVerificationMail;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class SubscriberService
@@ -110,17 +111,43 @@ class SubscriberService
         $subscriber = Subscriber::where('verification_token', $token)->first();
 
         if (!$subscriber) {
-            return ['status' => 'error', 'message' => 'Invalid or expired verification token.', 'code' => 404];
+            return [
+                'status' => 'error',
+                'message' => 'Invalid or expired verification token.',
+                'code' => 404
+            ];
         }
 
         if ($subscriber->status === 'active') {
-            return ['status' => 'success', 'message' => 'Email already verified.'];
+            return [
+                'status' => 'success',
+                'message' => 'Email already verified.'
+            ];
         }
 
-        $subscriber->update(['status' => 'active', 'verification_token' => null]);
+        $subscriber->update([
+            'status' => 'active',
+            'verification_token' => null
+        ]);
 
-        return ['status' => 'success', 'message' => 'Email verified successfully.'];
+        // Send notification to subscription list owner
+        $subscriptionList = SubscriptionList::find($subscriber->list_id);
+        if ($subscriptionList) {
+            Notification::create([
+                'user_id' => $subscriptionList->user_id,
+                'title' => 'Email Verified',
+                'message' => "{$subscriber->email} has verified their email for '{$subscriptionList->name}'",
+                'read' => false,
+            ]);
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Email verified successfully.'
+        ];
     }
+
+
 
     public function getAllSubscribers($list_id)
     {
