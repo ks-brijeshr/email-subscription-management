@@ -9,6 +9,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -77,10 +79,16 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmail); // This will use the built-in Laravel email verification notification
     }
 
+    public function ownedOrganizations(): HasMany
+    {
+        return $this->hasMany(Organization::class, 'created_by');
+    }
+
+    /**
+     * Organizations where the user is a member
+     */
     public function organizations()
     {
-        return $this->belongsToMany(Organization::class)
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsToMany(Organization::class)->withPivot('role')->withTimestamps();
     }
 }

@@ -4,10 +4,16 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
 import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
+import OrganizationSwitcher from "../../components/OrganizationSwitcher";
 import { fetchDashboardStats } from "../../services/api";
 import apiConfig from "../../api-config";
 
 interface SubscriptionList {
+  id: number;
+  name: string;
+}
+
+interface Organization {
   id: number;
   name: string;
 }
@@ -26,13 +32,30 @@ const Dashboard = () => {
   const [selectedListId, setSelectedListId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeOrg, setActiveOrg] = useState<Organization | null>(null);
+
+  // Fetch dashboard stats when list ID or active org changes
+  useEffect(() => {
+    if (activeOrg) {
+      fetchStats(selectedListId);
+    }
+  }, [selectedListId, activeOrg]);
+
+  // Fetch subscription lists when active org changes
+  useEffect(() => {
+    if (activeOrg) {
+      fetchSubscriptionLists();
+    }
+  }, [activeOrg]);
 
   const fetchStats = async (listId?: string) => {
     try {
       setLoading(true);
       const data = await fetchDashboardStats(listId);
       setDashboardData(data);
+      setError(null);
     } catch (error) {
+      console.error(error);
       setError("Failed to load dashboard data");
     } finally {
       setLoading(false);
@@ -57,14 +80,6 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchStats(selectedListId);
-  }, [selectedListId]);
-
-  useEffect(() => {
-    fetchSubscriptionLists();
-  }, []);
-
   return (
     <div className="flex bg-gray-100 min-h-screen">
       <Sidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
@@ -85,6 +100,7 @@ const Dashboard = () => {
           </div>
 
           <div className="flex items-center space-x-6 text-gray-700">
+            <OrganizationSwitcher onOrganizationChange={setActiveOrg} />
             <div className="text-right">
               <p className="font-medium">{getGreetingMessage()}</p>
               <p className="text-sm text-gray-500">{new Date().toLocaleTimeString()}</p>

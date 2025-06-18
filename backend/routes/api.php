@@ -237,3 +237,8 @@ Route::delete('/organizations/{organization}/remove-user/{user}', [OrganizationC
 
 //Edir member role
 Route::put('/organizations/{org}/update-role/{user}', [OrganizationController::class, 'updateUserRole']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/my-organizations', [OrganizationController::class, 'getUserOrganizations']);
+    Route::post('/active-organization', [OrganizationController::class, 'setActiveOrganization']);
+    Route::get('/active-organization', [OrganizationController::class, 'getActiveOrganization']);
+});

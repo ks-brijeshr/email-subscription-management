@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InviteExistingUser;
+use Illuminate\Support\Facades\Session;
+
 use App\Mail\InviteNewUser;
 use App\Models\OrganizationInvitation;
 
@@ -145,5 +147,81 @@ class OrganizationController extends Controller
         ]);
 
         return response()->json(['status' => 'success', 'message' => 'Role updated successfully.']);
+    }
+
+    public function getUserOrganizations()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Owned organizations
+        $owned = $user->ownedOrganizations()->get();
+
+        // Member organizations
+        $member = $user->organizations()->get();
+
+        // Combine both, remove duplicates
+        $allOrganizations = $owned->merge($member)->unique('id')->values();
+
+        return response()->json($allOrganizations);
+    }
+
+    /**
+     * Set the active organization in the session.
+     */
+    public function setActiveOrganization(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $orgId = $request->input('organization_id');
+        if (!$orgId) {
+            return response()->json(['message' => 'Organization ID is required.'], 400);
+        }
+
+        // Check if user owns or is a member of the org
+        $owns = $user->ownedOrganizations()->where('id', $orgId)->exists();
+        $member = $user->organizations()->where('organizations.id', $orgId)->exists();
+
+        if (!$owns && !$member) {
+            return response()->json(['message' => 'You do not have access to this organization.'], 403);
+        }
+
+        // Set in session
+        Session::put('active_organization_id', $orgId);
+
+        return response()->json(['message' => 'Active organization set successfully.']);
+    }
+
+    /**
+     * Get the currently active organization from the session.
+     */
+    public function getActiveOrganization()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $orgId = session('active_organization_id');
+
+        if ($orgId) {
+            $org = Organization::find($orgId);
+            if ($org) return response()->json($org);
+        }
+
+        // Fallback: get owned
+        $owned = $user->ownedOrganizations()->first();
+        if ($owned) {
+            session(['active_organization_id' => $owned->id]);
+            return response()->json($owned);
+        }
+
+        // Fallback: get member
+        $member = $user->organizations()->first();
+        if ($member) {
+            session(['active_organization_id' => $member->id]);
+            return response()->json($member);
+        }
+
+        return response()->json(['message' => 'No organization found.'], 404);
     }
 }
