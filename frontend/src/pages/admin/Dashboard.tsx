@@ -4,6 +4,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import DashboardStats from "../../components/admin/DashboardStats";
 import ActivityLogs from "../../components/admin/ActivityLogs";
 import SubscriberGraph from "../../components/admin/SubscriberGraph";
+import NotificationBell from "../../components/admin/NotificationBell";
 import { fetchDashboardStats } from "../../services/api";
 import apiConfig from "../../api-config";
 
@@ -85,6 +86,8 @@ const Dashboard = () => {
           </div>
 
           <div className="flex items-center space-x-6 text-gray-700">
+            <NotificationBell />
+
             <div className="text-right">
               <p className="font-medium">{getGreetingMessage()}</p>
               <p className="text-sm text-gray-500">{new Date().toLocaleTimeString()}</p>

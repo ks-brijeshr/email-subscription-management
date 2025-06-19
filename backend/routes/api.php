@@ -21,6 +21,7 @@ use App\Http\Controllers\SubscriptionListController;
 use App\Http\Controllers\SubscriptionAnalyticsController;
 use App\Http\Controllers\EmailVerificationStatsController;
 use App\Http\Controllers\sendTemplateToSubscribers;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'Hey this new API is working!']);
@@ -235,3 +236,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->post('/send-template', [sendTemplateToSubscribers::class, 'sendTemplateToSubscribers']);
+
+Route::middleware('auth:sanctum')->get('/notifications', [NotificationController::class, 'index']);
+Route::middleware('auth:sanctum')->put('/notifications/mark-as-read', [NotificationController::class, 'markAllAsRead']);
