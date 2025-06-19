@@ -55,9 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
   return (
     <>
       <aside
-        className={`w-64 h-screen fixed flex flex-col justify-between z-50 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`w-64 h-screen fixed flex flex-col justify-between z-50 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 pt-5">
@@ -92,11 +91,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
         <nav className="space-y-1 px-5">
           <Link
             to="/admin/dashboard"
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
-              location.pathname === "/admin/dashboard"
-                ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
-                : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
-            }`}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${location.pathname === "/admin/dashboard"
+              ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
+              : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
+              }`}
           >
             <svg
               className="w-6 h-6"
@@ -117,11 +115,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
 
           <Link
             to="/admin/manage-subscriptions"
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
-              location.pathname === "/admin/manage-subscriptions"
-                ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
-                : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
-            }`}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${location.pathname === "/admin/manage-subscriptions"
+              ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
+              : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
+              }`}
           >
             <svg
               className="w-6 h-6"
@@ -142,11 +139,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
 
           <Link
             to="/admin/blacklist"
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
-              location.pathname === "/admin/blacklist"
-                ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
-                : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
-            }`}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${location.pathname === "/admin/blacklist"
+              ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
+              : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
+              }`}
           >
             <svg
               className="w-6 h-6"
@@ -167,11 +163,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
 
           <Link
             to="/admin/send-mail"
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
-              location.pathname === "/admin/send-mail"
-                ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
-                : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
-            }`}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${location.pathname === "/admin/send-mail"
+              ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
+              : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
+              }`}
           >
             <svg
               className="w-6 h-6"
@@ -190,13 +185,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
             <span className="text-sm">Send Email</span>
           </Link>
 
-          <button
-            onClick={openAPITokenModal}
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 w-full text-left ${
-              showAPITokenModal
+          <Link
+            to="/admin/email-templates"
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${location.pathname === "/admin/email-templates"
                 ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
                 : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
-            }`}
+              }`}
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 4h16v16H4V4zm0 4l8 5 8-5"
+              />
+            </svg>
+            <span className="text-sm">Email Templates</span>
+          </Link>
+
+
+          <button
+            onClick={openAPITokenModal}
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 w-full text-left ${showAPITokenModal
+              ? "bg-blue-50 border-l-4 border-blue-600 text-blue-600"
+              : "text-gray-700 hover:bg-blue-50 hover:border-l-4 hover:border-blue-600 hover:text-blue-600"
+              }`}
           >
             <svg
               className="w-6 h-6"
@@ -219,7 +238,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsSidebarOpen }) => {
         {/* Bottom */}
         <div className="px-5 pb-6 mt-auto">
           <hr className="my-4 border-gray-200" />
-
           <Link
             to="/profile"
             className="block px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-300"
